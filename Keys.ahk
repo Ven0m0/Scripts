@@ -90,9 +90,6 @@ Return
 ;Always on top, Alt+t
 !t::WinSet, AlwaysOnTop, Toggle, A
 
-; Hotstrings section
-::}ahk::autohotkey
-
 ; Fullscreen Single Key
 ToggleFakeFullscreen()
 {
