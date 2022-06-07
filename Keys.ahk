@@ -6,7 +6,7 @@
 }
 
 #SingleInstance Force
-; #Warn  ; Enable warnings to assist with detecting common errors.
+#Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 DetectHiddenWindows, On
 
@@ -17,38 +17,16 @@ SetNumlockState, AlwaysOn
 SetCapsLockState, AlwaysOff
 SetScrollLockState, AlwaysOff
 
-; Rechner always on top
-Loop
-{
-WinWaitActive, Rechner
-WinSet, AlwaysOnTop, On, Rechner
-WinWaitNotActive, Rechner
-}
-
-; Calculator always on top
-Loop
-{
-WinWaitActive, Calculator
-WinSet, AlwaysOnTop, On, Calculator
-WinWaitNotActive, Calculator
-}
-
-; Bild-in-Bild always on top
-Loop
-{
-WinWaitActive, Bild-in-Bild
-WinSet, AlwaysOnTop, On, Bild-in-Bild
-WinWaitNotActive, Bild-in-Bild
-}
-
-; Picture-in-Picture always on top
-Loop
-{
-WinWaitActive, Picture-in-Picture
-WinSet, AlwaysOnTop, On, Picture-in-Picture
-WinWaitNotActive, Picture-in-Picture
-}
-Return
+; Set windows on top
+	SetTimer, SetAlwaysOnTop, 1000
+	Exit
+	
+		SetAlwaysOnTop(){
+			WinSet, AlwaysOnTop, On, Rechner
+			WinSet, AlwaysOnTop, On, Calculator
+			WinSet, AlwaysOnTop, On, Bild-in-Bild
+			WinSet, AlwaysOnTop, On, Picture-in-Picture
+		}
 
 ; Execute last copied clipboard text as admin in cmd with App key
 AppsKey::
@@ -89,6 +67,9 @@ Return
 
 ;Always on top, Alt+t
 !t::WinSet, AlwaysOnTop, Toggle, A
+
+; Hotstrings section
+::}ahk::autohotkey
 
 ; Fullscreen Single Key
 ToggleFakeFullscreen()
