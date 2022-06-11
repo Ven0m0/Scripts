@@ -158,6 +158,7 @@ Explorer_GetSelection() {
    else
       Return
    
+   result := ""
    for item in oShellFolderView.SelectedItems
       result .= (result = "" ? "" : "`n") . item.path
    if !result
