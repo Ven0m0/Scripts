@@ -9,9 +9,15 @@
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 DetectHiddenWindows, On
-
+#KeyHistory 0 
+ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
+SetKeyDelay, -1, -1
+SetMouseDelay, -1
+SetDefaultMouseSpeed, 0 ; Even though SendInput ignores SetKeyDelay, SetMouseDelay and SetDefaultMouseSpeed, having these delays at -1 improves SendEvent's speed just in case SendInput is not available and falls back to SendEvent.
+SetWinDelay, -1
+SetControlDelay, -1 ; SetWinDelay and SetControlDelay may affect performance depending on the script.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetTitleMatchMode, 3
+SetTitleMatchMode, 3 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
 SetTitleMatchMode, Fast
 SetNumlockState, AlwaysOn
 SetCapsLockState, AlwaysOff
@@ -20,7 +26,6 @@ SetScrollLockState, AlwaysOff
 ; Set windows on top
 	SetTimer, SetAlwaysOnTop, 1000
 	Exit
-	
 		SetAlwaysOnTop(){
 			WinSet, AlwaysOnTop, On, Rechner
 			WinSet, AlwaysOnTop, On, Calculator
@@ -29,7 +34,7 @@ SetScrollLockState, AlwaysOff
 		}
 
 ; Execute last copied clipboard text as admin in cmd with App key
-AppsKey::
+$*AppsKey::
     ClipWait
     Run *RunAs cmd.exe
     WinWait, ahk_exe cmd.exe
@@ -39,37 +44,33 @@ AppsKey::
 return
 
 ; Google for last copied clipboard text with Right Control key
-RCtrl::
+$*RCtrl::
     ClipWait  ; Wait for the clipboard to contain text.
     run, https://www.google.de/search?q=%clipboard%
 return
 
 ; SHift + F1 Minimizes the active window
-+F1::
+$*+F1::
     WinGet, active_id, ID, A
     WinMinimize, ahk_id %active_id%
 Return
 
 ;Volume mixer, Shift + f2 opens
-#MaxThreadsPerHotkey 2
-+F2::Run SndVol.exe
+$*+F2::Run SndVol.exe
 
 ; Empties the clipboard and recycle bin, Shift + F3 
-+F3::
+$*+F3::
     FileRecycleEmpty
     clipboard := ""   ; Empty the clipboard.
 Return
 
 ;Volume control, Alt+Scroll wheel (and Mbutton)
-!WheelUp::Volume_Up
-!WheelDown::Volume_Down
-!MButton::Volume_Mute
+$*!WheelUp::Volume_Up
+$*!WheelDown::Volume_Down
+$*!MButton::Volume_Mute
 
 ;Always on top, Alt+t
-!t::WinSet, AlwaysOnTop, Toggle, A
-
-; Hotstrings section
-::}ahk::autohotkey
+$*!t::WinSet, AlwaysOnTop, Toggle, A
 
 ; Fullscreen Single Key
 ToggleFakeFullscreen()
@@ -125,11 +126,11 @@ WinGetPos x,y,width,height, A
 return GetMonitorAtPos(x+width/2, y+height/2)
 }
 
-End::ToggleFakeFullscreen()rrors
+$*End::ToggleFakeFullscreen()rrors
 
 ;----------------------------------------------------------------------------
 ; Add date to selected file, Win+j
-#j::
+$*#j::
 if !Explorer_GetSelection()
    {
    msgbox,,,No files were selected,2   
