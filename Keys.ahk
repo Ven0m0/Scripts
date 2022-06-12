@@ -1,8 +1,8 @@
-; Admin check
- if not A_IsAdmin
-{
-   Run *RunAs "%A_ScriptFullPath%"
-   ExitApp
+; UIA check
+if (!InStr(A_AhkPath, "_UIA.exe")) {
+	newPath := RegExReplace(A_AhkPath, "\.exe", "U" (32 << A_Is64bitOS) "_UIA.exe")
+	Run % StrReplace(DllCall("Kernel32\GetCommandLine", "Str"), A_AhkPath, newPath)
+	ExitApp
 }
 
 #SingleInstance Force
@@ -22,6 +22,18 @@ SetTitleMatchMode, Fast
 SetNumlockState, AlwaysOn
 SetCapsLockState, AlwaysOff
 SetScrollLockState, AlwaysOff
+Menu, Tray, Tip, Keys
+
+; GLobal Variables for window snapping
+mw := GetMonitorWidth()             ; Monitor width
+mh := GetMonitorHeight()            ; Monitor height
+pw := mw / 3                        ; 1 / 3 of monitor width
+ph := mh / 3                        ; 1 / 3 of monitor height
+lw := 2 * pw > 1024 ? 1024: 2 * pw  ; Left side width (1024 is preffered)
+rw := mw - lw                       ; Right side width
+th := round(2 * ph)                 ; Top side height
+bh := ceil(ph)                      ; Bottom side height
+positions := {}                     ; Saves Window position before snapping
 
 ; Set windows on top
 	SetTimer, SetAlwaysOnTop, 1000
@@ -52,7 +64,7 @@ return
 ; SHift + F1 Minimizes the active window
 #IfWinNotActive ahk_class WorkerW
 $*+F1::WinMinimize,A
-#If
+#IfWinNotActive
 
 ;Volume mixer, Shift + f2 opens
 $*+F2::Run SndVol.exe
@@ -192,4 +204,59 @@ GetDesktopIShellFolderViewDual()
         ObjRelease(ptlb)
     }
     return IShellFolderViewDual
+}
+
+; Window Snapping to left and right
+#Left::MoveWindowLeft()
+#Right::MoveWindowRight()
+#Down::RestoreWindowPosition()
+
+SaveWindowPosition() {
+    global positions
+    hwnd := WinExist("A")
+    WinGetPos, x, y, w, h, A
+    positions[hwnd] := [x, y, w, h]
+}
+
+RestoreWindowPosition() {
+    global positions
+    hwnd := WinExist("A")
+    pos := positions[hwnd]
+    WinMove, A, , pos[1], pos[2], pos[3], pos[4]
+}
+
+MoveWindowLeft() {
+    global
+    SaveWindowPosition()
+    if (IsResizable()) {
+        WinMove, A,, 0, 0, lw, mh
+    } else {
+        WinMove, A,, 0, 0
+    }
+}
+
+MoveWindowRight() {
+    global
+    SaveWindowPosition()
+    if (IsResizable()) {
+        WinMove, A,, lw, 0, rw, mh
+    } else {
+        WinMove, A,, lw, 0
+    }
+}
+
+; Helper functions
+GetMonitorWidth() {
+    SysGet, mon, MonitorWorkArea
+    return monRight - monLeft
+}
+
+GetMonitorHeight() {
+    SysGet, mon, MonitorWorkArea
+    return monBottom - monTop
+}
+
+IsResizable() {
+    WinGet, Style, Style, A
+    return (Style & 0x40000) ; WS_SIZEBOX
 }
