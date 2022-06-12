@@ -35,33 +35,32 @@ SetScrollLockState, AlwaysOff
 
 ; Execute last copied clipboard text as admin in cmd with App key
 $*AppsKey::
-    ClipWait
-    Run *RunAs cmd.exe
-    WinWait, ahk_exe cmd.exe
-    WinActivate, ahk_exe cmd.exe
-    Send {Blind}{Text}%clipboard%
-    Send {Enter}
+ClipWait
+Run *RunAs cmd.exe
+WinWait, ahk_exe cmd.exe
+WinActivate, ahk_exe cmd.exe
+Send {Blind}{Text}%clipboard%
+Send {Enter}
 return
 
 ; Google for last copied clipboard text with Right Control key
 $*RCtrl::
-    ClipWait  ; Wait for the clipboard to contain text.
-    run, https://www.google.de/search?q=%clipboard%
+ClipWait  ; Wait for the clipboard to contain text.
+run, https://www.google.de/search?q=%clipboard%
 return
 
 ; SHift + F1 Minimizes the active window
-$*+F1::
-    WinGet, active_id, ID, A
-    WinMinimize, ahk_id %active_id%
-Return
+#IfWinNotActive ahk_class WorkerW
+$*+F1::WinMinimize,A
+#If
 
 ;Volume mixer, Shift + f2 opens
 $*+F2::Run SndVol.exe
 
 ; Empties the clipboard and recycle bin, Shift + F3 
 $*+F3::
-    FileRecycleEmpty
-    clipboard := ""   ; Empty the clipboard.
+FileRecycleEmpty
+clipboard := ""   ; Empty the clipboard.
 Return
 
 ;Volume control, Alt+Scroll wheel (and Mbutton)
@@ -126,7 +125,7 @@ WinGetPos x,y,width,height, A
 return GetMonitorAtPos(x+width/2, y+height/2)
 }
 
-$*End::ToggleFakeFullscreen()rrors
+$*End::ToggleFakeFullscreen()
 
 ;----------------------------------------------------------------------------
 ; Add date to selected file, Win+j
