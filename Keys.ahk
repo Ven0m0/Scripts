@@ -282,7 +282,7 @@ Gui, Add, Text,, Right Ctrl Googles for last copied clipboard text
 Gui, Tab, 2
 Gui, Add, Text,, The script can set the calculator and Picture-In-Picture always on top.
 Gui, Tab, 3
-Gui, Add, Text, gGithubLink, Github
+Gui, Add, Button, gGithubLink, Github
 Gui, Tab
 gui, show
 return
