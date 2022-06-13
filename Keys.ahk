@@ -270,7 +270,7 @@ Gui, Add, Tab3,, Hotkeys|Functions|Links
 Gui, Add, Text,, Shift + F1 Minimizes the active window.
 Gui, Add, Text,, Shift + F2 Opens the volume mixer.
 Gui, Add, Text,, Shift + F3 Empties the clipboard and recycle bin.
-Gui, Add, Text,, Mousewheel turns thye volume up, down or mutes it.
+Gui, Add, Text,, Mousewheel turns the volume up, down or mutes it.
 Gui, Add, Text,, Alt + T Sets the active window on top.
 Gui, Add, Text,, End makes the active window fullscreen.
 Gui, Add, Text,, Win + J adds the creation date to the selected file.
