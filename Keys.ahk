@@ -23,6 +23,8 @@ SetNumlockState, AlwaysOn
 SetCapsLockState, AlwaysOff
 SetScrollLockState, AlwaysOff
 Menu, Tray, Tip, Keys
+Menu, Tray, Add
+Menu, Tray, Add, Documentation, Item1
 
 ; GLobal Variables for window snapping
 mw := GetMonitorWidth()             ; Monitor width
@@ -260,3 +262,31 @@ IsResizable() {
     WinGet, Style, Style, A
     return (Style & 0x40000) ; WS_SIZEBOX
 }
+
+Item1:
+Gui +AlwaysOnTop
+Gui, New, -MinimizeBox, Documentation
+Gui, Add, Tab3,, Hotkeys|Functions|Links
+Gui, Add, Text,, Shift + F1 Minimizes the active window.
+Gui, Add, Text,, Shift + F2 Opens the volume mixer.
+Gui, Add, Text,, Shift + F3 Empties the clipboard and recycle bin.
+Gui, Add, Text,, Mousewheel turns thye volume up, down or mutes it.
+Gui, Add, Text,, Alt + T Sets the active window on top.
+Gui, Add, Text,, End makes the active window fullscreen.
+Gui, Add, Text,, Win + J adds the creation date to the selected file.
+Gui, Add, Text,, Win + Left snaps the active window to the left.
+Gui, Add, Text,, Win + Right snaps the active window to the right.
+Gui, Add, Text,, Win + Down Restores the active window to the position before the snapping.
+Gui, Add, Text,, Appskey executes the last copied clipboard text as admin in cmd
+Gui, Add, Text,, Right Ctrl Googles for last copied clipboard text
+Gui, Tab, 2
+Gui, Add, Text,, The script can set the calculator and Picture-In-Picture always on top.
+Gui, Tab, 3
+Gui, Add, Text, gGithubLink, Github
+Gui, Tab
+gui, show
+return
+
+GithubLink:
+Run, https://github.com/Ven0m0/Autohotkey-scripts
+return
