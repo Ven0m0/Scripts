@@ -283,10 +283,16 @@ Gui, Tab, 2
 Gui, Add, Text,, The script can set the calculator and Picture-In-Picture always on top.
 Gui, Tab, 3
 Gui, Add, Button, gGithubLink, Github
+Gui, Add, Button, gYoutubeLink, Youtube
+Gui, Add, Edit, ReadOnly, Email: jannik.joergensen15@gmail.com
 Gui, Tab
-gui, show
+Gui, show
 return
 
 GithubLink:
 Run, https://github.com/Ven0m0/Autohotkey-scripts
+return
+
+YoutubeLink:
+Run, https://www.youtube.com/channel/UCgRZ6y1F3uDF9UR3LFRgFXg
 return
