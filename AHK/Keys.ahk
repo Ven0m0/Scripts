@@ -8,7 +8,6 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 #SingleInstance Force
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-DetectHiddenWindows, On
 #KeyHistory 0 
 ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
 SetKeyDelay, -1, -1
