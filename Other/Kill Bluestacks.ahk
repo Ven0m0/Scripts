@@ -10,6 +10,8 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 #KeyHistory 0 
+DetectHiddenText, Off
+DetectHiddenWindows, Off
 ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
 SetKeyDelay, -1, -1
 SetMouseDelay, -1
