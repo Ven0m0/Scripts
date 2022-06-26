@@ -33,6 +33,6 @@ TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\co
 TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","pp_shader_name=none (builtin)","pp_shader_name=Bump_Mapping_AA_optimize")
 TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","pp_shader_name\default=false","pp_shader_name\default=true")
 
-; Preloading on
-TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures\default=true","preload_textures\default=false")
-TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures=false","preload_textures=true")
+; Preloading off
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures\default=false","preload_textures\default=true")
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures=false","preload_textures=false")

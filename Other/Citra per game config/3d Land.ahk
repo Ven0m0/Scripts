@@ -22,10 +22,17 @@ SetControlDelay, -1 ; SetWinDelay and SetControlDelay may affect performance dep
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetTitleMatchMode, 3 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
 
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","641","641","10","8")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","654","654","false","true")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","655","655","xBRZ freescale","none")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","662","662","false","true")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","663","663","Bump_Mapping_AA_optimize","none (builtin)")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","1062","1063","false","true")
-TF_ReplaceInLines("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","1063","1063","true","false")
+; Internal Resolution to 8x
+TF_RegExReplace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","resolution_factor=([2-9]|10|1)","resolution_factor=8")
+
+; Texture Filter to none
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","texture_filter_name=xBRZ freescale","texture_filter_name=none")
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","texture_filter_name\default=false","texture_filter_name\default=true")
+
+; Shader to none
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","pp_shader_name=Bump_Mapping_AA_optimize","pp_shader_name=none (builtin)")
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","pp_shader_name\default=true","pp_shader_name\default=false")
+
+; Preloading off
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures\default=false","preload_textures\default=true")
+TF_Replace("!C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\config\qt-config.ini","preload_textures=false","preload_textures=false")
