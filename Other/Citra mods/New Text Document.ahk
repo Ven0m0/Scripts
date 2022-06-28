@@ -12,9 +12,12 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 																				
 Buttons := {}																; Create Object for the Folder Names and Related Paths
 Loop, Files, C:\Users\janni\OneDrive\Backup\Optimal\Scripts\Other\Playnite\Citra mods\Mods 2\3d Land\*.*, d
+{
+	Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath})        ; Add the name and path of the current folder to the Buttons Object
+}
 Loop, Files, C:\Users\janni\OneDrive\Backup\Optimal\Scripts\Other\Playnite\Citra mods\Mods 2\NSMB\*.*, d
 {
-	Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath}) 		; Add the name and path of the current folder to the Buttons Object
+	Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath})        ; Add the name and path of the current folder to the Buttons Object
 }
 	
 for each, button in Buttons {												; Move through the Buttons object, one button at a time
