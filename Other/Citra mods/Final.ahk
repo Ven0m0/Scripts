@@ -13,16 +13,19 @@ SetWorkingDir % A_ScriptDir ; Ensures a consistent starting directory.
 EnvGet OneDrive, ONEDRIVE
 root := OneDrive "\Backup\Optimal\Scripts\Other\Playnite\Citra mods\Mods 2"
 
+Destination := ""
 Buttons := {}                                                                  ; Create Object for the Folder Names and Related Paths
 loop Files, % root "\*.*", D
 {
         Gamename := A_LoopFileName     ; save game name
         Gamepath := A_LoopFileFullPath ; save game path
+        findDest:
         loop Read, % A_ScriptDir "\Destination.txt"
         {
                 if (InStr(A_LoopReadLine, Gamename))
                 {
                         Destination := StrReplace(A_LoopReadLine, Gamename . "_", "")
+                        break findDest
                 }
         }
         loop Files, % Gamepath "\*.*", D
