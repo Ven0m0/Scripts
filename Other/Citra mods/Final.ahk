@@ -48,7 +48,11 @@ return ; End of auto-execute
 
 FileActions(Root, Button)
 {
-        MsgBox % button.Name button.Ziel
+        Zielpfad = C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\load\mods
+        Fullpath := Zielpfad "\" button.Ziel "\" button.Name
+        MsgBox % Fullpath
+        FileCopyDir, button.Path, %Fullpath%
+
 }
 
 HasFolder(Root, Subfolder)
