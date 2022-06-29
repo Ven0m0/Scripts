@@ -30,7 +30,7 @@ loop Files, % root "\*.*", D
         }
         loop Files, % Gamepath "\*.*", D
         {
-                Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath})
+                Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath, "Ziel":Destination})
         }
 }
 
@@ -48,12 +48,7 @@ return ; End of auto-execute
 
 FileActions(Root, Button)
 {
-        if (HasFolder(Root "\3d Land", "Kaizo Mario 3D Land"))
-                MsgBox Kaizo Mario 3D Land ist da
-        if (HasFolder(Root "\3d Land", "Super Mario 3d Land Expedition"))
-                MsgBox Super Mario 3d Land Expedition ist da
-        if (HasFolder(Root "\NSMB", "NSMBNext The Lost Levels"))
-                MsgBox NSMBNext The Lost Levels ist da
+        MsgBox % button.Name button.Ziel
 }
 
 HasFolder(Root, Subfolder)
