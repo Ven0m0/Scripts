@@ -11,7 +11,7 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 SetWorkingDir % A_ScriptDir ; Ensures a consistent starting directory.
 Menu, Tray, Tip, Citra Mod Manager
 EnvGet OneDrive, ONEDRIVE
-root := OneDrive "\Backup\Game\Emul\Citra\canary-mingw\Mods"
+root := OneDrive "\Backup\Game\Emul\Citra\nightly-mingw\Mods"
 
 Destination := ""
 Buttons := {}                                                                  ; Create Object for the Folder Names and Related Paths
@@ -51,7 +51,7 @@ return ; End of auto-execute
 
 FileActions(Root, Button)
 {
-        Zielpfad = C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\canary-mingw\user\load\mods
+        Zielpfad = C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\nightly-mingw\user\load\mods
         Fullpath := Zielpfad "\" button.Ziel "\" button.Name
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path
