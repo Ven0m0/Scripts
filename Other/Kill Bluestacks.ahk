@@ -24,5 +24,7 @@ SetTitleMatchMode, Fast
 
 WinGet, HDPlayer, PID, ahk_exe HD-Player.exe
 WinGet, BstkSVC, PID, ahk_exe BstkSVC.exe
+WinGet, LogCollector, PID, ahk_exe HD-LogCollector.exe
 Process, Close, %HDPlayer%
 Process, Close, %BstkSVC%
+Process, Close, %LogCollector%

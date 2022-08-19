@@ -23,5 +23,6 @@ SetTitleMatchMode, 2 ; Use SetTitleMatchMode 2 when you want to use wintitle tha
 SetTitleMatchMode, Fast
 
 WinWait, | ahk_exe citra-qt.exe
+WinMaximize, ahk_exe citra-qt.exe
 ControlSend,, {F11}, ahk_exe citra-qt.exe
 return

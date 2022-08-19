@@ -23,7 +23,7 @@ SetTitleMatchMode, 3 ; Use SetTitleMatchMode 2 when you want to use wintitle tha
 SetTitleMatchMode, Fast
 
 WinWait, ahk_exe HD-Player.exe
-DllCall("Sleep","UInt",6000)
+DllCall("Sleep","UInt",6500)
 WinActivate, ahk_exe HD-Player.exe
 WinMaximize, ahk_exe HD-Player.exe
 ControlSend,, {F11}, ahk_exe HD-Player.exe

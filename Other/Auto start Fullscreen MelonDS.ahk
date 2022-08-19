@@ -18,7 +18,7 @@ SetDefaultMouseSpeed, 0 ; Even though SendInput ignores SetKeyDelay, SetMouseDel
 SetWinDelay, -1
 SetControlDelay, -1 ; SetWinDelay and SetControlDelay may affect performance depending on the script.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetTitleMatchMode, 3
+SetTitleMatchMode, 2
 SetTitleMatchMode, Fast
 
 WinWait, ahk_exe melonDS.exe
@@ -26,6 +26,6 @@ DllCall("Sleep","UInt",1000)
 WinActivate, ahk_exe melonDS.exe
 WinMaximize, ahk_exe melonDS.exe
 Sendinput, {F11 down}
-DllCall("Sleep","UInt",50)
+DllCall("Sleep","UInt",100)
 Send, {F11 up}
 return

@@ -1,4 +1,4 @@
-; UIA check
+﻿; UIA check
 if (!InStr(A_AhkPath, "_UIA.exe")) {
 	newPath := RegExReplace(A_AhkPath, "\.exe", "U" (32 << A_Is64bitOS) "_UIA.exe")
 	Run % StrReplace(DllCall("Kernel32\GetCommandLine", "Str"), A_AhkPath, newPath)
@@ -8,10 +8,10 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 #SingleInstance Force
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+#KeyHistory 0 
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 DetectHiddenText, Off
 DetectHiddenWindows, Off
-#KeyHistory 0 
 ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
 SetKeyDelay, -1, -1
 SetMouseDelay, -1
@@ -22,14 +22,6 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetTitleMatchMode, 3 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
 SetTitleMatchMode, Fast
 
-WinWait, ahk_exe HD-Player.exe
-DllCall("Sleep","UInt",6500)
-WinActivate, ahk_exe HD-Player.exe
-WinMaximize, ahk_exe HD-Player.exe
-ControlSend,, {F11}, ahk_exe HD-Player.exe
-CoordMode, mouse, Relative
-WinGetActiveStats, Title, Width, Height, X, Y
-x := Width - 15
-y := 380
-Click %x%, %y%
-return
+RunWait, "C:\Users\janni\OneDrive\Backup\Game\Other\Tools\FSR\Lossless Scaling\LosslessScaling.exe"
+DllCall("kernel32.dll\Sleep", "UInt", 800)
+WinMinimize, ahk_exe LosslessScaling.exe
