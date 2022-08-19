@@ -9,6 +9,9 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #KeyHistory 0 
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+DetectHiddenText, Off
+DetectHiddenWindows, Off
 ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
 SetKeyDelay, -1, -1
 SetMouseDelay, -1
@@ -46,32 +49,21 @@ positions := {}                     ; Saves Window position before snapping
 			WinSet, AlwaysOnTop, On, Picture-in-Picture
 		}
 
-; Execute last copied clipboard text as admin in cmd with App key
-$*AppsKey::
-ClipWait
-Run *RunAs cmd.exe
-WinWait, ahk_exe cmd.exe
-WinActivate, ahk_exe cmd.exe
-Send {Blind}{Text}%clipboard%
-Send {Enter}
-return
-
-; Google for last copied clipboard text with Right Control key
-$*RCtrl::
-ClipWait  ; Wait for the clipboard to contain text.
-run, https://www.google.de/search?q=%clipboard%
-return
-
 ; SHift + F1 Minimizes the active window
-#IfWinNotActive ahk_class WorkerW
+#IfWinNotActive ahk_exe Explorer.EXE
 $*+F1::WinMinimize,A
 #IfWinNotActive
 
-;Volume mixer, Shift + f2 opens
-$*+F2::Run SndVol.exe
+;Volume mixer, Shift + f4 opens
+$*+F4::
+    if WinExist("ahk_exe Spotify.exe")
+        WinActivate
+    else
+        Run SndVol.exe
+Return
 
-; Empties the clipboard and recycle bin, Shift + F3 
-$*+F3::
+; Empties the clipboard and recycle bin, Shift + F2
+$*+F2::
 FileRecycleEmpty
 clipboard := ""   ; Empty the clipboard.
 Return
@@ -264,7 +256,6 @@ IsResizable() {
 
 Item1:
 Gui +AlwaysOnTop
-Gui, New, -MinimizeBox, Documentation
 Gui, Add, Tab3,, Hotkeys|Functions|Links
 Gui, Add, Text,, Shift + F1 Minimizes the active window.
 Gui, Add, Text,, Shift + F2 Opens the volume mixer.
@@ -285,11 +276,11 @@ Gui, Add, Button, gGithubLink, Github
 Gui, Add, Button, gYoutubeLink, Youtube
 Gui, Add, Edit, ReadOnly, Email: jannik.joergensen15@gmail.com
 Gui, Tab
-Gui, show
+Gui, Show, Center, Documentation
 return
 
 GithubLink:
-Run, https://github.com/Ven0m0/Scripts
+Run, https://github.com/Ven0m0/
 return
 
 YoutubeLink:
