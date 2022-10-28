@@ -5,7 +5,6 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 	ExitApp
 }
 
-#SingleInstance Force
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
@@ -22,13 +21,7 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetTitleMatchMode, 2 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
 SetTitleMatchMode, Fast
 
-GroupAdd, Safe, ahk_exe Explorer.EXE
-GroupAdd, Safe, ahk_class ExploreWClass
-GroupAdd, Safe, ahk_class CabinetWClass
-GroupAdd, Safe, ahk_class WorkerW
-GroupAdd, Safe, ahk_exe Playnite.DesktopApp.exe
-GroupAdd, Safe, ahk_exe Playnite.FullscreenApp.exe
-GroupAdd, Safe, ahk_exe msedge.exe
-
-If !WinActive("ahk_group Safe")
-WinKill, A
+WinWait, ahk_exe ShellShockLive.exe
+DllCall("Sleep","UInt",100)
+ControlSend,, {Enter}, ahk_exe ShellShockLive.exe
+WinActivate, ahk_exe ShellShockLive.exe
