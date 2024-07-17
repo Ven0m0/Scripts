@@ -8,9 +8,9 @@
 
 
 ### Youtube and Spotify downloader:
-
-![alt text](https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png)
-
+<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader">
+    ![alt text](https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png)
+</a>
 
 ### Citra mod manager:
 
