@@ -5,9 +5,11 @@ https://www.autohotkey.com/
 
 
 
-Youtube and Spotify downloader:
+###Youtube and Spotify downloader:
+
 ![alt text](https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png)
 
 
-Citra mod manager:
+###Citra mod manager:
+
 ![alt text](https://github.com/Ven0m0/Scripts/blob/main/Other/Citra%20mods/Citra%20Mod%20Manager.png)
