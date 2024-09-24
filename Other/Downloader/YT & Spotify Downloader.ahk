@@ -16,7 +16,7 @@ Gui, Add, Edit, x300 y34 w250 h20 vSpotify gSpotYoutube
 ; Add a button to execute the command
 Gui, Add, Button, x32 y435 w100 h30 gRunCmd, Run Command
 ;
-Gui, Show, h480 w640, YT Downloader
+Gui, Show, h480 w640, YT & Spotify Downloader
 Return
 
 ; The GUI fields and buttons

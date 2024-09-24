@@ -14,13 +14,13 @@ Gui, Add, Edit, x2 y34 w250 h20 vLink gGuiInput
 ; Add a button to execute the command
 Gui, Add, Button, x32 y435 w100 h30 gRunCmd, Run Command
 ;
-Gui, Show, h480 w640, YT Downloader
+Gui, Show, h480 w640, Spotify Downloader
 Return
 
 ; The GUI fields and buttons
 GuiInput:
   GuiControlGet, Link
-  ; Add "yt-dlp.exe" in front of the input text
+  ; Add "spotdl" in front of the input text
   Cmd := "spotdl download " Link " --output %userprofile%\Music --preload --sponsor-block --threads 12 "
   ; Update the GroupBox with the combined text
   GuiControl,, Output, % Cmd
