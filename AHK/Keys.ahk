@@ -274,7 +274,7 @@ Gui, Add, Text,, The script can set the calculator and Picture-In-Picture always
 Gui, Tab, 3
 Gui, Add, Button, gGithubLink, Github
 Gui, Add, Button, gYoutubeLink, Youtube
-Gui, Add, Edit, ReadOnly, Email: jannik.joergensen15@gmail.com
+Gui, Add, Edit, ReadOnly, Email: ven0m0.wastaken@gmail.com
 Gui, Tab
 Gui, Show, Center, Documentation
 return
