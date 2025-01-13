@@ -31,7 +31,7 @@ return
 ; The GUI fields and buttons
 SpotYoutube:
   GuiControlGet, Spotify
-  ; Add "yt-dlp.exe" in front of the input text
+  ; Add "spotdl" in front of the input text
   Cmd := "spotdl download " Spotify " --output %userprofile%\Music --preload --sponsor-block --threads 12 "
   ; Update the GroupBox with the combined text
   GuiControl,, Output, % Cmd
