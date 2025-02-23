@@ -19,6 +19,7 @@
 
 ### Fake Fullscreen:
 Simple scripts to set the current window to fullscreen, similar to fullscreen borderless
+
 https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen.ahk
 
 https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk
