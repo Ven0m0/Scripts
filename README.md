@@ -1,7 +1,7 @@
 ### Collection of Scripts, that may be useful in automating daily tasks, or just assist you otherwise. Autohotkey is required for every script.
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
-    <img height="42" src="https://upload.wikimedia.org/wikipedia/commons/c/cf/Autokey-logo.svg" alt="AHK">
+    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
 </a>
 
 
