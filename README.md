@@ -16,3 +16,9 @@
 <a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods">    
     <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra%20mods/Citra%20Mod%20Manager.png">
 </a>
+
+### Fake Fullscreen:
+https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen.ahk
+https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk
+https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Double%20Key.ahk
+
