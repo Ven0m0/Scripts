@@ -25,10 +25,7 @@ https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk
 
 https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Double%20Key.ahk
 
-## []() 
+### [Playnite auto Fullscreen:](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite%20Fullscreen) 
 
 
-## [Playnite auto Fullscreen:](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite%20Fullscreen) 
-
-
-## [Citra per game auto config:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20per%20game%20config)
+### [Citra per game auto config:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20per%20game%20config)
