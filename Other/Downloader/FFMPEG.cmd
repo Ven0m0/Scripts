@@ -1,3 +1,3 @@
 cd /d %~dp0
-spotdl --download-ffmpeg
-exit
+spotdl.exe --download-ffmpeg
+pause

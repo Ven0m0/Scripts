@@ -23,7 +23,7 @@ Return
 GuiInput:
   GuiControlGet, Youtube
   ; Add "yt-dlp.exe" in front of the input text
-  Cmd := "yt-dlp.exe --paths %userprofile%\Music -f bv+ba -S res:1080 --merge-output-format mp4 " . Youtube
+  Cmd := "yt-dlp.exe --paths %userprofile%\Music -f bv+ba -S res:1080 --audio-format aac --merge-output-format mp4 " . Youtube
   ; Update the GroupBox with the combined text
   GuiControl,, Output, % Cmd
 return
