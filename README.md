@@ -28,4 +28,3 @@ https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen.ahk
 https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk
 
 https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Double%20Key.ahk
-
