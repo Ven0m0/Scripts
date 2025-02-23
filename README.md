@@ -6,10 +6,8 @@
 
 
 
-### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader)
-<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader">    
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png" alt="Windows10">
-</a>
+### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader) 
+<img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png" alt="Windows10">
 
 ### Citra mod manager:
 
