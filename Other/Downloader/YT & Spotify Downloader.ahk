@@ -4,6 +4,7 @@
 
 ; Initialise variables
 Youtube := ""
+SpotYoutube := ""
 ; --------------------------------------------------------------------------------------------------------------------------------
 Gui, Add, GroupBox, x22 y340 w430 h90 vMyGroupBox, Batch output
 Gui, Add, Edit, ReadOnly x32 y355 w410 h70 vOutput, 
