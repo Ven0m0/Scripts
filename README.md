@@ -1,12 +1,16 @@
 ### Collection of Scripts, that may be useful in automating daily tasks, or just assist you otherwise. Autohotkey is required for every script.
 
-![GitHub Release](https://img.shields.io/github/v/release/Ven0m0/Scripts?label=Current%20Release?logo=github)
+![GitHub Release](https://img.shields.io/github/v/release/Ven0m0/Scripts?label=Current%20Release)
 ![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
+
+![Commit activity](https://img.shields.io/github/commit-activity/t/Ven0m0/Scripts%20?logo=github)
+
 
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
-    <img height="35" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
+    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
 </a>
+
 
 
 ### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader) 
@@ -31,5 +35,6 @@ Simple scripts to set the current window to fullscreen, similar to fullscreen bo
 [Fullscreen Single Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk)
 
 [Fullscreen Double Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Double%20Key.ahk)
+
 
 
