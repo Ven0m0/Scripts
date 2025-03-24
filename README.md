@@ -5,9 +5,8 @@
 
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
-    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
+    <img height="35" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
 </a>
-
 
 
 ### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader) 
