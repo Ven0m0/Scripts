@@ -1,5 +1,9 @@
 ### Collection of Scripts, that may be useful in automating daily tasks, or just assist you otherwise. Autohotkey is required for every script.
 
+![GitHub Release](https://img.shields.io/github/v/release/azahar-emu/azahar?label=Current%20Release)
+![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
+
+
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
     <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
 </a>
