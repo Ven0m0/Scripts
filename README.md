@@ -4,6 +4,13 @@
 ![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
 
 
+
+
+
+![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total)
+
+
+
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
     <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
 </a>
