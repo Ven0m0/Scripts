@@ -1,6 +1,6 @@
 ### Collection of Scripts, that may be useful in automating daily tasks, or just assist you otherwise. Autohotkey is required for every script.
 
-![GitHub Release](https://img.shields.io/github/v/release/azahar-emu/azahar?label=Current%20Release)
+![GitHub Release](https://img.shields.io/github/v/release/Ven0m0/Scripts?label=Current%20Release)
 ![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
 
 
