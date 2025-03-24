@@ -2,11 +2,7 @@
 
 ![GitHub Release](https://img.shields.io/github/v/release/Ven0m0/Scripts?label=Current%20Release)
 ![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
-
 ![Commit activity](https://img.shields.io/github/last-commit/Ven0m0/Scripts?logo=github)
-
-
-
 
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
