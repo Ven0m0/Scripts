@@ -3,7 +3,9 @@
 ![GitHub Release](https://img.shields.io/github/v/release/Ven0m0/Scripts?label=Current%20Release)
 ![GitHub Downloads](https://img.shields.io/github/downloads/Ven0m0/Scripts/total?logo=github&label=GitHub%20Downloads)
 
-![Commit activity](https://img.shields.io/github/commit-activity/t/Ven0m0/Scripts%20?logo=github)
+![Commit activity](https://img.shields.io/github/commit-activity/t/Ven0m0/Scripts%20)
+
+
 
 
 
