@@ -6,14 +6,14 @@
 
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
-    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.png" alt="AHK">
+    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.avif" alt="AHK">
 </a>
 
 
 
 ### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader) 
 <a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader">   
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.png" alt="Windows10">
+    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.avif" alt="Windows10">
 </a>
 
 ### [Citra mod manager:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods) 
