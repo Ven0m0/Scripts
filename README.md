@@ -18,7 +18,7 @@
 
 ### [Citra mod manager:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods) 
 <a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods">    
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra%20mods/Citra%20Mod%20Manager.png">
+    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra%20mods/Citra%20Mod%20Manager.avif">
 </a>
 
 ### [Playnite auto Fullscreen](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite%20Fullscreen) 
