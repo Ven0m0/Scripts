@@ -24,7 +24,7 @@ loop, Files, % root "\*.*", D
         {
                 if (InStr(A_LoopReadLine, Gamename))
                 {
-                        Destination := StrReplace(A_LoopReadLine, Gamename . ";", "")
+                        Destination := StrReplace(A_LoopReadLine, Gamename . ",", "")
                         break findDest
                 }
         }
@@ -69,4 +69,5 @@ FileActions(Root, Button)
 
 GuiClose:
 GuiEscape:
+
 ExitApp
