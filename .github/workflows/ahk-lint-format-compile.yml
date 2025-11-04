@@ -45,19 +45,11 @@ jobs:
           }
         shell: pwsh
 
-      - name: Download AutoHotkey Formatter
+      - name: Setup Formatter
         run: |
-          # Download a community AutoHotkey formatter script
-          $formatterUrl = "https://raw.githubusercontent.com/TheMaster1127/AutoHotKey-Script-Formatter/main/AutoHotKey-Script-Formatter.ahk"
-          $formatterPath = "$env:TEMP\formatter.ahk"
-          try {
-            Invoke-WebRequest -Uri $formatterUrl -OutFile $formatterPath -ErrorAction Stop
-            Write-Host "Formatter downloaded successfully"
-          } catch {
-            Write-Host "Could not download formatter, will skip formatting step"
-            New-Item -Path $formatterPath -ItemType File -Force
-            Set-Content -Path $formatterPath -Value "; Placeholder formatter script`nExitApp"
-          }
+          # Note: For security, we're using built-in format checking instead of downloading external scripts
+          # The format checking is done in PowerShell in the next step
+          Write-Host "Format checking will be performed using built-in PowerShell validation"
         shell: pwsh
 
       - name: Syntax Check All AHK Scripts
@@ -87,7 +79,7 @@ jobs:
             $tempExe = Join-Path $tempDir "temp_$([System.IO.Path]::GetRandomFileName()).exe"
             
             try {
-              $result = & $compiler /in $file.FullName /out $tempExe 2>&1
+              $result = & $compiler /in $file /out $tempExe 2>&1
               
               # Check if compilation was successful (even if we don't need the exe)
               if ($LASTEXITCODE -eq 0 -or (Test-Path $tempExe)) {
@@ -149,7 +141,7 @@ jobs:
             $content = Get-Content $file -Raw
             
             # Check for common formatting issues
-            $hasTabsAndSpaces = ($content -match "^\t" -and $content -match "^    ")
+            $hasTabsAndSpaces = ($content -match "(?m)^\t" -and $content -match "(?m)^    ")
             $hasTrailingWhitespace = ($content -match "[ \t]+`r?`n")
             $hasMixedLineEndings = (($content -match "`r`n") -and ($content -match "(?<!`r)`n"))
             
