@@ -17,9 +17,6 @@ Sleep 100
 Click, up, right
 }
 
-
-
-
 $*F8::
 Pause
 Return
