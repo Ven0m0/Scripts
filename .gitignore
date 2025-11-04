@@ -1,0 +1,22 @@
+# Compiled AutoHotkey executables
+compiled/
+*.exe
+
+# AutoHotkey temporary files
+*.bak
+*.tmp
+
+# Formatter temporary files
+formatter.ahk
+
+# OS specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
