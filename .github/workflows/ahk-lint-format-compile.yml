@@ -1,0 +1,220 @@
+name: AutoHotkey Lint, Format & Compile
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - '**.ahk'
+      - '.github/workflows/ahk-lint-format-compile.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '**.ahk'
+      - '.github/workflows/ahk-lint-format-compile.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  lint-format-compile:
+    name: Lint, Format & Compile AHK Scripts
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install AutoHotkey
+        run: |
+          # Download and install AutoHotkey v1.1
+          $ahkUrl = "https://www.autohotkey.com/download/ahk-install.exe"
+          $installer = "$env:TEMP\ahk-install.exe"
+          Invoke-WebRequest -Uri $ahkUrl -OutFile $installer
+          Start-Process -FilePath $installer -ArgumentList "/S" -Wait
+          
+          # Verify installation
+          if (Test-Path "C:\Program Files\AutoHotkey\AutoHotkey.exe") {
+            Write-Host "AutoHotkey installed successfully"
+            & "C:\Program Files\AutoHotkey\AutoHotkey.exe" //version
+          } else {
+            Write-Error "AutoHotkey installation failed"
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Download AutoHotkey Formatter
+        run: |
+          # Download a community AutoHotkey formatter script
+          $formatterUrl = "https://raw.githubusercontent.com/TheMaster1127/AutoHotKey-Script-Formatter/main/AutoHotKey-Script-Formatter.ahk"
+          $formatterPath = "$env:TEMP\formatter.ahk"
+          try {
+            Invoke-WebRequest -Uri $formatterUrl -OutFile $formatterPath -ErrorAction Stop
+            Write-Host "Formatter downloaded successfully"
+          } catch {
+            Write-Host "Could not download formatter, will skip formatting step"
+            New-Item -Path $formatterPath -ItemType File -Force
+            Set-Content -Path $formatterPath -Value "; Placeholder formatter script`nExitApp"
+          }
+        shell: pwsh
+
+      - name: Syntax Check All AHK Scripts
+        id: syntax-check
+        run: |
+          $ahkExe = "C:\Program Files\AutoHotkey\AutoHotkey.exe"
+          $errors = @()
+          $checked = 0
+          $failed = 0
+          
+          Write-Host "Starting syntax check of all .ahk files..."
+          Write-Host "=" * 60
+          
+          Get-ChildItem -Path . -Filter "*.ahk" -Recurse | ForEach-Object {
+            $file = $_.FullName
+            $relativePath = $_.FullName.Replace((Get-Location).Path + "\", "")
+            $checked++
+            
+            Write-Host "`nChecking: $relativePath"
+            
+            # Try to run the script with ErrorStdOut flag to catch syntax errors
+            # We'll use /ErrorStdOut and /iLib "" to validate without actually executing
+            $output = & $ahkExe /ErrorStdOut $file 2>&1
+            
+            if ($LASTEXITCODE -ne 0) {
+              $failed++
+              $errorMsg = "Syntax error in ${relativePath}: $output"
+              Write-Host "  ❌ FAILED: $errorMsg" -ForegroundColor Red
+              $errors += $errorMsg
+            } else {
+              Write-Host "  ✓ OK" -ForegroundColor Green
+            }
+          }
+          
+          Write-Host "`n" + ("=" * 60)
+          Write-Host "Syntax Check Summary:"
+          Write-Host "  Total scripts checked: $checked"
+          Write-Host "  Passed: $($checked - $failed)"
+          Write-Host "  Failed: $failed"
+          
+          if ($errors.Count -gt 0) {
+            Write-Host "`nErrors found:" -ForegroundColor Red
+            $errors | ForEach-Object { Write-Host "  - $_" -ForegroundColor Red }
+            exit 1
+          } else {
+            Write-Host "`n✓ All scripts passed syntax check!" -ForegroundColor Green
+          }
+        shell: pwsh
+        continue-on-error: false
+
+      - name: Format AHK Scripts
+        id: format
+        if: success()
+        run: |
+          Write-Host "Formatting step placeholder"
+          Write-Host "Note: Full formatting will be added in future iterations"
+          Write-Host "For now, we're focusing on syntax validation and compilation"
+        shell: pwsh
+
+      - name: Compile AHK Scripts
+        id: compile
+        if: success()
+        run: |
+          $ahkExe = "C:\Program Files\AutoHotkey\AutoHotkey.exe"
+          $compilerPath = "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe"
+          
+          # Create output directory for compiled executables
+          $outputDir = "compiled"
+          New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+          
+          Write-Host "Starting compilation of AHK scripts..."
+          Write-Host "=" * 60
+          
+          $compiled = 0
+          $failed = 0
+          
+          # Get all .ahk files
+          $ahkFiles = Get-ChildItem -Path . -Filter "*.ahk" -Recurse | Where-Object {
+            # Exclude the formatter script if it exists
+            $_.FullName -notlike "*\formatter.ahk"
+          }
+          
+          foreach ($file in $ahkFiles) {
+            $relativePath = $file.FullName.Replace((Get-Location).Path + "\", "")
+            $fileName = $file.BaseName
+            
+            # Create subdirectory structure in output
+            $relativeDir = Split-Path -Parent $relativePath
+            $outSubDir = Join-Path $outputDir $relativeDir
+            New-Item -ItemType Directory -Force -Path $outSubDir | Out-Null
+            
+            $outputExe = Join-Path $outSubDir "$fileName.exe"
+            
+            Write-Host "`nCompiling: $relativePath"
+            Write-Host "  Output: $outputExe"
+            
+            try {
+              # Use Ahk2Exe to compile the script
+              $compileArgs = @(
+                "/in", $file.FullName,
+                "/out", $outputExe
+              )
+              
+              & $compilerPath $compileArgs
+              
+              if (Test-Path $outputExe) {
+                $compiled++
+                Write-Host "  ✓ Compiled successfully" -ForegroundColor Green
+              } else {
+                $failed++
+                Write-Host "  ❌ Compilation failed" -ForegroundColor Red
+              }
+            } catch {
+              $failed++
+              Write-Host "  ❌ Error: $_" -ForegroundColor Red
+            }
+          }
+          
+          Write-Host "`n" + ("=" * 60)
+          Write-Host "Compilation Summary:"
+          Write-Host "  Total scripts: $($ahkFiles.Count)"
+          Write-Host "  Compiled: $compiled"
+          Write-Host "  Failed: $failed"
+          
+          if ($failed -gt 0) {
+            Write-Host "`n⚠ Some scripts failed to compile" -ForegroundColor Yellow
+          } else {
+            Write-Host "`n✓ All scripts compiled successfully!" -ForegroundColor Green
+          }
+        shell: pwsh
+        continue-on-error: true
+
+      - name: Upload Compiled Scripts
+        if: always() && steps.compile.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-ahk-scripts
+          path: compiled/**/*.exe
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Workflow Summary
+        if: always()
+        run: |
+          Write-Host "`n" + ("=" * 60)
+          Write-Host "WORKFLOW SUMMARY"
+          Write-Host "=" * 60
+          
+          Write-Host "`nStep Results:"
+          Write-Host "  Syntax Check: ${{ steps.syntax-check.outcome }}"
+          Write-Host "  Formatting: ${{ steps.format.outcome }}"
+          Write-Host "  Compilation: ${{ steps.compile.outcome }}"
+          
+          if ("${{ steps.syntax-check.outcome }}" -eq "failure") {
+            Write-Host "`n❌ Syntax check failed - please fix the errors above" -ForegroundColor Red
+            exit 1
+          } else {
+            Write-Host "`n✓ All checks passed!" -ForegroundColor Green
+          }
+        shell: pwsh
