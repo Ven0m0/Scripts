@@ -1,10 +1,5 @@
-; UIA check
-if (!InStr(A_AhkPath, "_UIA.exe")) {
-	newPath := RegExReplace(A_AhkPath, "\.exe", "U" (32 << A_Is64bitOS) "_UIA.exe")
-	Run % StrReplace(DllCall("Kernel32\GetCommandLine", "Str"), A_AhkPath, newPath)
-	ExitApp
-}
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript()
 
 $*F7::
 Send, 1 ; switch to slot 1
