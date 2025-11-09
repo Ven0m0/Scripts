@@ -1,22 +1,13 @@
-; Admin check
-if not A_IsAdmin
-{
-Run *RunAs "%A_ScriptFullPath%"
-ExitApp
-}
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript(true, true)  ; UIA + Admin required
 
-; Great directives to have
 #SingleInstance Force
 #Persistent
-#Warn  ; Enable warnings to assist with detecting common errors.
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-
-; 1-time declarations
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetTitleMatchMode, 2
-SetTitleMatchMode, Fast
-DetectHiddenWindows, On
+#NoEnv
+#Warn
 SetBatchLines -1
+SetTitleMatchMode, 3
+SetTitleMatchMode, Fast
 
 Gui +AlwaysOnTop
 Gui, New, -MinimizeBox, My Codes

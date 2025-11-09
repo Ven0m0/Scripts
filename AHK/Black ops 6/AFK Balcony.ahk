@@ -1,16 +1,13 @@
-; UIA check
-if !InStr(A_AhkPath, "_UIA.exe") {
-    Run, % A_AhkPath . " U" (32 << A_Is64bitOS) "_UIA.exe"
-    ExitApp
-}
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript()
 
 #SingleInstance, Force
 #NoEnv
 #Warn
-#KeyHistory 0
-ListLines Off
-SetBatchLines, 10ms
-SendMode Input
+#MaxHotkeysPerInterval 99000000
+#HotkeyInterval 99000000
+SetBatchLines, -1
+Process, Priority, , A
 
 F6::
 SetTimer , AFK , 500

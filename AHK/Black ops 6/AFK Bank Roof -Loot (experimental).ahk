@@ -1,26 +1,13 @@
-; UIA check
-if !InStr(A_AhkPath, "_UIA.exe") {
-    Run, % A_AhkPath . " U" (32 << A_Is64bitOS) "_UIA.exe"
-    ExitApp
-}
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript()
 
 #SingleInstance, Force
 #NoEnv
 #Warn
-#KeyHistory 0
 #MaxHotkeysPerInterval 99000000
 #HotkeyInterval 99000000
-ListLines Off
-SetBatchLines, -1 ;Script doesnt sleep every line (CPU heavy)
-; SetBatchLines, 10ms ;Script sleeps 10ms every line
-SendMode Input
+SetBatchLines, -1
 Process, Priority, , A
-;Incase SendMode Input doesn't work
-SetKeyDelay, -1, -1
-SetMouseDelay, -1
-SetDefaultMouseSpeed, 0
-SetWinDelay, -1
-SetControlDelay, -1
 
 ; Function to walk forward and back
 WalkForwardAndBack()
