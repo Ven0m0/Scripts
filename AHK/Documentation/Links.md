@@ -1,0 +1,2 @@
+- https://www.autohotkey.com/boards/viewtopic.php?t=6413
+- https://www.elitepvpers.com/forum/s4-league/4027859-guide-optimize-autohotkey-timing.html

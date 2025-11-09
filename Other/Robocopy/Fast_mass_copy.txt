@@ -1,0 +1,3 @@
+robocopy "%userprofile%\Downloads\ahazhar2\azahar" "%userprofile%\Downloads\ahazhar2-backup\azahar" /MT:32 /E /NS /NC /NFL /NDL /NJH /LOG:C:\Robocopy.log
+
+xcopy "%userprofile%\Downloads\ahazhar2" "%userprofile%\Downloads\ahazhar2-1" /s /e /t /b /j /compress
