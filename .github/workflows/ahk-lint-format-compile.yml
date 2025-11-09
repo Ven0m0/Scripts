@@ -242,7 +242,7 @@ jobs:
 
       - name: Upload Compiled Scripts
         if: always() && steps.compile.outcome == 'success'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: compiled-ahk-scripts
           path: compiled/**/*.exe
