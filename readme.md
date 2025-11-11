@@ -16,23 +16,23 @@
     <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.avif" alt="Windows10">
 </a>
 
-### [Citra mod manager:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods) 
-<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20mods">    
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra%20mods/Citra%20Mod%20Manager.avif">
+### [Citra mod manager:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_mods) 
+<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_mods">    
+    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra_mods/Citra_Mod_Manager.avif">
 </a>
 
-### [Playnite auto Fullscreen](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite%20Fullscreen) 
+### [Playnite auto Fullscreen](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite_fullscreen) 
 
-### [Citra per game auto config](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra%20per%20game%20config)
+### [Citra per game auto config](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_per_game_config)
 
 ### Fake Fullscreen:
 Simple scripts to set the current window to fullscreen, similar to fullscreen borderless
 
 [Fullscreen](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen.ahk)
 
-[Fullscreen Single Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Single%20Key.ahk)
+[Fullscreen Single Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen_single.ahk)
 
-[Fullscreen Double Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen%20Double%20Key.ahk)
+[Fullscreen Double Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen_double.ahk)
 
 
 
