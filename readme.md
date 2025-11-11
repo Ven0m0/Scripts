@@ -11,28 +11,28 @@
 
 
 
-### [Youtube and Spotify downloader:](https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader) 
-<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Downloader">   
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Downloader/Downloader.avif" alt="Windows10">
+### [Youtube and Spotify downloader:](Other/Downloader) 
+<a style="text-decoration:none" href="Other/Downloader">   
+    <img src="Other/Downloader/Downloader.avif" alt="Windows10">
 </a>
 
-### [Citra mod manager:](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_mods) 
-<a style="text-decoration:none" href="https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_mods">    
-    <img src="https://github.com/Ven0m0/Scripts/blob/main/Other/Citra_mods/Citra_Mod_Manager.avif">
+### [Citra mod manager:](Other/Citra_mods) 
+<a style="text-decoration:none" href="Other/Citra_mods">    
+    <img src="Other/Citra_mods/Citra_Mod_Manager.avif">
 </a>
 
-### [Playnite auto Fullscreen](https://github.com/Ven0m0/Scripts/tree/main/Other/Playnite_fullscreen) 
+### [Playnite auto Fullscreen](Other/Playnite_fullscreen) 
 
-### [Citra per game auto config](https://github.com/Ven0m0/Scripts/tree/main/Other/Citra_per_game_config)
+### [Citra per game auto config](Other/Citra_per_game_config)
 
 ### Fake Fullscreen:
 Simple scripts to set the current window to fullscreen, similar to fullscreen borderless
 
-[Fullscreen](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen.ahk)
+[Fullscreen](AHK/Fullscreen.ahk)
 
-[Fullscreen Single Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen_single.ahk)
+[Fullscreen Single Key](AHK/Fullscreen_single.ahk)
 
-[Fullscreen Double Key](https://github.com/Ven0m0/Scripts/blob/main/AHK/Fullscreen_double.ahk)
+[Fullscreen Double Key](AHK/Fullscreen_double.ahk)
 
 
 
