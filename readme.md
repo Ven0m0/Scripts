@@ -6,7 +6,7 @@
 
 
 <a style="text-decoration:none" href="http://www.Autohotkey.com/">
-    <img height="42" src="https://raw.githubusercontent.com/Ven0m0/Ven0m0/refs/heads/main/Images/autohotkey.avif" alt="AHK">
+    <img height="42" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDPJ-OzynAXca5NgC4EGafO0g90Ydl013YEQ&s" alt="AHK">
 </a>
 
 
