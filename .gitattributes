@@ -1,0 +1,57 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# AutoHotkey files - Windows line endings (CRLF)
+*.ahk text eol=crlf
+
+# PowerShell files - Windows line endings (CRLF)
+*.ps1 text eol=crlf
+*.psm1 text eol=crlf
+*.psd1 text eol=crlf
+
+# CMD/Batch files - Windows line endings (CRLF)
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# Markdown files
+*.md text eol=lf
+
+# Documentation files
+*.txt text eol=lf
+LICENSE text eol=lf
+license.md text eol=lf
+readme.md text eol=lf
+README.md text eol=lf
+
+# Configuration files
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+.editorconfig text eol=lf
+.gitattributes text eol=lf
+.gitignore text eol=lf
+
+# Binary files
+*.exe binary
+*.dll binary
+*.zip binary
+*.7z binary
+*.rar binary
+*.tar binary
+*.gz binary
+*.bz2 binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.bmp binary
+*.ico binary
+*.avif binary
+*.webp binary
+*.mp3 binary
+*.mp4 binary
+*.avi binary
+*.mkv binary
+*.flac binary
+*.wav binary
+*.pdf binary

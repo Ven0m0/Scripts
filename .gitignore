@@ -5,14 +5,33 @@ compiled/
 # AutoHotkey temporary files
 *.bak
 *.tmp
+*.old
+*.orig
 
 # Formatter temporary files
 formatter.ahk
+
+# AutoHotkey debugging
+*.stackdump
+
+# PowerShell temporary files
+*.ps1~
+*.psm1~
+*.psd1~
+
+# CMD/Batch temporary files
+*.cmd~
+*.bat~
 
 # OS specific files
 .DS_Store
 Thumbs.db
 desktop.ini
+ehthumbs.db
+*.lnk
+
+# Windows shortcuts
+*.url
 
 # Editor specific files
 .vscode/
@@ -20,3 +39,25 @@ desktop.ini
 *.swp
 *.swo
 *~
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Temporary directories
+tmp/
+temp/
+cache/
+
+# Node modules (if any JavaScript tools are used)
+node_modules/
+
+# Archives (build artifacts)
+*.zip
+*.7z
+*.rar
+*.tar
+*.gz
