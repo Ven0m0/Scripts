@@ -13,4 +13,6 @@ F6::
 Send {LButton down}
 return
 
-F7::ExitApp
+F7::
+Send {LButton up}
+ExitApp
