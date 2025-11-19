@@ -1,0 +1,8 @@
+cd %userprofile%\OneDrive\Backup\Game\Other\Launchers\7zEmuPrepper
+"%userprofile%\OneDrive\Backup\Game\Other\Launchers\7zEmuPrepper\7zEmuPrepper.exe" "C:\PROGRA~1\7-Zip\7z.exe" "%userprofile%\OneDrive\Backup\Game\Emul\RPCS3\rpcs3.exe" """--headless""" "%userprofile%\Documents\My Games\7zEmuPrepper\Temporary" "%userprofile%\Documents\My Games\7zEmuPrepper\Zipped\Skylanders Swap Force.7z" "bin|iso|zip|7z|rar"
+exit
+
+Run cmd.exe /c "%userprofile%\OneDrive\Backup\Game\Other\Launchers\7zEmuPrepper\7zEmuPrepper.exe" "C:\PROGRA~1\7-Zip\7z.exe" "%userprofile%\OneDrive\Backup\Game\Emul\RPCS3\rpcs3.exe" """--headless""" "%userprofile%\Documents\My Games\7zEmuPrepper\Temporary" "%userprofile%\Documents\My Games\7zEmuPrepper\Zipped\Skylanders Swap Force.7z" "bin|iso|zip|7z|rar",,hide
+
+"%userprofile%\OneDrive\Backup\Game\Other\Launchers\7zEmuPrepper\7zEmuPrepper.exe" "C:\PROGRA~1\7-Zip\7z.exe" "%userprofile%\OneDrive\Backup\Game\Emul\RPCS3\rpcs3.exe" """--headless""" "%userprofile%\Documents\My Games\7zEmuPrepper\Temporary" "%userprofile%\Documents\My Games\7zEmuPrepper\Zipped\Skylanders Swap Force.7z" "bin|iso|zip|7z|rar"
+"%userprofile%\OneDrive\Backup\Game\Other\Launchers\7zEmuPrepper" "C:\Program Files\7-Zip" "%userprofile%\OneDrive\Backup\Game\Emul\RPCS3" "" "%userprofile%\Documents\Games\Temp" "%userprofile%\Documents\Games" "bin|zip|7z"  -KeepExtracted
