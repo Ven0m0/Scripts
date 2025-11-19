@@ -14,55 +14,52 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Install AutoHotkey
-        run: |
-          $url = "https://www.autohotkey.com/download/ahk-install.exe"
-          $inst = "$env:TEMP\ahk-install.exe"
-          iwr -Uri $url -OutFile $inst
-          Start-Process -FilePath $inst -ArgumentList "/S" -Wait
-          if (!(Test-Path "C:\Program Files\AutoHotkey\AutoHotkey.exe")) { exit 1 }
+        run: choco install autohotkey --version=2.0.19 -y
         shell: pwsh
 
-      - name: Lint & Syntax Check
+      - name: Verify Installation
         run: |
-          $compiler = "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe"
-          $tempDir = New-Item -ItemType Directory -Force -Path "$env:TEMP\ahk-check-$(Get-Random)"
-          $errors = @()
-          
-          Get-ChildItem -Recurse -Filter "*.ahk" | ForEach-Object {
-            $tempExe = Join-Path $tempDir "$([System.IO.Path]::GetRandomFileName()).exe"
-            & $compiler /in $_.FullName /out $tempExe 2>&1 | Out-Null
-            if ($LASTEXITCODE -ne 0 -or !(Test-Path $tempExe)) {
-              $errors += $_.FullName
-              Write-Host "❌ $($_.FullName)" -ForegroundColor Red
-            } else {
-              Write-Host "✓ $($_.FullName)" -ForegroundColor Green
-              Remove-Item $tempExe -Force -ErrorAction SilentlyContinue
-            }
-          }
-          
-          Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-          if ($errors.Count -gt 0) { exit 1 }
+          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          if (!(Test-Path $compiler)) { throw "Compiler not found: $compiler" }
+          Write-Host "Compiler ready"
         shell: pwsh
 
-      - name: Compile All Scripts
+      - name: Compile Scripts
         run: |
-          $compiler = "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe"
-          $outDir = "release"
-          New-Item -ItemType Directory -Force -Path $outDir | Out-Null
+          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          $outDir = 'release'
+          New-Item -Type Directory -Force $outDir | Out-Null
           
-          Get-ChildItem -Recurse -Filter "*.ahk" | ForEach-Object {
+          $scripts = Get-ChildItem -Recurse -Filter *.ahk
+          $compiled = 0
+          $failed = @()
+          
+          $scripts | % {
             $outExe = Join-Path $outDir "$($_.BaseName).exe"
-            & $compiler /in $_.FullName /out $outExe
-            if (Test-Path $outExe) {
-              Write-Host "✓ Compiled: $outExe" -ForegroundColor Green
+            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
+            
+            & $compiler /in $_.FullName /out $outExe 2>&1 | Out-Null
+            
+            if ($LASTEXITCODE -eq 0 -and (Test-Path $outExe)) {
+              $compiled++
+              $size = [math]::Round((Get-Item $outExe).Length / 1KB, 1)
+              Write-Host "✓ $rel → $($_.BaseName).exe ($size KB)" -ForegroundColor Green
             } else {
-              Write-Host "❌ Failed: $($_.FullName)" -ForegroundColor Red
-              exit 1
+              Write-Host "❌ $rel" -ForegroundColor Red
+              $failed += $rel
             }
+          }
+          
+          Write-Host "`nCompiled: $compiled/$($scripts.Count)"
+          
+          if ($failed) {
+            Write-Host "`nFailed:" -ForegroundColor Red
+            $failed | % { Write-Host "  $_" }
+            exit 1
           }
         shell: pwsh
 
-      - name: Release
+      - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           files: release/*.exe
