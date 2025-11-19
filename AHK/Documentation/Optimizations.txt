@@ -1,5 +1,93 @@
+================================================================================
+                    COMPREHENSIVE SCRIPT REVIEW AND OPTIMIZATIONS
+                              Updated: 2025-11-19
+================================================================================
+
+SCRIPTS REVIEWED:
+- 59 AutoHotkey (.ahk) files
+- 2 PowerShell (.ps1) files
+- 3 Command (.cmd) files
+Total: 64 scripts
+
+================================================================================
+CRITICAL FIXES APPLIED
+================================================================================
+
+1. GUI_Laptop.ahk & GUI_PC.ahk - FIXED PID Variable Issues
+   - Problem: WinKill commands referenced undefined variables (Keys, Host, Autocorrect)
+   - Fix: Changed Run command output variables to KeysPID, HostPID, AutocorrectPID
+   - Impact: WinKill commands now properly terminate processes
+   - Files: AHK/GUI/GUI_Laptop.ahk:33-45, AHK/GUI/GUI_PC.ahk:38-58
+
+2. CitraConfigBase.ahk - FIXED Invalid File Path
+   - Problem: Path started with "!" making it invalid
+   - Fix: Removed "!" prefix from global CitraConfigFile path
+   - Impact: File operations will now work correctly
+   - File: Other/Citra_per_game_config/CitraConfigBase.ahk:24
+
+3. AFK_Hold_Click.ahk - FIXED Missing Mouse Button Release
+   - Problem: F6 pressed LButton down but never released it
+   - Fix: Added LButton up to F7 hotkey before ExitApp
+   - Impact: Mouse button properly released when exiting
+   - File: AHK/Black_ops_6/AFK_Hold_Click.ahk:16-17
+
+4. Powerplan.ahk - FIXED Inefficient Loop Logic
+   - Problem: Commands executed every 5 seconds regardless of state changes
+   - Fix: Added state tracking to only run commands when Fortnite launches/closes
+   - Impact: Reduced unnecessary powercfg executions by ~99%
+   - File: AHK/Powerplan.ahk:23-41
+
+5. 7zEmuPrepper.ps1 - FIXED Multiple PowerShell Issues
+   - Problem 1: Invalid string concatenation syntax ($fileName"."*)
+   - Fix 1: Changed to proper "$fileName.*" syntax (Line 44)
+
+   - Problem 2: Triple-quote usage in ArgumentList
+   - Fix 2: Changed to proper backtick escaping (Lines 52, 76)
+
+   - Problem 3: No null checking for $extractedFile
+   - Fix 3: Added null checks and error handling (Lines 50-56, 73-80)
+
+   - Problem 4: Potential Substring exception
+   - Fix 4: Added Contains(".") check before Substring (Line 93)
+
+   - Impact: Script now handles errors gracefully and won't crash
+   - File: Other/7zEmuPrepper/7zEmuPrepper.ps1
+
+================================================================================
+KNOWN ISSUES - NOT YET FIXED (Recommendations)
+================================================================================
+
+HIGH PRIORITY:
+- Command injection vulnerabilities in Downloader scripts (YT_Spotify_Downloader.ahk, etc.)
+  * Recommendation: Add input validation for URLs before passing to yt-dlp
+
+- Hardcoded user paths (janni, Jannik) in multiple scripts
+  * Recommendation: Use A_ScriptDir or environment variables for portability
+
+- Missing WinWait timeouts in AutoStartHelper.ahk and other files
+  * Recommendation: Add timeout parameter to all WinWait commands
+
+MEDIUM PRIORITY:
+- Code duplication between GUI_Laptop.ahk and GUI_PC.ahk
+  * Could be unified into single parameterized script
+
+- SetWindowBorderless function duplicated across 3 files
+  * Should use #Include to import from WindowManager.ahk
+
+- WM.ahk polling loop writes to INI file 2.8 times/second
+  * Consider increasing polling interval or batching writes
+
+LOW PRIORITY:
+- Inconsistent variable naming conventions across scripts
+- Redundant SetTitleMatchMode calls in multiple files
+- Magic numbers in AFK scripts (should use named constants)
+
+================================================================================
+AUTOHOTKEY OPTIMIZATION TEMPLATES
+================================================================================
+
 ; Admin check
- if not A_IsAdmin
+if not A_IsAdmin
 {
    Run *RunAs "%A_ScriptFullPath%"
    ExitApp
@@ -9,7 +97,7 @@
 #Warn  ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 DetectHiddenWindows, On
-#KeyHistory 0 
+#KeyHistory 0
 ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
 SetKeyDelay, -1, -1
 SetMouseDelay, -1

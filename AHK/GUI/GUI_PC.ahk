@@ -35,27 +35,27 @@ Gui, Show
 return
 
 ChoiceA:
-    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Keys.ahk",,, Keys
+    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Keys.ahk",,, KeysPID
 Return
 
 Choice1:
-    WinKill, ahk_pid  %Keys%
+    WinKill, ahk_pid %KeysPID%
 Return
 
 ChoiceB:
-    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Script Master\Host.ahk",,, Host
+    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Script Master\Host.ahk",,, HostPID
 Return
 
 Choice2:
-    WinKill, ahk_pid %Host%
+    WinKill, ahk_pid %HostPID%
 Return
 
 ChoiceC:
-    Run "C:\Users\janni\OneDrive\Backup\Optimal\Scripts\AHK\Autocorrect.ahk",,, Autocorrect
+    Run "C:\Users\janni\OneDrive\Backup\Optimal\Scripts\AHK\Autocorrect.ahk",,, AutocorrectPID
 Return
 
 Choice3:
-    WinKill, ahk_pid %Autocorrect%
+    WinKill, ahk_pid %AutocorrectPID%
 Return
 
 ChoiceD:

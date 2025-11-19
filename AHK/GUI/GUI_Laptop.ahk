@@ -30,19 +30,19 @@ Gui, Show
 return
 
 ChoiceA:
-    Run, "C:\Users\janni\Documents\Scripts\Keys.ahk",,, Keys
+    Run, "C:\Users\janni\Documents\Scripts\Keys.ahk",,, KeysPID
 Return
 
 Choice1:
-    WinKill, ahk_pid  %Keys%
+    WinKill, ahk_pid %KeysPID%
 Return
 
 ChoiceB:
-    Run, "C:\Users\janni\Documents\Scripts\Script Master\Host.ahk",,, Host
+    Run, "C:\Users\janni\Documents\Scripts\Script Master\Host.ahk",,, HostPID
 Return
 
 Choice2:
-    WinKill, ahk_pid %Host%
+    WinKill, ahk_pid %HostPID%
 Return
 
 ChoiceD:

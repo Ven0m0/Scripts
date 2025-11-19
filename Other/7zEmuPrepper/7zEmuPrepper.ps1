@@ -41,14 +41,19 @@ $fileName = [System.IO.Path]::GetFileNameWithoutExtension("$filePath")
 # Set location
 Set-Location -Path $extractionPath
 
-if (Test-Path $fileName"."*) {
+if (Test-Path "$fileName.*") {
 
 ""
 
 # Define the path of the correct file to try and launch with the emulator
 $extractedFile = Get-Item -Path "$fileName*.*" | Where-Object -Property Extension -Match -Value $launchFile | Select-Object -Last 1 -ExpandProperty FullName
-"Archive Already Extracted. Launching [$extractedFile]..."
-Start-Process $emulatorPath -ArgumentList $emulatorArguments, """$extractedFile""" -Wait
+if ($extractedFile) {
+    "Archive Already Extracted. Launching [$extractedFile]..."
+    Start-Process $emulatorPath -ArgumentList $emulatorArguments, "`"$extractedFile`"" -Wait
+} else {
+    Write-Error "No matching file found to launch with extension: $launchFile"
+    exit 1
+}
 
 
 }
@@ -65,9 +70,14 @@ else {
 
 # Define the path of the correct file to try and launch with the emulator
 $extractedFile = Get-Item -Path "$fileName*.*" | Where-Object -Property Extension -Match -Value $launchFile | Select-Object -Last 1 -ExpandProperty FullName
-""
-"Archive Extraction Complete. Launching [$extractedFile]..."
-Start-Process $emulatorPath -ArgumentList $emulatorArguments, """$extractedFile""" -Wait
+if ($extractedFile) {
+    ""
+    "Archive Extraction Complete. Launching [$extractedFile]..."
+    Start-Process $emulatorPath -ArgumentList $emulatorArguments, "`"$extractedFile`"" -Wait
+} else {
+    Write-Error "No matching file found to launch with extension: $launchFile"
+    exit 1
+}
 }
 # If "KeepExtracted" argument passed, exit before removal
 if ($KeepExtracted)
@@ -80,10 +90,12 @@ if ($KeepExtracted)
 else
 {
     # Get the name of the extracted file without the extension so we can delete everything with that name
-    $extractedFileNoExtension = $extractedFile.Substring(0, $extractedFile.LastIndexOf("."))
+    if ($extractedFile -and $extractedFile.Contains(".")) {
+        $extractedFileNoExtension = $extractedFile.Substring(0, $extractedFile.LastIndexOf("."))
 
-    "Removing the extracted file..."
-    Remove-Item "$extractedFileNoExtension.*"
+        "Removing the extracted file..."
+        Remove-Item "$extractedFileNoExtension.*"
+    }
     "Process Complete!"
     exit
 }
