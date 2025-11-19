@@ -16,75 +16,69 @@ jobs:
   lint:
     runs-on: windows-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
       - name: Install AutoHotkey
-        run: |
-          $url = "https://www.autohotkey.com/download/ahk-install.exe"
-          $inst = "$env:TEMP\ahk-install.exe"
-          iwr -Uri $url -OutFile $inst
-          Start-Process -FilePath $inst -ArgumentList "/S" -Wait
-          if (!(Test-Path "C:\Program Files\AutoHotkey\AutoHotkey.exe")) { exit 1 }
+        run: choco install autohotkey --version=2.0.19 -y
         shell: pwsh
 
-      - name: Syntax Check
+      - name: Verify Installation
         run: |
-          $compiler = "C:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe"
-          $tempDir = New-Item -ItemType Directory -Force -Path "$env:TEMP\ahk-check-$(Get-Random)"
-          $errors = @()
+          $ahk = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+          if (!(Test-Path $ahk)) { throw "Installation failed: $ahk not found" }
+          Write-Host "Installed: $(& $ahk --version)"
+        shell: pwsh
+
+      - name: Syntax Check & Format Validation
+        run: |
+          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
+          $syntaxErrors = @()
+          $formatIssues = @()
           $checked = 0
           
-          Get-ChildItem -Recurse -Filter "*.ahk" | ForEach-Object {
+          Get-ChildItem -Recurse -Filter *.ahk | % {
             $checked++
-            $tempExe = Join-Path $tempDir "$([System.IO.Path]::GetRandomFileName()).exe"
-            $rel = $_.FullName.Replace("$(Get-Location)\", "")
+            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
             
+            # Syntax check
+            $tempExe = Join-Path $tempDir "$([IO.Path]::GetRandomFileName()).exe"
             & $compiler /in $_.FullName /out $tempExe 2>&1 | Out-Null
+            
             if ($LASTEXITCODE -eq 0 -and (Test-Path $tempExe)) {
               Write-Host "✓ $rel" -ForegroundColor Green
-              Remove-Item $tempExe -Force -ErrorAction SilentlyContinue
+              Remove-Item $tempExe -Force -EA SilentlyContinue
             } else {
-              Write-Host "❌ $rel" -ForegroundColor Red
-              $errors += $rel
+              Write-Host "❌ $rel - syntax error" -ForegroundColor Red
+              $syntaxErrors += $rel
             }
-          }
-          
-          Remove-Item $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-          Write-Host "`nChecked: $checked | Failed: $($errors.Count)"
-          if ($errors.Count -gt 0) { exit 1 }
-        shell: pwsh
-
-      - name: Format Check
-        run: |
-          $issues = @()
-          
-          Get-ChildItem -Recurse -Filter "*.ahk" | ForEach-Object {
+            
+            # Format check
             $content = Get-Content $_.FullName -Raw
-            $rel = $_.FullName.Replace("$(Get-Location)\", "")
             $problems = @()
+            if (($content -match '(?m)^\t') -and ($content -match '(?m)^    ')) { $problems += 'mixed indent' }
+            if ($content -match '[ \t]+`r?`n') { $problems += 'trailing space' }
+            if (($content -match '`r`n') -and ($content -match '(?<!`r)`n')) { $problems += 'mixed line endings' }
             
-            if (($content -match "(?m)^\t") -and ($content -match "(?m)^    ")) {
-              $problems += "mixed indentation"
-            }
-            if ($content -match "[ \t]+`r?`n") {
-              $problems += "trailing whitespace"
-            }
-            if (($content -match "`r`n") -and ($content -match "(?<!`r)`n")) {
-              $problems += "mixed line endings"
-            }
-            
-            if ($problems.Count -gt 0) {
+            if ($problems) {
               Write-Host "⚠ $rel : $($problems -join ', ')" -ForegroundColor Yellow
-              $issues += $rel
+              $formatIssues += $rel
             }
           }
           
-          if ($issues.Count -gt 0) {
-            Write-Host "`n$($issues.Count) file(s) with format issues" -ForegroundColor Yellow
-          } else {
-            Write-Host "✓ All files formatted correctly" -ForegroundColor Green
+          Remove-Item $tempDir -Recurse -Force -EA SilentlyContinue
+          
+          Write-Host "`nChecked: $checked | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
+          
+          if ($syntaxErrors) {
+            Write-Host "`nSyntax errors in:" -ForegroundColor Red
+            $syntaxErrors | % { Write-Host "  $_" }
+            exit 1
+          }
+          
+          if ($formatIssues) {
+            Write-Host "`nFormat issues in:" -ForegroundColor Yellow
+            $formatIssues | % { Write-Host "  $_" }
+            exit 1
           }
         shell: pwsh
