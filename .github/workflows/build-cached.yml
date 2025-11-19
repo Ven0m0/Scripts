@@ -1,0 +1,81 @@
+name: Build and Release (Cached)
+
+on:
+  push:
+    tags: ['*']
+
+permissions:
+  contents: write
+
+env:
+  AHK_VERSION: "2.0.19"
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Cache AutoHotkey
+        uses: actions/cache@v4
+        id: cache-ahk
+        with:
+          path: C:\AutoHotkey-Portable
+          key: ahk-${{ env.AHK_VERSION }}
+
+      - name: Install AutoHotkey
+        if: steps.cache-ahk.outputs.cache-hit != 'true'
+        run: |
+          $url = "https://github.com/AutoHotkey/AutoHotkey/releases/download/v$env:AHK_VERSION/AutoHotkey_$env:AHK_VERSION.zip"
+          iwr -Uri $url -OutFile ahk.zip
+          Expand-Archive ahk.zip -DestinationPath C:\AutoHotkey-Portable -Force
+          Remove-Item ahk.zip
+        shell: pwsh
+
+      - name: Verify Installation
+        run: |
+          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
+          if (!(Test-Path $compiler)) { throw "Compiler not found" }
+          Write-Host "Compiler ready (cached: ${{ steps.cache-ahk.outputs.cache-hit }})"
+        shell: pwsh
+
+      - name: Compile Scripts
+        run: |
+          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
+          $outDir = 'release'
+          New-Item -Type Directory -Force $outDir | Out-Null
+          
+          $scripts = Get-ChildItem -Recurse -Filter *.ahk
+          $compiled = 0
+          $failed = @()
+          
+          $scripts | % {
+            $outExe = Join-Path $outDir "$($_.BaseName).exe"
+            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
+            
+            & $compiler /in $_.FullName /out $outExe 2>&1 | Out-Null
+            
+            if ($LASTEXITCODE -eq 0 -and (Test-Path $outExe)) {
+              $compiled++
+              $size = [math]::Round((Get-Item $outExe).Length / 1KB, 1)
+              Write-Host "✓ $rel → $($_.BaseName).exe ($size KB)" -ForegroundColor Green
+            } else {
+              Write-Host "❌ $rel" -ForegroundColor Red
+              $failed += $rel
+            }
+          }
+          
+          Write-Host "`nCompiled: $compiled/$($scripts.Count)"
+          
+          if ($failed) {
+            Write-Host "`nFailed:" -ForegroundColor Red
+            $failed | % { Write-Host "  $_" }
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/*.exe
+          fail_on_unmatched_files: true
