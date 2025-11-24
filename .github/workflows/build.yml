@@ -11,7 +11,7 @@ jobs:
   build-release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install AutoHotkey
         run: choco install autohotkey --version=2.0.19 -y
