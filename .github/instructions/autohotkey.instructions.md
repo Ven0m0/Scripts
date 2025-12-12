@@ -75,7 +75,7 @@ Repository-wide instructions for writing **performant, maintainable AutoHotkey v
 SendMode "Input"
 SetWorkingDir A_ScriptDir
 
-#Include A_ScriptDir "\\..\\Lib\\WindowManager.ahk"
+#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
 
 ToggleFullscreen() {
   target := "Game Title"
