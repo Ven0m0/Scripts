@@ -1,14 +1,14 @@
 ---
-description: "AutoHotkey v1.1 scripting standards for Windows automation and gaming tools"
+description: "AutoHotkey v2 scripting standards for Windows automation and gaming tools"
 applyTo: "**/*.ahk"
 ---
 
 # AutoHotkey Scripting Guidelines
 
-Instructions for writing performant, maintainable AutoHotkey v1.1 scripts across window management, emulator automation, and gaming utilities.
+Instructions for writing performant, maintainable AutoHotkey v2 scripts across window management, emulator automation, and gaming utilities.
 
 ## General Instructions
-- Target AutoHotkey **v1.1** (not v2).
+- Target AutoHotkey **v2**.
 - Prefer **pure AHK**; avoid external binaries unless absolutely required.
 - Keep scripts **portable** and **Windows-only**; assume CRLF line endings.
 - Centralize reusable logic in `Lib/` (e.g., `AHK_Common.ahk`, `WindowManager.ahk`, `AutoStartHelper.ahk`). Do not duplicate.
