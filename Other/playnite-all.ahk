@@ -8,7 +8,7 @@
 ;   tv_firefox   - TV primary, move Firefox to TV, boot video, Playnite
 ;   tv_sound     - TV primary, switch audio to TV, boot video, Playnite
 ; ============================================================================
-#Include %A_ScriptDir%\..\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 InitScript(false, false, true)
 #SingleInstance Force
 
