@@ -86,6 +86,7 @@ This repository is a **comprehensive automation toolkit** focused on Windows gam
 ### Running Scripts
 
 1. **Clone the repository:**
+
    ```bash
    git clone https://github.com/Ven0m0/Scripts.git
    cd Scripts
@@ -163,36 +164,36 @@ Scripts/
 
 ### Window Management
 
-| Script | Description | Version |
-|--------|-------------|---------|
-| `AHK_v2/Fullscreen.ahk` | Toggle borderless fullscreen (multi-monitor) | v2 |
-| `AHK/Keys.ahk` | Comprehensive hotkey suite (Win+Arrow snapping, etc.) | v1 |
-| `AHK/GUI/WM.ahk` | Window management GUI controls | v2 |
+| Script                  | Description                                           | Version |
+| ----------------------- | ----------------------------------------------------- | ------- |
+| `AHK_v2/Fullscreen.ahk` | Toggle borderless fullscreen (multi-monitor)          | v2      |
+| `AHK/Keys.ahk`          | Comprehensive hotkey suite (Win+Arrow snapping, etc.) | v1      |
+| `AHK/GUI/WM.ahk`        | Window management GUI controls                        | v2      |
 
 ### Emulator Automation
 
-| Script | Description | Version |
-|--------|-------------|---------|
-| `Other/AutoStartManager.ahk` | Unified auto-fullscreen launcher | v2 |
-| `Other/Playnite_fullscreen_v2/Playnite_TV.ahk` | Multi-monitor Playnite setup | v2 |
-| `Other/Citra_per_game_config/*.ahk` | Per-game Citra configurations | v1 |
+| Script                                         | Description                      | Version |
+| ---------------------------------------------- | -------------------------------- | ------- |
+| `Other/AutoStartManager.ahk`                   | Unified auto-fullscreen launcher | v2      |
+| `Other/Playnite_fullscreen_v2/Playnite_TV.ahk` | Multi-monitor Playnite setup     | v2      |
+| `Other/Citra_per_game_config/*.ahk`            | Per-game Citra configurations    | v1      |
 
 ### Gaming Utilities
 
-| Script | Description | Version |
-|--------|-------------|---------|
-| `AHK/Black_ops_6/AFK_*.ahk` | Black Ops 6 AFK farming macros | v2 |
-| `AHK/Minecraft/MC_AFK_*.ahk` | Minecraft AFK automation | v2 |
-| `AHK/ControllerQuit.ahk` | Quit apps with controller combo | v2 |
-| `AHK/Powerplan.ahk` | Auto power plan switching | v2 |
+| Script                       | Description                     | Version |
+| ---------------------------- | ------------------------------- | ------- |
+| `AHK/Black_ops_6/AFK_*.ahk`  | Black Ops 6 AFK farming macros  | v2      |
+| `AHK/Minecraft/MC_AFK_*.ahk` | Minecraft AFK automation        | v2      |
+| `AHK/ControllerQuit.ahk`     | Quit apps with controller combo | v2      |
+| `AHK/Powerplan.ahk`          | Auto power plan switching       | v2      |
 
 ### Media & Downloaders
 
-| Script | Description | Version |
-|--------|-------------|---------|
-| `Other/Downloader/YT_Spotify_Downloader.ahk` | Combined media downloader GUI | v1 |
-| `Other/Downloader/YT_Downloader.ahk` | YouTube downloader (yt-dlp GUI) | v1 |
-| `Other/Downloader/Spotify_Downloader.ahk` | Spotify downloader (spotdl GUI) | v1 |
+| Script                                       | Description                     | Version |
+| -------------------------------------------- | ------------------------------- | ------- |
+| `Other/Downloader/YT_Spotify_Downloader.ahk` | Combined media downloader GUI   | v1      |
+| `Other/Downloader/YT_Downloader.ahk`         | YouTube downloader (yt-dlp GUI) | v1      |
+| `Other/Downloader/Spotify_Downloader.ahk`    | Spotify downloader (spotdl GUI) | v1      |
 
 ---
 
@@ -280,18 +281,21 @@ This repository has undergone a **comprehensive migration** to AutoHotkey v2.0 w
 ### Quick Install (Windows)
 
 1. **Install AutoHotkey v2:**
+
    ```powershell
    choco install autohotkey --version=2.0.19
    ```
 
 2. **Install AutoHotkey v1 (for legacy scripts):**
+
    ```powershell
    choco install autohotkey --version=1.1.37.02
    ```
 
-   *Or run:* `Other/UIA Install.ahk` (requires admin)
+   _Or run:_ `Other/UIA Install.ahk` (requires admin)
 
 3. **Clone repository:**
+
    ```bash
    git clone https://github.com/Ven0m0/Scripts.git
    ```

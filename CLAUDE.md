@@ -62,6 +62,7 @@ This repository has undergone a comprehensive migration from AutoHotkey v1.1 to 
 ### Migration Strategy
 
 **Migrated to v2** (45+ scripts):
+
 - ✅ All core libraries (Lib/v2/)
 - ✅ All AFK macros (Black Ops 6, Minecraft)
 - ✅ All GUI scripts (GUI_PC, GUI_Laptop, GUI_Shared, WM)
@@ -76,17 +77,19 @@ This repository has undergone a comprehensive migration from AutoHotkey v1.1 to 
 - ✅ Other/7zEmuPrepper/Final.ahk - GUI migrated to v2 object-oriented syntax
 
 **Kept in v1.1** (scripts with complex dependencies):
+
 - 🔒 Keys.ahk - Complex COM interactions, extensive testing required
 - 🔒 Citra configuration scripts - Dependency on tf.ahk library (v1 only)
 - 🔒 Downloader scripts - Legacy but functional, security patches applied
 - 🔒 String.ahk - Unused third-party library (can be deleted or migrated if needed)
 
 **Consolidated & Deleted** (24 files):
+
 - ❌ 9 auto-start scripts → 1 data-driven AutoStartManager.ahk with AutoStartConfig.ini
 - ❌ 3 fullscreen variants → 1 unified AHK_v2/Fullscreen.ahk
 - ❌ 4 duplicate downloader drafts removed
 - ❌ 7 deprecated auto-start v1 files (covered by AutoStartManager)
-- ❌ 4 deprecated v1 utility files (Close_Window, Kill_Bluestacks, Lossless_Scaling_*)
+- ❌ 4 deprecated v1 utility files (Close*Window, Kill_Bluestacks, Lossless_Scaling*\*)
 - ❌ 1 deprecated Playnite_fullscreen/ directory (replaced by Playnite_fullscreen_v2/)
 
 ### Dual Library Architecture
@@ -104,6 +107,7 @@ Lib/
 ```
 
 **Key Changes in v2 Libraries:**
+
 - `InitUIA()` - Now a no-op (UIA built into v2)
 - `RequireAdmin()` - Updated to v2 error handling with try/catch
 - `WindowManager` - Converted WinGet/WinSet to WinGetStyle/WinSetStyle
@@ -121,27 +125,29 @@ Lib/
 ### CI/CD Compatibility
 
 The build system (`ahk-lint-format-compile.yml`) now **automatically detects** script version:
+
 - Checks for `#Requires AutoHotkey v2` directive
 - Checks for `Lib/v2/` or `AHK_v2/` in file path
 - Compiles with appropriate AHK version (v1.1.37.02 or v2.0.19)
 
 ### v1 to v2 Syntax Quick Reference
 
-| v1 Syntax | v2 Syntax | Example |
-|-----------|-----------|---------|
-| `MsgBox, text` | `MsgBox("text")` | `MsgBox("Hello")` |
-| `WinWait, title` | `WinWait("title")` | `WinWait("ahk_exe game.exe")` |
-| `WinGet, var, Style` | `var := WinGetStyle()` | `style := WinGetStyle("A")` |
-| `WinSet, Style, value` | `WinSetStyle(value)` | `WinSetStyle(-0xC00000, "A")` |
+| v1 Syntax               | v2 Syntax                  | Example                       |
+| ----------------------- | -------------------------- | ----------------------------- |
+| `MsgBox, text`          | `MsgBox("text")`           | `MsgBox("Hello")`             |
+| `WinWait, title`        | `WinWait("title")`         | `WinWait("ahk_exe game.exe")` |
+| `WinGet, var, Style`    | `var := WinGetStyle()`     | `style := WinGetStyle("A")`   |
+| `WinSet, Style, value`  | `WinSetStyle(value)`       | `WinSetStyle(-0xC00000, "A")` |
 | `SetTimer, Label, 1000` | `SetTimer(Function, 1000)` | `SetTimer(CheckWindow, 1000)` |
-| `Object()` | `Map()` | `buttons := Map()` |
-| `HasKey("key")` | `Has("key")` | `if map.Has("key")` |
-| `#NoEnv` | *removed* | Not needed in v2 |
-| `#IfWinActive` | *changed* | Use `HotIf()` or `#HotIf` |
+| `Object()`              | `Map()`                    | `buttons := Map()`            |
+| `HasKey("key")`         | `Has("key")`               | `if map.Has("key")`           |
+| `#NoEnv`                | _removed_                  | Not needed in v2              |
+| `#IfWinActive`          | _changed_                  | Use `HotIf()` or `#HotIf`     |
 
 ### Future Migration Candidates
 
 **To be migrated when time permits:**
+
 - Keys.ahk - Requires comprehensive testing of all hotkeys
 - Citra scripts - Needs tf.ahk library migration or rewrite
 
@@ -194,6 +200,7 @@ The build system (`ahk-lint-format-compile.yml`) now **automatically detects** s
 **NEVER modify these without testing all dependent scripts!**
 
 **Dual Architecture:** Libraries exist in both `Lib/v1/` and `Lib/v2/` directories
+
 - **v1 scripts** use: `#Include %A_ScriptDir%\..\Lib\v1\AHK_Common.ahk`
 - **v2 scripts** use: `#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk`
 
@@ -239,6 +246,7 @@ The build system (`ahk-lint-format-compile.yml`) now **automatically detects** s
 #### `AHK/` - Main Scripts
 
 **Keys.ahk** - Main hotkey suite (most complex script)
+
 - Window snapping (Win+Arrow keys)
 - Media control (Alt+Wheel, Alt+MButton)
 - File renaming with date prefix (Win+J)
@@ -248,6 +256,7 @@ The build system (`ahk-lint-format-compile.yml`) now **automatically detects** s
 #### `Other/` - Specialized Tools
 
 **High-Complexity Scripts:**
+
 - `Downloader/YT_Spotify_Downloader.ahk` - GUI with command-line integration
 - `Citra_mods/Citra_Mod_Manager.ahk` - Dynamic GUI generation from filesystem
 - `Playnite_fullscreen/Playnite_TV.ahk` - Multi-monitor + external tool orchestration
@@ -264,11 +273,13 @@ The repository has **3 automated workflows** in `.github/workflows/`:
 #### 1. `ahk-lint-format-compile.yml` - Code Quality ⚠️ MOST IMPORTANT
 
 **Triggers:**
+
 - Push to `main`/`master` (when .ahk files or workflow changes)
 - Pull requests to `main`/`master`
 - Manual dispatch
 
 **What It Does:**
+
 1. **Syntax Validation** - Compiles all .ahk files with `Ahk2Exe.exe`
 2. **Format Validation** - Checks for:
    - Mixed indentation (tabs vs spaces) ❌
@@ -276,11 +287,13 @@ The repository has **3 automated workflows** in `.github/workflows/`:
    - Mixed line endings (CRLF vs LF) ❌
 
 **Exit Codes:**
+
 - Syntax errors → Exit 1 (build fails)
 - Format issues → Exit 1 (build fails)
 - Both clean → Exit 0 (build passes)
 
 **Output Example:**
+
 ```
 ✓ AHK/Keys.ahk
 ❌ AHK/Test.ahk - syntax error
@@ -296,6 +309,7 @@ Checked: 61 | Syntax errors: 1 | Format issues: 1
 **Triggers:** Git tags (any tag push)
 
 **Process:**
+
 1. Installs AutoHotkey 2.0.19 via Chocolatey
 2. Compiles ALL .ahk files to .exe
 3. Creates GitHub release with compiled executables
@@ -308,6 +322,7 @@ Checked: 61 | Syntax errors: 1 | Format issues: 1
 **Triggers:** Git tags (any tag push)
 
 **Improvements:**
+
 - Caches AutoHotkey installation (saves ~30-60 seconds)
 - Downloads portable AHK from GitHub releases
 - Same compilation process as `build.yml`
@@ -317,12 +332,14 @@ Checked: 61 | Syntax errors: 1 | Format issues: 1
 ### CI/CD Best Practices
 
 **Before Committing:**
+
 1. Ensure proper indentation (4 spaces for .ahk)
 2. Remove trailing whitespace
 3. Use CRLF line endings for .ahk files
 4. Test locally if possible
 
 **For Releases:**
+
 1. Tag format: `v1.0.0` or any tag
 2. Both build workflows will trigger
 3. Compiled .exe files will be attached to release
@@ -335,16 +352,17 @@ Checked: 61 | Syntax errors: 1 | Format issues: 1
 
 **File:** `.editorconfig` (46 lines)
 
-| File Type | Indent | Size | Line Endings | Trim Whitespace |
-|-----------|--------|------|--------------|-----------------|
-| `*.ahk` | Spaces | 4 | CRLF | Yes |
-| `*.ps1` | Spaces | 4 | CRLF | Yes |
-| `*.{cmd,bat}` | Spaces | 4 | CRLF | Yes |
-| `*.md` | Spaces | 2 | LF | **No** |
-| `*.{yml,yaml}` | Spaces | 2 | LF | Yes |
-| `*.json` | Spaces | 2 | LF | Yes |
+| File Type      | Indent | Size | Line Endings | Trim Whitespace |
+| -------------- | ------ | ---- | ------------ | --------------- |
+| `*.ahk`        | Spaces | 4    | CRLF         | Yes             |
+| `*.ps1`        | Spaces | 4    | CRLF         | Yes             |
+| `*.{cmd,bat}`  | Spaces | 4    | CRLF         | Yes             |
+| `*.md`         | Spaces | 2    | LF           | **No**          |
+| `*.{yml,yaml}` | Spaces | 2    | LF           | Yes             |
+| `*.json`       | Spaces | 2    | LF           | Yes             |
 
 **Global Rules:**
+
 - Charset: UTF-8
 - Insert final newline: true
 
@@ -395,12 +413,14 @@ SetWorkingDir %A_ScriptDir%
 #### Library Usage Pattern
 
 **DO:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(true, true)  ; UIA + Admin + Performance optimizations
 ```
 
 **DON'T:**
+
 ```autohotkey
 ; Inline UIA check (legacy pattern, avoid in new scripts)
 if !InStr(A_AhkPath, "_UIA.exe") {
@@ -412,11 +432,13 @@ if !InStr(A_AhkPath, "_UIA.exe") {
 #### Variable Naming
 
 **Observed Patterns:**
+
 - **PascalCase** for global variables: `ScriptPID`, `CitraConfigFile`
 - **camelCase** for local variables: `winTitle`, `processName`
 - **SCREAMING_SNAKE_CASE** for constants (rare, use when needed)
 
 **For PID Tracking:**
+
 ```autohotkey
 Run "script.ahk",,, ScriptPID  ; Store PID for later use
 WinKill, ahk_pid %ScriptPID%   ; Proper cleanup
@@ -425,6 +447,7 @@ WinKill, ahk_pid %ScriptPID%   ; Proper cleanup
 #### Comment Style
 
 **Function Documentation:**
+
 ```autohotkey
 ; ============================================================================
 ; FunctionName(param1, param2) - Brief description
@@ -444,6 +467,7 @@ FunctionName(param1, param2 := "default") {
 ```
 
 **Inline Comments:**
+
 ```autohotkey
 Sleep 5000  ; Wait for process to initialize
 ```
@@ -455,6 +479,7 @@ Sleep 5000  ; Wait for process to initialize
 **String Quotes:** Use double quotes for variable interpolation
 
 **Best Practices:**
+
 - Add parameter validation with `[ValidateNotNullOrEmpty()]`
 - Include null checks before operations
 - Use `Write-Host` for user feedback
@@ -462,6 +487,7 @@ Sleep 5000  ; Wait for process to initialize
 - Add `try/catch` blocks for external commands
 
 **Example from 7zEmuPrepper.ps1:**
+
 ```powershell
 if (-not (Test-Path $extractedFile)) {
     Write-Error "Extraction failed - file not found"
@@ -472,6 +498,7 @@ if (-not (Test-Path $extractedFile)) {
 ### Git Commit Guidelines
 
 **Format:**
+
 ```
 <type>: <brief description>
 
@@ -479,6 +506,7 @@ if (-not (Test-Path $extractedFile)) {
 ```
 
 **Types:**
+
 - `feat:` - New feature
 - `fix:` - Bug fix
 - `refactor:` - Code restructuring
@@ -489,6 +517,7 @@ if (-not (Test-Path $extractedFile)) {
 - `chore:` - Maintenance tasks
 
 **Example:**
+
 ```
 fix: Add missing mouse button release in AFK_Hold_Click.ahk
 
@@ -511,11 +540,13 @@ Fixes issue where mouse remained in pressed state after script exit.
 **Purpose:** One-call initialization for all common requirements
 
 **Parameters:**
+
 - `requireUIA` (bool) - Restart with UIA support if needed
 - `requireAdmin` (bool) - Restart with admin privileges if needed
 - `optimize` (bool, default: true) - Apply performance optimizations
 
 **Usage:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
@@ -534,6 +565,7 @@ InitScript(false, false)
 **Purpose:** Ensures script is running with UI Automation support
 
 **Implementation:**
+
 ```autohotkey
 if !InStr(A_AhkPath, "_UIA.exe") {
     Run, % A_AhkPath . " U" (32 << A_Is64bitOS) "_UIA.exe"
@@ -548,6 +580,7 @@ if !InStr(A_AhkPath, "_UIA.exe") {
 **Purpose:** Restarts script with administrator privileges
 
 **Implementation:**
+
 ```autohotkey
 if not A_IsAdmin {
     Run *RunAs "%A_ScriptFullPath%"
@@ -562,6 +595,7 @@ if not A_IsAdmin {
 **Purpose:** Applies all standard performance optimizations
 
 **Sets:**
+
 - `#KeyHistory 0`
 - `ListLines Off`
 - `SetBatchLines -1`
@@ -585,12 +619,14 @@ if not A_IsAdmin {
 **Purpose:** Multi-monitor aware borderless fullscreen toggle
 
 **Features:**
+
 - Detects current monitor
 - Calculates monitor bounds
 - Saves/restores window state
 - Handles multiple monitors correctly
 
 **Usage:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
@@ -598,6 +634,7 @@ End::ToggleFakeFullscreenMultiMonitor("A")  ; Active window
 ```
 
 **Technical Details:**
+
 - Uses `SysGet, MonitorCount, MonitorCount` for detection
 - Stores state in `WindowStates` object
 - Applies borderless style: `0x00040000` (WS_SIZEBOX)
@@ -609,6 +646,7 @@ End::ToggleFakeFullscreenMultiMonitor("A")  ; Active window
 **Difference from Multi-Monitor:** Always uses primary monitor dimensions
 
 **Usage:**
+
 ```autohotkey
 ToggleFakeFullscreen("ahk_exe game.exe")
 ```
@@ -618,10 +656,12 @@ ToggleFakeFullscreen("ahk_exe game.exe")
 **Purpose:** Remove window borders/titlebar
 
 **Windows Styles Modified:**
+
 - `WS_CAPTION` (0xC00000) - Removed
 - `WS_BORDER` (0x800000) - Removed
 
 **Implementation:**
+
 ```autohotkey
 WinGet, Style, Style, %winTitle%
 WinSet, Style, -%Style%, %winTitle%
@@ -633,6 +673,7 @@ WinSet, Style, +0x00040000, %winTitle%  ; Add resizable
 **Purpose:** Combined borderless + maximize operation
 
 **Process:**
+
 1. `SetWindowBorderless(winTitle)`
 2. `MaximizeWindow(winTitle)`
 
@@ -643,6 +684,7 @@ WinSet, Style, +0x00040000, %winTitle%  ; Add resizable
 **Returns:** true if found, false if timeout
 
 **Usage:**
+
 ```autohotkey
 if !WaitForWindow("ahk_exe game.exe", 10) {
     MsgBox, Window not found after 10 seconds
@@ -659,6 +701,7 @@ if !WaitForWindow("ahk_exe game.exe", 10) {
 **Returns:** true if found, false if timeout
 
 **Usage:**
+
 ```autohotkey
 if !WaitForProcess("citra-qt.exe", 10) {
     MsgBox, Process did not start
@@ -677,6 +720,7 @@ if !WaitForProcess("citra-qt.exe", 10) {
 **Purpose:** Wait for process, then trigger fullscreen
 
 **Parameters:**
+
 - `exeName` (string) - Process name (e.g., "citra-qt.exe")
 - `fullscreenKey` (string, default: "F11") - Key to send for fullscreen
 - `maximize` (bool, default: true) - Maximize before sending key
@@ -684,12 +728,14 @@ if !WaitForProcess("citra-qt.exe", 10) {
 - `activate` (bool, default: true) - Activate window before sending key
 
 **Usage:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AutoStartHelper.ahk
 AutoStartFullscreen("citra-qt.exe", "F11", true, 0)
 ```
 
 **Process:**
+
 1. Wait for process to exist (`Process, Exist`)
 2. Sleep 500ms for window initialization
 3. Activate window (if `activate = true`)
@@ -705,6 +751,7 @@ AutoStartFullscreen("citra-qt.exe", "F11", true, 0)
 **When to Use:** When multiple instances of same process exist, or process name is generic
 
 **Usage:**
+
 ```autohotkey
 AutoStartFullscreenWithTitle("ahk_class UnityWndClass", "Alt+Enter", true, 1000)
 ```
@@ -718,12 +765,14 @@ AutoStartFullscreenWithTitle("ahk_class UnityWndClass", "Alt+Enter", true, 1000)
 **Purpose:** INI file manipulation for Citra configs
 
 **Functions:**
+
 - `tf_Find()` - Search for text in file
 - `tf_Replace()` - Replace text in file
 - `tf_ReadLine()` - Read specific line
 - `tf_WriteLine()` - Write specific line
 
 **Usage in CitraConfigBase.ahk:**
+
 ```autohotkey
 #Include %A_ScriptDir%\tf.ahk
 
@@ -742,6 +791,7 @@ tf_Replace(CitraConfigFile, "custom_textures\use_custom_textures=false", "custom
 **Use Case:** Launch emulator in fullscreen automatically
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\AutoStartHelper.ahk
@@ -757,6 +807,7 @@ return
 **Example:** `Other/Auto_start_Fullscreen_Citra.ahk` (5 lines)
 
 **When to Use:**
+
 - Script runs once, then exits
 - No user interaction needed
 - Minimal logic
@@ -768,6 +819,7 @@ return
 **Use Case:** Repetitive actions in games
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
 InitScript()
@@ -795,15 +847,18 @@ return
 ```
 
 **Standard Hotkeys:**
+
 - **F7** - Start/Loop
 - **F8** - Pause/Resume
 - **F9** - Exit
 
 **Examples:**
+
 - `AHK/Minecraft/MC_AFK_Fishing.ahk`
 - `AHK/Black_ops_6/AFK_Bank_Roof.ahk`
 
 **Advanced Techniques:**
+
 ```autohotkey
 ; Random delays to avoid detection
 Sleep % 1000 + Random(0, 500)
@@ -823,6 +878,7 @@ if !WinExist("ahk_exe game.exe")
 **Use Case:** Launch/close multiple scripts from central GUI
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript()
@@ -855,11 +911,13 @@ ExitApp
 ```
 
 **Key Points:**
+
 - Store PIDs in variables (e.g., `Script1PID`)
 - Use `WinKill, ahk_pid %PID%` for cleanup
 - Tab-based organization for many scripts
 
 **Examples:**
+
 - `AHK/GUI/GUI_PC.ahk` (86 lines)
 - `AHK/GUI/GUI_Laptop.ahk` (60 lines)
 
@@ -870,6 +928,7 @@ ExitApp
 **Use Case:** Custom window snapping, fullscreen, positioning
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
@@ -887,6 +946,7 @@ return
 ```
 
 **Common Operations:**
+
 ```autohotkey
 ; Get window info
 WinGetPos, X, Y, Width, Height, %winTitle%
@@ -905,6 +965,7 @@ SysGet, Monitor, Monitor, 1  ; Get bounds of monitor 1
 ```
 
 **Examples:**
+
 - `AHK/Keys.ahk:95-125` (window snapping)
 - `AHK/Fullscreen.ahk` (borderless fullscreen)
 
@@ -915,6 +976,7 @@ SysGet, Monitor, Monitor, 1  ; Get bounds of monitor 1
 **Use Case:** Orchestrate multiple external programs
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(true, true)
@@ -935,10 +997,12 @@ if ErrorLevel
 ```
 
 **Examples:**
+
 - `Other/Playnite_fullscreen/Playnite_TV.ahk` (MultiMonitorTool, VLC)
 - `Other/Downloader/YT_Downloader.ahk` (yt-dlp, spotdl)
 
 **Command Line Integration:**
+
 ```autohotkey
 ; Execute command and capture output
 RunWait, %ComSpec% /c "command.exe > output.txt",, Hide
@@ -957,6 +1021,7 @@ Gui Show
 **Use Case:** Respond to process start/stop
 
 **Template:**
+
 ```autohotkey
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(true, true)
@@ -986,9 +1051,11 @@ return
 ```
 
 **Example:**
+
 - `AHK/Powerplan.ahk` (switches power plan based on Fortnite process)
 
 **Advanced: Window Monitoring**
+
 ```autohotkey
 SetTimer, CheckWindow, 100
 
@@ -1008,6 +1075,7 @@ return
 **Use Case:** Enable/disable displays, switch primary monitor
 
 **Template:**
+
 ```autohotkey
 ; Using MultiMonitorTool (NirSoft)
 toolPath := A_ScriptDir . "\MultiMonitorTool\MultiMonitorTool.exe"
@@ -1026,9 +1094,11 @@ Run, "%toolPath%" /LoadConfig "config.cfg"
 ```
 
 **Example:**
+
 - `Other/Playnite_fullscreen/Playnite_TV.ahk:17-23`
 
 **AHK-Native Method:**
+
 ```autohotkey
 ; Get monitor count
 SysGet, MonitorCount, MonitorCount
@@ -1054,6 +1124,7 @@ WinGetPos, WinX, WinY, WinW, WinH, A
 **GitHub Actions Workflow:** `ahk-lint-format-compile.yml`
 
 **What Gets Tested:**
+
 1. ✅ **Syntax Validation** - All .ahk files compile without errors
 2. ✅ **Format Validation** - No mixed indentation, trailing spaces, mixed line endings
 3. ✅ **AutoHotkey Version** - Ensures AHK 2.0.19 compatibility
@@ -1061,6 +1132,7 @@ WinGetPos, WinX, WinY, WinW, WinH, A
 **How to Test Locally:**
 
 #### Windows PowerShell Method
+
 ```powershell
 # Install AutoHotkey 2.0.19
 choco install autohotkey --version=2.0.19 -y
@@ -1082,12 +1154,14 @@ Get-ChildItem -Recurse -Filter *.ahk | ForEach-Object {
 #### Manual Testing
 
 **For Script Changes:**
+
 1. Run the modified script in a test environment
 2. Verify all hotkeys work as expected
 3. Check for error dialogs or unexpected behavior
 4. Test edge cases (missing dependencies, wrong paths, etc.)
 
 **For Library Changes (Lib/):**
+
 1. Identify all scripts that include the modified library
 2. Test at least 3-5 dependent scripts
 3. Verify no regressions in existing functionality
@@ -1108,6 +1182,7 @@ Get-ChildItem -Recurse -Filter *.ahk | ForEach-Object {
 - [ ] Variables follow naming conventions
 
 **Security Checklist:**
+
 - [ ] No command injection vulnerabilities (validate user input)
 - [ ] No SQL injection (if using databases)
 - [ ] No arbitrary file writes to system directories
@@ -1124,6 +1199,7 @@ Get-ChildItem -Recurse -Filter *.ahk | ForEach-Object {
 #### 1. Command Injection Vulnerabilities ✅ FIXED (2025-12-17)
 
 **Affected Files:**
+
 - `Other/Downloader/YT_Downloader.ahk`
 - `Other/Downloader/Spotify_Downloader.ahk`
 - `Other/Downloader/YT_Spotify_Downloader.ahk`
@@ -1133,6 +1209,7 @@ Get-ChildItem -Recurse -Filter *.ahk | ForEach-Object {
 **Risk:** Malicious URLs could execute arbitrary commands
 
 **Fix Applied:**
+
 ```autohotkey
 ; ValidateInput() function added to all downloader scripts
 ValidateInput(input) {
@@ -1163,6 +1240,7 @@ RunCmd:
 **Issue:** Paths like `C:\Users\janni\` break on other systems
 
 **Recommendation:**
+
 ```autohotkey
 ; Instead of:
 configPath := "C:\Users\janni\Documents\config.ini"
@@ -1178,6 +1256,7 @@ configPath := EnvGet("OneDrive") . "\config.ini"
 #### 3. Missing WinWait Timeouts
 
 **Affected Files:**
+
 - `Lib/WindowManager.ahk`
 - `Lib/AutoStartHelper.ahk`
 - Various auto-start scripts
@@ -1185,11 +1264,13 @@ configPath := EnvGet("OneDrive") . "\config.ini"
 **Issue:** Scripts hang indefinitely if window/process never appears
 
 **Current:**
+
 ```autohotkey
 WinWait, ahk_exe game.exe  ; Hangs forever
 ```
 
 **Recommendation:**
+
 ```autohotkey
 WinWait, ahk_exe game.exe,, 10  ; 10 second timeout
 if ErrorLevel {
@@ -1203,12 +1284,14 @@ if ErrorLevel {
 #### 4. Code Duplication ✅ ADDRESSED (2025-12-17)
 
 **Between Files:**
+
 - `GUI_Laptop.ahk` and `GUI_PC.ahk` (90% identical)
 - `SetWindowBorderless()` duplicated in 3 files
 - Performance directives copy-pasted (now in `AHK_Common.ahk`)
 - 9 auto-start scripts (95% identical)
 
 **Actions Taken:**
+
 - ✅ Created shared `GUI_Shared.ahk` library with data-driven design
 - ✅ GUI_PC and GUI_Laptop now use shared framework with configuration arrays
 - ✅ Consolidated 9 auto-start scripts → `AutoStartManager.ahk` + `AutoStartConfig.ini`
@@ -1217,6 +1300,7 @@ if ErrorLevel {
 - ✅ All scripts use `InitScript()` for initialization
 
 **Remaining:**
+
 - GUI_Laptop.ahk and GUI_PC.ahk still separate (different button layouts justify separation)
 
 #### 5. WM.ahk INI Pollution
@@ -1226,6 +1310,7 @@ if ErrorLevel {
 **Impact:** Unnecessary disk I/O, potential SSD wear
 
 **Recommendation:**
+
 ```autohotkey
 ; Only write on change
 if (currentValue != lastValue) {
@@ -1239,6 +1324,7 @@ if (currentValue != lastValue) {
 #### 6. Inconsistent Variable Naming
 
 **Mixed Styles:**
+
 - `ScriptPID` (PascalCase)
 - `winTitle` (camelCase)
 - `script_path` (snake_case)
@@ -1248,12 +1334,14 @@ if (currentValue != lastValue) {
 #### 7. Magic Numbers
 
 **Example from AFK scripts:**
+
 ```autohotkey
 Sleep 5734  ; Why 5734? Document the reason
 Click 1920, 1080  ; Hardcoded screen coordinates
 ```
 
 **Recommendation:**
+
 ```autohotkey
 ; Better:
 FISHING_CAST_DELAY := 5734  ; Optimal delay for server response
@@ -1278,6 +1366,7 @@ Click %SCREEN_CENTER_X%, %SCREEN_CENTER_Y%
 ### Workflow for Code Changes
 
 #### Step 1: Understand Context
+
 ```
 1. Read the modified file(s) completely
 2. Identify all #Include statements
@@ -1287,6 +1376,7 @@ Click %SCREEN_CENTER_X%, %SCREEN_CENTER_Y%
 ```
 
 #### Step 2: Make Changes
+
 ```
 1. Apply edits following EditorConfig settings
 2. Add comments for non-obvious logic
@@ -1296,6 +1386,7 @@ Click %SCREEN_CENTER_X%, %SCREEN_CENTER_Y%
 ```
 
 #### Step 3: Validate
+
 ```
 1. Check indentation (4 spaces)
 2. Remove trailing whitespace
@@ -1305,6 +1396,7 @@ Click %SCREEN_CENTER_X%, %SCREEN_CENTER_Y%
 ```
 
 #### Step 4: Document
+
 ```
 1. Update comments if behavior changed
 2. Add entry to Optimizations.txt if fixing known issue
@@ -1331,6 +1423,7 @@ return
 ```
 
 **Testing:**
+
 1. Run manually
 2. Verify it exits after sending F11
 3. Test with emulator not running (should hang or timeout)
@@ -1357,6 +1450,7 @@ NewFunction(param1, param2 := "default") {
 ```
 
 **Testing:**
+
 1. Create test script that uses the function
 2. Identify 2-3 existing scripts that could benefit
 3. Update those scripts to use new function
@@ -1367,11 +1461,13 @@ NewFunction(param1, param2 := "default") {
 #### Fixing a Syntax Error
 
 **From GitHub Actions:**
+
 ```
 ❌ AHK/TestScript.ahk - syntax error
 ```
 
 **Process:**
+
 1. Read the file
 2. Compile locally to see error details:
    ```powershell
@@ -1393,9 +1489,11 @@ NewFunction(param1, param2 := "default") {
 **Example:** Unify `GUI_Laptop.ahk` and `GUI_PC.ahk`
 
 **Approach:**
+
 1. Read both files
 2. Identify differences (likely just button labels and paths)
 3. Extract differences to configuration:
+
    ```autohotkey
    ; GUI_Shared.ahk
    #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
@@ -1407,6 +1505,7 @@ NewFunction(param1, param2 := "default") {
    ; Use config to customize GUI
    Gui, New, -MinimizeBox, %ProfileName% Launcher
    ```
+
 4. Create `GUI_Config_Laptop.ini` and `GUI_Config_PC.ini`
 5. Test both configurations
 6. Update documentation
@@ -1420,6 +1519,7 @@ NewFunction(param1, param2 := "default") {
 **Location:** `Other/Downloader/YT_Downloader.ahk`
 
 **Integration Pattern:**
+
 ```autohotkey
 ; Get URL from GUI
 Gui Submit, NoHide
@@ -1439,6 +1539,7 @@ GuiControl,, OutputField, %Output%
 ```
 
 **Dependencies:**
+
 - yt-dlp.exe (in script directory)
 - FFMPEG (for audio merging)
 
@@ -1451,6 +1552,7 @@ GuiControl,, OutputField, %Output%
 **Location:** `Other/Playnite_fullscreen/MultiMonitorTool/`
 
 **Integration Pattern:**
+
 ```autohotkey
 mmt := A_ScriptDir . "\MultiMonitorTool\MultiMonitorTool.exe"
 
@@ -1465,6 +1567,7 @@ Run, "%mmt%" /SetPrimary 1
 ```
 
 **Config Files:**
+
 - `MultiMonitorTool.cfg` - Saved display configurations
 - Created via GUI, then loaded programmatically
 
@@ -1528,11 +1631,13 @@ KeyHistory
 #### Input Validation
 
 **Always validate user input before:**
+
 - Executing commands
 - Writing files
 - Modifying registry
 
 **Example:**
+
 ```autohotkey
 ; Bad:
 Run, %ComSpec% /c %UserInput%
@@ -1572,12 +1677,14 @@ FileRead, Content, %userFile%
 #### Admin Privilege Minimization
 
 **Use admin only when necessary:**
+
 - Modifying system power plans ✅
 - Manipulating other user's windows ✅
 - Reading/writing own directories ❌
 - Standard hotkeys ❌
 
 **Pattern:**
+
 ```autohotkey
 ; Check if admin actually needed
 needsAdmin := (action = "PowerPlan") or (action = "SystemSettings")
@@ -1603,6 +1710,7 @@ SetBatchLines 10  ; Run 10ms, sleep 10ms (default)
 ```
 
 **When to reduce:**
+
 - Script causes 100% CPU usage
 - Other apps become unresponsive
 - Not time-critical operations
@@ -1612,6 +1720,7 @@ SetBatchLines 10  ; Run 10ms, sleep 10ms (default)
 #### 2. Avoid Unnecessary Loops
 
 **Bad:**
+
 ```autohotkey
 Loop {
     Sleep 10
@@ -1621,6 +1730,7 @@ Loop {
 ```
 
 **Good:**
+
 ```autohotkey
 WinWait, ahk_exe game.exe,, 30
 if ErrorLevel {
@@ -1636,6 +1746,7 @@ if ErrorLevel {
 **Already in `SetOptimalPerformance()` via `SendMode Input`**
 
 **Speed comparison:**
+
 - `SendInput` - Fastest, uninterruptible
 - `SendPlay` - Slower, most compatible
 - `SendEvent` - Medium, can be interrupted
@@ -1645,6 +1756,7 @@ if ErrorLevel {
 #### 4. Cache Frequent Calculations
 
 **Bad:**
+
 ```autohotkey
 Loop, 1000 {
     result := ComplexFunction(sameValue)
@@ -1652,6 +1764,7 @@ Loop, 1000 {
 ```
 
 **Good:**
+
 ```autohotkey
 cachedResult := ComplexFunction(sameValue)
 Loop, 1000 {
@@ -1688,6 +1801,7 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 5. **New Workflow Added** - Update "Development Workflows & CI/CD"
 
 **Update Process:**
+
 ```
 1. Make changes to CLAUDE.md
 2. Update "Last Updated" date at top
@@ -1703,18 +1817,22 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 ### Useful Resources
 
 **AutoHotkey Documentation:**
+
 - Official Docs: https://www.autohotkey.com/docs/
 - Forum: https://www.autohotkey.com/boards/
 
 **Optimization Guides:**
+
 - AHK Forum Post: https://www.autohotkey.com/boards/viewtopic.php?t=6413
 - ElitePvpers Guide: https://www.elitepvpers.com/forum/programming-tutorials/4642814-guide-autohotkey-timing-precision-sleep-alternative.html
 
 **Windows API:**
+
 - Window Styles: https://learn.microsoft.com/en-us/windows/win32/winmsg/window-styles
 - Extended Styles: https://learn.microsoft.com/en-us/windows/win32/winmsg/extended-window-styles
 
 **External Tools:**
+
 - MultiMonitorTool: https://www.nirsoft.net/utils/multi_monitor_tool.html
 - yt-dlp: https://github.com/yt-dlp/yt-dlp
 - spotdl: https://github.com/spotDL/spotify-downloader
@@ -1744,6 +1862,7 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 ## Changelog
 
 ### 2025-12-17
+
 - **MAJOR:** Completed AutoHotkey v2 migration (45+ scripts migrated)
 - Created dual library architecture (Lib/v1/ and Lib/v2/)
 - Consolidated 9 auto-start scripts into data-driven AutoStartManager.ahk
@@ -1766,6 +1885,7 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 - Reduced codebase by 24 duplicate/redundant files
 
 ### 2025-12-04
+
 - Initial creation of CLAUDE.md
 - Documented all major components and patterns
 - Added comprehensive development guidelines
@@ -1775,6 +1895,7 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 ---
 
 **For questions or clarifications, refer to:**
+
 - `AHK/Documentation/Optimizations.txt` - Detailed optimization history
 - `readme.md` - User-facing project overview
 - Individual script READMEs in subdirectories
@@ -1784,4 +1905,4 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 
 ---
 
-*This document is maintained as part of the Scripts repository to assist AI assistants and developers in understanding and contributing to the codebase effectively.*
+_This document is maintained as part of the Scripts repository to assist AI assistants and developers in understanding and contributing to the codebase effectively._

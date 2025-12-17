@@ -3,10 +3,10 @@ name: AHK Lint & Format
 on:
   push:
     branches: [main, master]
-    paths: ['**.ahk', '.github/workflows/ahk-lint-format-compile.yml']
+    paths: ["**.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
   pull_request:
     branches: [main, master]
-    paths: ['**.ahk', '.github/workflows/ahk-lint-format-compile.yml']
+    paths: ["**.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
   workflow_dispatch:
 
 permissions:
@@ -93,17 +93,17 @@ jobs:
               $formatIssues += $rel
             }
           }
-          
+
           Remove-Item $tempDir -Recurse -Force -EA SilentlyContinue
 
           Write-Host "`nChecked: $checked (v1: $v1Count, v2: $v2Count) | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
-          
+
           if ($syntaxErrors) {
             Write-Host "`nSyntax errors in:" -ForegroundColor Red
             $syntaxErrors | % { Write-Host "  $_" }
             exit 1
           }
-          
+
           if ($formatIssues) {
             Write-Host "`nFormat issues in:" -ForegroundColor Yellow
             $formatIssues | % { Write-Host "  $_" }
