@@ -37,8 +37,30 @@ SpotYoutube:
   GuiControl,, Output, % Cmd
 return
 
+; Function to validate input for command injection
+ValidateInput(input) {
+    ; Check for dangerous characters that could enable command injection
+    ; Dangerous: & | ; < > ( ) $ ` ^ "
+    if RegExMatch(input, "[&|;<>()`$^""]") {
+        return false
+    }
+    return true
+}
+
 ; Function to execute the command in cmd
 RunCmd:
+  GuiControlGet, Youtube
+  GuiControlGet, Spotify
+
+  ; Determine which field has content and validate it
+  inputToValidate := (Youtube != "") ? Youtube : Spotify
+
+  ; Validate input before executing
+  if (!ValidateInput(inputToValidate)) {
+      MsgBox, 16, Security Error, Invalid characters detected in URL!`n`nThe following characters are not allowed:`n& | ; < > ( ) $ `` ^ "
+      return
+  }
+
   GuiControlGet, Cmd, , Output
   Run, %ComSpec% /c %Cmd%,, Hide
 return
