@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 
 ; ============================================================================
-; Playnite_All.ahk - Unified launcher for Playnite fullscreen modes
+; playnite_all.ahk - Unified launcher for Playnite fullscreen modes
 ; Modes:
 ;   fullscreen   - Boot video + Playnite (no monitor/audio changes)
 ;   tv           - TV as primary, boot video, Playnite
