@@ -3,10 +3,6 @@
 ; ============================================================================
 ; Playnite_Fullscreen.ahk - Launch Playnite with boot video (no monitor switching)
 ; Version: 2.0.0 (Migrated to AHK v2)
-;
-; WARNING: Contains hardcoded paths that need customization
-;   - Line 28: User-specific path (janni)
-;   - Update paths before use
 ; ============================================================================
 
 #Include %A_ScriptDir%\..\..\Lib\v2\AHK_Common.ahk
@@ -14,25 +10,51 @@ InitScript(false, false, true)
 
 #SingleInstance Force
 
+FindExe(name, fallbacks := []) {
+    if FileExist(name)
+        return name
+    Loop Parse, EnvGet("PATH"), ";"
+    {
+        p := Trim(A_LoopField)
+        if !p
+            continue
+        cand := p . "\" . name
+        if FileExist(cand)
+            return cand
+    }
+    for _, fb in fallbacks
+        if FileExist(fb)
+            return fb
+    return ""
+}
+
+MustGetExe(name, fallbacks := []) {
+    exe := FindExe(name, fallbacks)
+    if exe = ""
+    {
+        MsgBox("Required executable not found: " . name . "`nChecked PATH and fallbacks.")
+        ExitApp(1)
+    }
+    return exe
+}
+
 ; Move cursor out of the way
 DllCall("SetCursorPos", "int", 0, "int", 1080)
 
 ; Play boot video
-vlcPath := "C:\Program Files\VideoLAN\VLC\vlc.exe"
+vlcPath := MustGetExe("vlc.exe", ["C:\Program Files\VideoLAN\VLC\vlc.exe"])
 bootVideo := A_ScriptDir . "\BootVideo.mp4"
 vlcArgs := '--fullscreen --video-on-top --play-and-exit --no-video-title -Idummy "' . bootVideo . '"'
 RunWait('cmd.exe /c START "" "' . vlcPath . '" ' . vlcArgs, , "hide")
 DllCall("kernel32.dll\Sleep", "UInt", 3000)
 
 ; Launch Playnite
-; TODO: Update these paths to match your system
-playniteExe := EnvGet("USERPROFILE") . "\OneDrive\Backup\Game\Other\Launchers\Playnite\Playnite.FullscreenApp.exe"
+playniteExe := MustGetExe(
+    "Playnite.FullscreenApp.exe",
+    [EnvGet("USERPROFILE") . "\OneDrive\Backup\Game\Other\Launchers\Playnite\Playnite.FullscreenApp.exe"
+    , "C:\Program Files\Playnite\Playnite.FullscreenApp.exe"]
+)
 playniteUser := A_UserName  ; Change this if needed
-
-if (!FileExist(playniteExe)) {
-    playniteExe := "C:\Program Files\Playnite\Playnite.FullscreenApp.exe"
-}
-
 playniteCmd := 'runas /noprofile /user:' . playniteUser . ' /savecred "' . playniteExe . ' --startfullscreen --hidesplashscreen"'
 RunWait('cmd.exe /c ' . playniteCmd, , "hide")
 
