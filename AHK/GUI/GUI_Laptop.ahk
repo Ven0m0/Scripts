@@ -1,78 +1,82 @@
 #Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\GUI_Shared.ahk
 InitScript(true, true)  ; UIA + Admin required
 
-#SingleInstance Force
-#Persistent
-#NoEnv
-#Warn
-SetBatchLines -1
-SetTitleMatchMode, 3
-SetTitleMatchMode, Fast
+documentsScripts := A_MyDocuments . "\Scripts"
+keysPath := documentsScripts . "\Keys.ahk"
+hostPath := documentsScripts . "\Script Master\Host.ahk"
+programFilesX86 := A_ProgramFiles
+if (A_Is64bitOS && !InStr(programFilesX86, " (x86)"))
+    programFilesX86 := A_ProgramFiles . " (x86)"
+shellShockPath := programFilesX86 . "\Steam\steamapps\common\ShellShock Live\ShellShockLive.exe"
+robosquarePath := programFilesX86 . "\Steam\steamapps\common\RoboSquare\RoboSquare.exe"
+y8Url := "https://y8.com"
 
-Gui +AlwaysOnTop
-Gui, New, -MinimizeBox, My Codes
-Gui, Add, Tab2,, General|Games
-Gui Add, Button, gChoiceA w80 h50 x22 y34, Open Keys
-Gui Add, Button, gChoice1 w80 h50 x105 y34, Close Keys
-Gui Add, Button, gChoiceB w80 h50 x22 y90, Open Host
-Gui Add, Button, gChoice2 w80 h50 x105 y90, Close Host
-Gui, Tab, 2
-Gui Add, Button, gChoiceD w80 h50 x22 y34, Open ShellShockLive
-Gui Add, Button, gChoice4 w80 h50 x105 y34, Close ShellShockLive
-Gui Add, Button, gChoiceE w80 h50 x22 y90, Open Robosquare
-Gui Add, Button, gChoice5 w80 h50 x105 y90, Close Robosquare
-Gui Add, Button, gChoiceF w80 h50 x22 y146, Open Y8 Games
-Gui Add, Button, gChoice6 w80 h50 x105 y146, Close Y8 Games
+tabs := [{
+    Name: "General",
+    Buttons: [
+        {Label: "Open Keys", Action: Func("OpenKeys")},
+        {Label: "Close Keys", Action: Func("CloseKeys")},
+        {Label: "Open Host", Action: Func("OpenHost")},
+        {Label: "Close Host", Action: Func("CloseHost")}
+    ]
+}, {
+    Name: "Games",
+    Buttons: [
+        {Label: "Open ShellShockLive", Action: Func("OpenShellShock")},
+        {Label: "Close ShellShockLive", Action: Func("CloseShellShock")},
+        {Label: "Open Robosquare", Action: Func("OpenRobosquare")},
+        {Label: "Close Robosquare", Action: Func("CloseRobosquare")},
+        {Label: "Open Y8 Games", Action: Func("OpenY8")},
+        {Label: "Close Y8 Games", Action: Func("CloseY8")}
+    ]
+}]
 
-Gui, Tab
-Gui, Add, Button, default xm, OK  ; xm puts it at the bottom left corner.
-Gui, Show
+CreateLauncher(tabs)
 return
 
-ChoiceA:
-    Run, "C:\Users\janni\Documents\Scripts\Keys.ahk",,, KeysPID
-Return
+OpenKeys() {
+    global KeysPID
+    Run, %keysPath%,,, KeysPID
+}
 
-Choice1:
+CloseKeys() {
+    global KeysPID
     WinKill, ahk_pid %KeysPID%
-Return
+}
 
-ChoiceB:
-    Run, "C:\Users\janni\Documents\Scripts\Script Master\Host.ahk",,, HostPID
-Return
+OpenHost() {
+    global HostPID
+    Run, %hostPath%,,, HostPID
+}
 
-Choice2:
+CloseHost() {
+    global HostPID
     WinKill, ahk_pid %HostPID%
-Return
+}
 
-ChoiceD:
-   Run, C:\Program Files (x86)\Steam\steamapps\common\ShellShock Live\ShellShockLive.exe
-Return
+OpenShellShock() {
+    Run, %shellShockPath%
+}
 
-Choice4:
+CloseShellShock() {
     WinKill, ahk_exe ShellShockLive.exe
-Return
+}
 
-ChoiceE:
-   Run, C:\Program Files (x86)\Steam\steamapps\common\RoboSquare\RoboSquare.exe
-Return
+OpenRobosquare() {
+    Run, %robosquarePath%
+}
 
-Choice5:
-   WinKill, ahk_exe RoboSquare.exe
-Return
+CloseRobosquare() {
+    WinKill, ahk_exe RoboSquare.exe
+}
 
-ChoiceF:
-   Run, https://y8.com
-Return
+OpenY8() {
+    Run, %y8Url%
+}
 
-Choice6:
-   IfWinExist, Y8 Games
-   Winactivate, Y8 Games
-   Send, ^w
-Return
-
-
-
-ButtonOK:
-GuiClose:
-ExitApp
+CloseY8() {
+    IfWinExist, Y8 Games
+    Winactivate, Y8 Games
+    Send, ^w
+}

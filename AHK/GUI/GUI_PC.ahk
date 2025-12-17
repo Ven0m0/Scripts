@@ -1,100 +1,136 @@
 #Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\GUI_Shared.ahk
 InitScript(true, true)  ; UIA + Admin required
 
-#SingleInstance Force
-#Persistent
-#NoEnv
-#Warn
-SetBatchLines -1
-SetTitleMatchMode, 3
-SetTitleMatchMode, Fast
+EnvGet, oneDrivePath, OneDrive
+if (oneDrivePath = "")
+    oneDrivePath := A_MyDocuments
 
-Gui +AlwaysOnTop
-Gui, New, -MinimizeBox, My Codes
-Gui, Add, Tab2,, General|Games
-Gui Add, Button, gChoiceA w80 h50 x22 y34, Open Keys
-Gui Add, Button, gChoice1 w80 h50 x105 y34, Close Keys
-Gui Add, Button, gChoiceB w80 h50 x22 y90, Open Host
-Gui Add, Button, gChoice2 w80 h50 x105 y90, Close Host
-Gui Add, Button, gChoiceC w80 h50 x22 y146, Open Autocorrect
-Gui Add, Button, gChoice3 w80 h50 x105 y146, Close Autocorrect
-Gui, Tab, 2
-Gui Add, Button, gChoiceD w80 h50 x22 y34, Open Fortnite
-Gui Add, Button, gChoice4 w80 h50 x105 y34, Close Fortnite
-Gui Add, Button, gChoiceE w80 h50 x22 y90, Open Battlefront
-Gui Add, Button, gChoice5 w80 h50 x105 y90, Close Battlefront
-Gui Add, Button, gChoiceF w80 h50 x22 y146, Open The Witcher 3
-Gui Add, Button, gChoice6 w80 h50 x105 y146, Close The Witcher 3
-Gui, Tab, 3
-Gui Add, Button, gChoiceG w80 h50 x22 y34, Open Gameboost
-Gui Add, Button, gChoice7 w80 h50 x105 y34, Close Gameboost
+scriptsRoot := oneDrivePath . "\Backup\Optimal\Scripts\AHK"
+gameRoot := oneDrivePath . "\Backup\Game\Steam"
+keysPath := scriptsRoot . "\Keys.ahk"
+hostPath := scriptsRoot . "\Script Master\Host.ahk"
+autocorrectPath := scriptsRoot . "\Autocorrect.ahk"
+gameboostPath := scriptsRoot . "\Gameboost.ahk"
+battlefrontPath := gameRoot . "\Battlefront 2\FrostyModManager.lnk"
 
-Gui, Tab
-Gui, Add, Button, default xm, OK  ; xm puts it at the bottom left corner.
-Gui, Show
+fortniteRoot := A_ProgramFiles
+if (A_Is64bitOS)
+    fortniteRoot := A_ProgramFiles64
+fortnitePath := fortniteRoot . "\Epic Games\Fortnite\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe"
+
+programFilesX86 := A_ProgramFiles
+if (A_Is64bitOS && !InStr(programFilesX86, " (x86)"))
+    programFilesX86 := A_ProgramFiles . " (x86)"
+witcherPath := programFilesX86 . "\Steam\steamapps\common\The Witcher 3\bin\x64\witcher3.exe"
+
+tabs := [{
+    Name: "General",
+    Buttons: [
+        {Label: "Open Keys", Action: Func("OpenKeys")},
+        {Label: "Close Keys", Action: Func("CloseKeys")},
+        {Label: "Open Host", Action: Func("OpenHost")},
+        {Label: "Close Host", Action: Func("CloseHost")},
+        {Label: "Open Autocorrect", Action: Func("OpenAutocorrect")},
+        {Label: "Close Autocorrect", Action: Func("CloseAutocorrect")}
+    ]
+}, {
+    Name: "Games",
+    Buttons: [
+        {Label: "Open Fortnite", Action: Func("OpenFortnite")},
+        {Label: "Close Fortnite", Action: Func("CloseFortnite")},
+        {Label: "Open Battlefront", Action: Func("OpenBattlefront")},
+        {Label: "Close Battlefront", Action: Func("CloseBattlefront")},
+        {Label: "Open The Witcher 3", Action: Func("OpenWitcher")},
+        {Label: "Close The Witcher 3", Action: Func("CloseWitcher")},
+        {Label: "Open Gameboost", Action: Func("OpenGameboost")},
+        {Label: "Close Gameboost", Action: Func("CloseGameboost")}
+    ]
+}]
+
+CreateLauncher(tabs)
 return
 
-ChoiceA:
-    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Keys.ahk",,, KeysPID
-Return
+OpenKeys() {
+    global KeysPID
+    Run, %keysPath%,,, KeysPID
+}
 
-Choice1:
+CloseKeys() {
+    global KeysPID
     WinKill, ahk_pid %KeysPID%
-Return
+}
 
-ChoiceB:
-    Run "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Script Master\Host.ahk",,, HostPID
-Return
+OpenHost() {
+    global HostPID
+    Run, %hostPath%,,, HostPID
+}
 
-Choice2:
+CloseHost() {
+    global HostPID
     WinKill, ahk_pid %HostPID%
-Return
+}
 
-ChoiceC:
-    Run "C:\Users\janni\OneDrive\Backup\Optimal\Scripts\AHK\Autocorrect.ahk",,, AutocorrectPID
-Return
+OpenAutocorrect() {
+    global AutocorrectPID
+    Run, %autocorrectPath%,,, AutocorrectPID
+}
 
-Choice3:
+CloseAutocorrect() {
+    global AutocorrectPID
     WinKill, ahk_pid %AutocorrectPID%
-Return
+}
 
-ChoiceD:
-   Run, "C:\Program Files\Epic Games\Fortnite\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe",,, FortnitePID
+OpenFortnite() {
+    global FortnitePID
+    Run, %fortnitePath%,,, FortnitePID
     Process, Priority, %FortnitePID%, High
-Return
+}
 
-Choice4:
-   WinKill, FortniteClient-Win64-Shipping.exe
-Return
+CloseFortnite() {
+    global FortnitePID
+    if (FortnitePID + 0)
+        WinKill, ahk_pid %FortnitePID%
+    else
+        WinKill, FortniteClient-Win64-Shipping.exe
+}
 
-ChoiceE:
-   Run "C:\Users\janni\OneDrive\Backup\Game\Steam\Battlefront 2\FrostyModManager.lnk"
-   WinWait, ahk_exe starwarsbattlefrontii.exe
-   WinGet, Battlefront_pid, PID, ahk_exe starwarsbattlefrontii.exe
-   Process, Priority, %Battlefront_pid%, High
-Return
+OpenBattlefront() {
+    global BattlefrontPID
+    Run, %battlefrontPath%
+    WinWait, ahk_exe starwarsbattlefrontii.exe
+    WinGet, BattlefrontPID, PID, ahk_exe starwarsbattlefrontii.exe
+    Process, Priority, %BattlefrontPID%, High
+}
 
-Choice5:
-   WinKill, starwarsbattlefrontii.exe
-Return
+CloseBattlefront() {
+    global BattlefrontPID
+    if (BattlefrontPID + 0)
+        WinKill, ahk_pid %BattlefrontPID%
+    else
+        WinKill, starwarsbattlefrontii.exe
+}
 
-ChoiceF:
-   Run, "C:\Program Files (x86)\Steam\steamapps\common\The Witcher 3\bin\x64\witcher3.exe",,, WitcherPID
-   Process, Priority, %WitcherPID%, High
-Return
+OpenWitcher() {
+    global WitcherPID
+    Run, %witcherPath%,,, WitcherPID
+    Process, Priority, %WitcherPID%, High
+}
 
-Choice6:
-   WinKill, ahk_exe witcher3.exe
-Return
+CloseWitcher() {
+    global WitcherPID
+    if (WitcherPID + 0)
+        WinKill, ahk_pid %WitcherPID%
+    else
+        WinKill, ahk_exe witcher3.exe
+}
 
-ChoiceG:
-   Run, "C:\Users\Jannik\OneDrive\Backup\Optimal\Scripts\AHK\Gameboost.ahk",,, GamePID
-Return
+OpenGameboost() {
+    global GamePID
+    Run, %gameboostPath%,,, GamePID
+}
 
-Choice7:
-   WinKill, ahk_pid  %GamePID%
-Return
-
-ButtonOK:
-GuiClose:
-ExitApp
+CloseGameboost() {
+    global GamePID
+    WinKill, ahk_pid %GamePID%
+}
