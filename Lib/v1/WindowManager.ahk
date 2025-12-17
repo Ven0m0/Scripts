@@ -16,20 +16,14 @@ ToggleFakeFullscreen(winTitle := "A") {
     hasTitleBar := currentStyle & 0xC00000
 
     if (hasTitleBar) {
-        ; Enter fake fullscreen - remove window decorations
-        WinSet, Style, -0xC00000, %winTitle%  ; hide title bar
-        WinSet, Style, -0x800000, %winTitle%  ; hide thin-line border
-        WinSet, Style, -0x400000, %winTitle%  ; hide dialog frame
-        WinSet, Style, -0x40000, %winTitle%   ; hide thickframe/sizebox
+        ; Enter fake fullscreen - remove window decorations (combined: 0xC00000 | 0x800000 | 0x400000 | 0x40000 = 0xEC0000)
+        WinSet, Style, -0xEC0000, %winTitle%  ; Remove all decorations in single operation
 
         ; Maximize the window
         WinMove, %winTitle%, , 0, 0, A_ScreenWidth, A_ScreenHeight
     } else {
-        ; Exit fake fullscreen - restore window decorations
-        WinSet, Style, +0xC00000, %winTitle%  ; restore title bar
-        WinSet, Style, +0x800000, %winTitle%  ; restore thin-line border
-        WinSet, Style, +0x400000, %winTitle%  ; restore dialog frame
-        WinSet, Style, +0x40000, %winTitle%   ; restore thickframe/sizebox
+        ; Exit fake fullscreen - restore window decorations (combined)
+        WinSet, Style, +0xEC0000, %winTitle%  ; Restore all decorations in single operation
 
         ; Restore window to non-maximized state
         WinRestore, %winTitle%
@@ -42,10 +36,8 @@ ToggleFakeFullscreen(winTitle := "A") {
 ;   winTitle - Window to affect
 ; ============================================================================
 SetWindowBorderless(winTitle) {
-    WinSet, Style, -0xC00000, %winTitle%  ; hide title bar
-    WinSet, Style, -0x800000, %winTitle%  ; hide thin-line border
-    WinSet, Style, -0x400000, %winTitle%  ; hide dialog frame
-    WinSet, Style, -0x40000, %winTitle%   ; hide thickframe/sizebox
+    ; Remove all decorations in single operation (0xC00000 | 0x800000 | 0x400000 | 0x40000 = 0xEC0000)
+    WinSet, Style, -0xEC0000, %winTitle%
 }
 
 ; ============================================================================

@@ -42,7 +42,11 @@ positions := {}                     ; Saves Window position before snapping
 SetTimer, SetAlwaysOnTop, 1000
 Return
     SetAlwaysOnTop(){
-        WinSet, AlwaysOnTop, On, Calculator
+        if WinExist("Calculator") {
+            WinSet, AlwaysOnTop, On, Calculator
+        } else {
+            SetTimer, SetAlwaysOnTop, Off
+        }
     }
 
 ; Shift + F1 Minimizes the active window

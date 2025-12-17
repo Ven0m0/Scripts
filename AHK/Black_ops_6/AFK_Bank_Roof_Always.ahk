@@ -10,15 +10,14 @@ SetBatchLines, -1
 Process, Priority, , A
 
 F6::
-SetTimer , AFK , 100
-return
-
-AFK:
-Random, rand, 0, 20
-DllCall("Sleep","UInt",rand)
-Send {LButton}
-Sleep 10
-Send {g}
+Loop {
+    Random, rand, 0, 20
+    DllCall("Sleep","UInt",rand)
+    Send {LButton}
+    Sleep 10
+    Send {g}
+    Sleep 90  ; Total ~120ms per iteration (similar to original behavior)
+}
 return
 
 F7::ExitApp
