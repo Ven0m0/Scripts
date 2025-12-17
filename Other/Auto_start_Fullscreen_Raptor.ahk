@@ -1,5 +1,5 @@
-#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
-#Include %A_ScriptDir%\..\Lib\AutoStartHelper.ahk
+#Include %A_ScriptDir%\..\Lib\v1\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\v1\AutoStartHelper.ahk
 
 InitScript()
 

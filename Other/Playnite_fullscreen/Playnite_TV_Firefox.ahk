@@ -1,4 +1,4 @@
-#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\..\..\Lib\v1\AHK_Common.ahk
 InitScript()
 
 #SingleInstance Force
