@@ -2,7 +2,7 @@ name: Build and Release
 
 on:
   push:
-    tags: ['*']
+    tags: ["*"]
 
 permissions:
   contents: write
@@ -29,11 +29,11 @@ jobs:
           $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
           $outDir = 'release'
           New-Item -Type Directory -Force $outDir | Out-Null
-          
+
           $scripts = Get-ChildItem -Recurse -Filter *.ahk
           $compiled = 0
           $failed = @()
-          
+
           $scripts | % {
             $outExe = Join-Path $outDir "$($_.BaseName).exe"
             $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
@@ -49,9 +49,9 @@ jobs:
               $failed += $rel
             }
           }
-          
+
           Write-Host "`nCompiled: $compiled/$($scripts.Count)"
-          
+
           if ($failed) {
             Write-Host "`nFailed:" -ForegroundColor Red
             $failed | % { Write-Host "  $_" }

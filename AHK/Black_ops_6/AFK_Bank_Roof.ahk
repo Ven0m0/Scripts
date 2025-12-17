@@ -37,7 +37,7 @@ F6::  ; When F6 is pressed, start the loop
             }            
             ; Your code to execute during the loop goes here
             Random, rand, 0, 20
-			DllCall("Sleep","UInt",rand)
+            DllCall("Sleep","UInt",rand)
             Send {LButton}
             Sleep 10
             Send {g}

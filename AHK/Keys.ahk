@@ -41,9 +41,9 @@ positions := {}                     ; Saves Window position before snapping
 ; Set windows on top
 SetTimer, SetAlwaysOnTop, 1000
 Return
-	SetAlwaysOnTop(){
-		WinSet, AlwaysOnTop, On, Calculator
-	}
+    SetAlwaysOnTop(){
+        WinSet, AlwaysOnTop, On, Calculator
+    }
 
 ; Shift + F1 Minimizes the active window
 #IfWinNotActive ahk_exe Explorer.EXE

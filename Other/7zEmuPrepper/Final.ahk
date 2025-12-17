@@ -1,95 +1,140 @@
+#Requires AutoHotkey v2.0
+
+; ============================================================================
+; 7zEmuPrepper Configuration GUI
+; Generates command line for 7zEmuPrepper.ps1
+; ============================================================================
+
 #Warn
 #SingleInstance
-#NoEnv
 
-; Initialise variables
-7zEmuPrepperPath :=""
-7zipPath :=""
-EmulatorPath :=""
-Arguments :=""
-ExtractionPath :=""
-GamePath :=""
-Extensions :=""
-KeepExtracted :=""
-; --------------------------------------------------------------------------------------------------------------------------------
-Gui, Add, GroupBox, x22 y340 w430 h90 , Batch output
-Gui, Add, Edit, ReadOnly x32 y355 w410 h70 vOutput, 
-; 
-Gui, Add, GroupBox, x2 y19 w150 h30 , 7zEmuPrepperPath
-Gui, Add, Edit, x2 y34 w130 h20 v7zEmuPrepperPath gGuiInput    ;Shrunk width by 20px
-Gui, Add, Button, x132 y34 w20 h20 g7zEmuPrepperPath, F           ;Added button into above space. see below for button code
-;
-Gui, Add, GroupBox, x2 y60 w150 h30 , 7ZipPath
-Gui, Add, Edit, x2 y75 w130 h20 v7ZipPath gGuiInput
-Gui, Add, Button, x132 y75 w20 h20 g7ZipPath, F
-;
-Gui, Add, GroupBox, x2 y101 w150 h30 , EmulatorPath
-Gui, Add, Edit, x2 y116 w130 h20 vEmulatorPath gGuiInput
-Gui, Add, Button, x132 y116 w20 h20 gEmulatorPath , F 
-;
-Gui, Add, GroupBox, x2 y142 w150 h30 , Arguments
-Gui, Add, Edit, x2 y157 w130 h20 vArguments gGuiInput
-;
-Gui, Add, GroupBox, x2 y183 w150 h30 , ExtractionPath
-Gui, Add, Edit, x2 y198 w130 h20 vExtractionPath gGuiInput 
-Gui, Add, Button, x132 y198 w20 h20 gExtractionPath, F
-;
-Gui, Add, GroupBox, x2 y224 w150 h30 , GamePath
-Gui, Add, Edit, x2 y239 w130 h20 vGamePath gGuiInput
-Gui, Add, Button, x132 y239 w20 h20 gGamePath, F
-;
-Gui, Add, GroupBox, x2 y265 w150 h30 , Extensions
-Gui, Add, Edit, x2 y280 w130 h20 vExtensions gGuiInput
-;
-Gui, Add, CheckBox, x2 y305 w130 h30 vKeepExtracted gGuiInput , KeepExtracted
-;
-Gui, Show, h480 w640, Game
-Return
+; Initialize variables
+sevenZEmuPrepperPath := ""
+sevenZipPath := ""
+EmulatorPath := ""
+Arguments := ""
+ExtractionPath := ""
+GamePath := ""
+Extensions := ""
+KeepExtracted := false
 
-;The GUI fields and buttons
-GuiInput:
-  GuiControlGet 7zEmuPrepperPath
-  GuiControlGet 7zipPath
-  GuiControlGet EmulatorPath
-  GuiControlGet Arguments
-  GuiControlGet ExtractionPath
-  GuiControlGet GamePath
-  GuiControlGet Extensions
-  GuiControlGet KeepExtracted
+; Create GUI
+myGui := Gui("+AlwaysOnTop", "7zEmuPrepper Configuration")
 
-if KeepExtracted = 1
-    KeepExtracted =" -KeepExtracted"
-if KeepExtracted = 0
-    KeepExtracted :=""
+; GroupBox and Edit controls
+myGui.Add("GroupBox", "x22 y340 w430 h90", "Batch output")
+OutputEdit := myGui.Add("Edit", "ReadOnly x32 y355 w410 h70 vOutput")
 
-GuiControl, , % "Output", % " """ 7zEmuPrepperPath """ """ 7zipPath """ """ EmulatorPath """ """ Arguments """ """ ExtractionPath """ """ GamePath """ """ Extensions """ " KeepExtracted "`r`n"
-return
+myGui.Add("GroupBox", "x2 y19 w150 h30", "7zEmuPrepperPath")
+Edit7zEmuPrepper := myGui.Add("Edit", "x2 y34 w130 h20 v7zEmuPrepperPath")
+Btn7zEmuPrepper := myGui.Add("Button", "x132 y34 w20 h20", "F")
 
-GuiClose:
-ExitApp
+myGui.Add("GroupBox", "x2 y60 w150 h30", "7ZipPath")
+Edit7Zip := myGui.Add("Edit", "x2 y75 w130 h20 v7ZipPath")
+Btn7Zip := myGui.Add("Button", "x132 y75 w20 h20", "F")
 
-; Code for buttons
-7zEmuPrepperPath:
-  FileSelectFile, 7zEmuPrepperPath,,3,Select the folder to copy
-  GuiControl,,7zEmuPrepperPath,% 7zEmuPrepperPath
-return
+myGui.Add("GroupBox", "x2 y101 w150 h30", "EmulatorPath")
+EditEmulator := myGui.Add("Edit", "x2 y116 w130 h20 vEmulatorPath")
+BtnEmulator := myGui.Add("Button", "x132 y116 w20 h20", "F")
 
-7zipPath:
-  FileSelectFile, 7zipPath,,3,Select the folder to copy
-  GuiControl,,7zipPath,% 7zipPath
-return
+myGui.Add("GroupBox", "x2 y142 w150 h30", "Arguments")
+EditArguments := myGui.Add("Edit", "x2 y157 w130 h20 vArguments")
 
-EmulatorPath:
-  FileSelectFile, EmulatorPath,,3,Select the folder to copy
-  GuiControl,,EmulatorPath,% EmulatorPath
-return
+myGui.Add("GroupBox", "x2 y183 w150 h30", "ExtractionPath")
+EditExtraction := myGui.Add("Edit", "x2 y198 w130 h20 vExtractionPath")
+BtnExtraction := myGui.Add("Button", "x132 y198 w20 h20", "F")
 
-ExtractionPath:
-  FileSelectFolder, ExtractionPath,,3,Select the folder to copy
-  GuiControl,,ExtractionPath,% ExtractionPath
-return
+myGui.Add("GroupBox", "x2 y224 w150 h30", "GamePath")
+EditGame := myGui.Add("Edit", "x2 y239 w130 h20 vGamePath")
+BtnGame := myGui.Add("Button", "x132 y239 w20 h20", "F")
 
-GamePath:
-  FileSelectFile, GamePath,,3,Select the folder to copy
-  GuiControl,,GamePath,% GamePath
-return
+myGui.Add("GroupBox", "x2 y265 w150 h30", "Extensions")
+EditExtensions := myGui.Add("Edit", "x2 y280 w130 h20 vExtensions")
+
+CheckKeep := myGui.Add("CheckBox", "x2 y305 w130 h30 vKeepExtracted", "KeepExtracted")
+
+; Set event handlers
+Edit7zEmuPrepper.OnEvent("Change", UpdateOutput)
+Edit7Zip.OnEvent("Change", UpdateOutput)
+EditEmulator.OnEvent("Change", UpdateOutput)
+EditArguments.OnEvent("Change", UpdateOutput)
+EditExtraction.OnEvent("Change", UpdateOutput)
+EditGame.OnEvent("Change", UpdateOutput)
+EditExtensions.OnEvent("Change", UpdateOutput)
+CheckKeep.OnEvent("Click", UpdateOutput)
+
+Btn7zEmuPrepper.OnEvent("Click", Select7zEmuPrepper)
+Btn7Zip.OnEvent("Click", Select7Zip)
+BtnEmulator.OnEvent("Click", SelectEmulator)
+BtnExtraction.OnEvent("Click", SelectExtraction)
+BtnGame.OnEvent("Click", SelectGame)
+
+myGui.OnEvent("Close", (*) => ExitApp())
+
+myGui.Show("h480 w640")
+
+; Event handler functions
+UpdateOutput(*) {
+    global
+    sevenZEmuPrepperPath := Edit7zEmuPrepper.Value
+    sevenZipPath := Edit7Zip.Value
+    EmulatorPath := EditEmulator.Value
+    Arguments := EditArguments.Value
+    ExtractionPath := EditExtraction.Value
+    GamePath := EditGame.Value
+    Extensions := EditExtensions.Value
+    KeepExtracted := CheckKeep.Value
+
+    keepFlag := KeepExtracted ? " -KeepExtracted" : ""
+
+    outputText := ' "' . sevenZEmuPrepperPath . '" "' . sevenZipPath . '" "'
+        . EmulatorPath . '" "' . Arguments . '" "' . ExtractionPath . '" "'
+        . GamePath . '" "' . Extensions . '"' . keepFlag . "`r`n"
+
+    OutputEdit.Value := outputText
+}
+
+Select7zEmuPrepper(*) {
+    global
+    selected := FileSelect(3, , "Select 7zEmuPrepper.ps1")
+    if (selected != "") {
+        Edit7zEmuPrepper.Value := selected
+        UpdateOutput()
+    }
+}
+
+Select7Zip(*) {
+    global
+    selected := FileSelect(3, , "Select 7-Zip executable")
+    if (selected != "") {
+        Edit7Zip.Value := selected
+        UpdateOutput()
+    }
+}
+
+SelectEmulator(*) {
+    global
+    selected := FileSelect(3, , "Select emulator executable")
+    if (selected != "") {
+        EditEmulator.Value := selected
+        UpdateOutput()
+    }
+}
+
+SelectExtraction(*) {
+    global
+    selected := DirSelect(, 3, "Select extraction folder")
+    if (selected != "") {
+        EditExtraction.Value := selected
+        UpdateOutput()
+    }
+}
+
+SelectGame(*) {
+    global
+    selected := FileSelect(3, , "Select game archive")
+    if (selected != "") {
+        EditGame.Value := selected
+        UpdateOutput()
+    }
+}
