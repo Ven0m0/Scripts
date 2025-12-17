@@ -15,16 +15,15 @@ InitScript(false, false, true)
 #SingleInstance Force
 ProcessSetPriority("High")
 
-AFK() {
-    rand := Random(0, 20)
-    DllCall("Sleep", "UInt", rand)
-    Send("{LButton}")
-    Sleep(10)
-    Send("{g}")
-}
-
 F6:: {
-    SetTimer(AFK, 100)
+    Loop {
+        rand := Random(0, 20)
+        DllCall("Sleep", "UInt", rand)
+        Send("{LButton}")
+        Sleep(10)
+        Send("{g}")
+        Sleep(90)  ; Total ~120ms per iteration (similar to original behavior)
+    }
 }
 
 F7:: {

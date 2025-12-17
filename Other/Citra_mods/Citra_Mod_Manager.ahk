@@ -13,25 +13,29 @@ Menu, Tray, Tip, Citra Mod Manager
 EnvGet OneDrive, ONEDRIVE
 root := OneDrive "\Backup\Game\Emul\Citra\nightly-mingw\Mods"
 
-Destination := ""
-Buttons := {}                                                                  ; Create Object for the Folder Names and Related Paths
+; Read CSV once and cache destinations in an associative array
+Destinations := {}
+loop Read, % A_ScriptDir "\Destination.csv"
+{
+    if (InStr(A_LoopReadLine, ","))
+    {
+        parts := StrSplit(A_LoopReadLine, ",")
+        if (parts.Length() >= 2)
+            Destinations[parts[1]] := parts[2]
+    }
+}
+
+Buttons := {}  ; Create Object for the Folder Names and Related Paths
 loop, Files, % root "\*.*", D
 {
-        Gamename := A_LoopFileName     ; save game name
-        Gamepath := A_LoopFileFullPath ; save game path
-        findDest:
-        loop Read, % A_ScriptDir "\Destination.csv"
-        {
-                if (InStr(A_LoopReadLine, Gamename))
-                {
-                        Destination := StrReplace(A_LoopReadLine, Gamename . ",", "")
-                        break findDest
-                }
-        }
-        loop, Files, % Gamepath "\*.*", D
-        {
-                Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath, "Ziel":Destination})
-        }
+    Gamename := A_LoopFileName     ; save game name
+    Gamepath := A_LoopFileFullPath ; save game path
+    Destination := Destinations[Gamename]  ; Look up from cached data
+
+    loop, Files, % Gamepath "\*.*", D
+    {
+        Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath, "Ziel":Destination})
+    }
 }
 
 Gui, New, -MinimizeBox, Citra Mod Manager
@@ -51,7 +55,8 @@ return ; End of auto-execute
 
 FileActions(Root, Button)
 {
-        Zielpfad = C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\nightly-mingw\user\load\mods
+        EnvGet, OneDriveDir, OneDrive
+        Zielpfad = %OneDriveDir%\Backup\Game\Emul\Citra\nightly-mingw\user\load\mods
         Fullpath := Zielpfad "\" button.Ziel "\" button.Name
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path

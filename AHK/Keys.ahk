@@ -1,8 +1,5 @@
-; UIA check
-if !InStr(A_AhkPath, "_UIA.exe") {
-    Run, % A_AhkPath . " U" (32 << A_Is64bitOS) "_UIA.exe"
-    ExitApp
-}
+#Include %A_ScriptDir%\..\Lib\v1\AHK_Common.ahk
+InitScript(true, false, false)  ; UIA required, no admin, no optimization (manual settings below)
 
 #SingleInstance, Force
 #NoEnv
@@ -42,7 +39,11 @@ positions := {}                     ; Saves Window position before snapping
 SetTimer, SetAlwaysOnTop, 1000
 Return
     SetAlwaysOnTop(){
-        WinSet, AlwaysOnTop, On, Calculator
+        if WinExist("Calculator") {
+            WinSet, AlwaysOnTop, On, Calculator
+        } else {
+            SetTimer, SetAlwaysOnTop, Off
+        }
     }
 
 ; Shift + F1 Minimizes the active window

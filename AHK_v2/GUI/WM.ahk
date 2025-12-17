@@ -18,6 +18,7 @@ ProcessSetPriority("Normal")
 
 MatchList := ""
 ExclusionList := ["ShellExperienceHost.exe", "SearchUI.exe"]
+LastSaved := Map()  ; Cache for last saved positions to avoid redundant INI writes
 
 ; Build initial list of windows
 try {
@@ -34,7 +35,7 @@ try {
 SetTimer(MonitorWindows, 350)
 
 MonitorWindows() {
-    global MatchList, ExclusionList
+    global MatchList, ExclusionList, LastSaved
 
     try {
         active_id := WinGetID("A")
@@ -75,7 +76,7 @@ MonitorWindows() {
 }
 
 SaveCurrentWindowPosition() {
-    global ExclusionList
+    global ExclusionList, LastSaved
 
     try {
         WinGetPos(&X, &Y, &Width, &Height, "A")
@@ -98,8 +99,12 @@ SaveCurrentWindowPosition() {
                     return
             }
 
-            ; Save to INI
-            IniWrite(X . "," . Y . "," . Width . "," . Height, A_ScriptDir . "\WindowSizePosLog.ini", "Process Names", active_ProcessName)
+            ; Only write if position/size changed
+            currentValue := X . "," . Y . "," . Width . "," . Height
+            if (!LastSaved.Has(active_ProcessName) || LastSaved[active_ProcessName] != currentValue) {
+                IniWrite(currentValue, A_ScriptDir . "\WindowSizePosLog.ini", "Process Names", active_ProcessName)
+                LastSaved[active_ProcessName] := currentValue
+            }
         }
     }
 }

@@ -16,27 +16,24 @@ InitScript(false, false, true)
 ProcessSetPriority("High")
 
 F6:: {
-    SetTimer(AFK, 500)
-}
-
-AFK() {
-    rand := Random(250, 2001)
-    Sleep(rand)
-    Send("{p}")
-    Sleep(1001)
-    Send("{2}")
-    Sleep(1001)
-    Send("{RButton down}")
-    Sleep(1001)
-    Send("{RButton up}")
-    Sleep(3001)
-    Send("{c}")
-    Sleep(1001)
-    Send("{p}")
-    Sleep(75001)
+    Loop {
+        rand := Random(250, 2001)
+        Sleep(rand)
+        Send("{p}")
+        Sleep(1001)
+        Send("{2}")
+        Sleep(1001)
+        Send("{RButton down}")
+        Sleep(1001)
+        Send("{RButton up}")
+        Sleep(3001)
+        Send("{c}")
+        Sleep(1001)
+        Send("{p}")
+        Sleep(75001)
+    }
 }
 
 F7:: {
-    SetTimer(AFK, 0)
     ExitApp()
 }

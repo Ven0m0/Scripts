@@ -20,7 +20,8 @@ SendMode Input  ; Recommended for new scripts due to its superior speed and reli
 SetTitleMatchMode, 3 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
 SetTitleMatchMode, Fast
 
-ToolDir := "C:\Users\janni\OneDrive\Backup\Optimal\Scripts\Other\Playnite\Playnite Fullscreen"
+EnvGet, OneDriveDir, OneDrive
+ToolDir := OneDriveDir . "\Backup\Optimal\Scripts\Other\Playnite\Playnite Fullscreen"
 Run, shell:AppsFolder\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App
 DllCall("kernel32.dll\Sleep", "UInt", 250)
 RunWait, %ToolDir%\SoundVolumeView\SoundVolumeView.exe /SetDefault THX Spatial - Synapse

@@ -31,6 +31,9 @@ Loop, %id%
 ; ExclusionList
 ExclusionList = ShellExperienceHost.exe,SearchUI.exe
 
+; Cache for last saved positions to avoid redundant INI writes
+LastSaved := {}
+
 ; The main program loop, which manages window positions/sizes and saves their last known configuration to an ini file in the script directory.
 Loop,
 {
@@ -67,7 +70,12 @@ Loop,
                 }
                 else if active_ProcessName not in %ExclusionList%
                 {
-                    IniWrite %X%`,%Y%`,%Width%`,%Height%, %A_ScriptDir%\WindowSizePosLog.ini, Process Names, %active_ProcessName%
+                    ; Only write if position/size changed
+                    currentValue := X "," Y "," Width "," Height
+                    if (LastSaved[active_ProcessName] != currentValue) {
+                        IniWrite %X%`,%Y%`,%Width%`,%Height%, %A_ScriptDir%\WindowSizePosLog.ini, Process Names, %active_ProcessName%
+                        LastSaved[active_ProcessName] := currentValue
+                    }
                 }
             }
         }
@@ -85,7 +93,12 @@ Loop,
             }
             else if active_ProcessName not in %ExclusionList%
             {
-                IniWrite %X%`,%Y%`,%Width%`,%Height%, %A_ScriptDir%\WindowSizePosLog.ini, Process Names, %active_ProcessName%
+                ; Only write if position/size changed
+                currentValue := X "," Y "," Width "," Height
+                if (LastSaved[active_ProcessName] != currentValue) {
+                    IniWrite %X%`,%Y%`,%Width%`,%Height%, %A_ScriptDir%\WindowSizePosLog.ini, Process Names, %active_ProcessName%
+                    LastSaved[active_ProcessName] := currentValue
+                }
             }
         }
     }

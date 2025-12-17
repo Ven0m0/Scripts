@@ -18,20 +18,14 @@ ToggleFakeFullscreen(winTitle := "A") {
     hasTitleBar := currentStyle & 0xC00000
 
     if (hasTitleBar) {
-        ; Enter fake fullscreen - remove window decorations
-        WinSetStyle(-0xC00000, winTitle)  ; hide title bar
-        WinSetStyle(-0x800000, winTitle)  ; hide thin-line border
-        WinSetStyle(-0x400000, winTitle)  ; hide dialog frame
-        WinSetStyle(-0x40000, winTitle)   ; hide thickframe/sizebox
+        ; Enter fake fullscreen - remove window decorations (combined: 0xC00000 | 0x800000 | 0x400000 | 0x40000 = 0xEC0000)
+        WinSetStyle(-0xEC0000, winTitle)  ; Remove all decorations in single operation
 
         ; Maximize the window
         WinMove(0, 0, A_ScreenWidth, A_ScreenHeight, winTitle)
     } else {
-        ; Exit fake fullscreen - restore window decorations
-        WinSetStyle(0xC00000, winTitle)  ; restore title bar
-        WinSetStyle(0x800000, winTitle)  ; restore thin-line border
-        WinSetStyle(0x400000, winTitle)  ; restore dialog frame
-        WinSetStyle(0x40000, winTitle)   ; restore thickframe/sizebox
+        ; Exit fake fullscreen - restore window decorations (combined)
+        WinSetStyle(0xEC0000, winTitle)  ; Restore all decorations in single operation
 
         ; Restore window to non-maximized state
         WinRestore(winTitle)
@@ -44,10 +38,8 @@ ToggleFakeFullscreen(winTitle := "A") {
 ;   winTitle - Window to affect
 ; ============================================================================
 SetWindowBorderless(winTitle) {
-    WinSetStyle(-0xC00000, winTitle)  ; hide title bar
-    WinSetStyle(-0x800000, winTitle)  ; hide thin-line border
-    WinSetStyle(-0x400000, winTitle)  ; hide dialog frame
-    WinSetStyle(-0x40000, winTitle)   ; hide thickframe/sizebox
+    ; Remove all decorations in single operation (0xC00000 | 0x800000 | 0x400000 | 0x40000 = 0xEC0000)
+    WinSetStyle(-0xEC0000, winTitle)
 }
 
 ; ============================================================================
@@ -169,8 +161,6 @@ ToggleFakeFullscreenMultiMonitor(winTitle := "A") {
 ;   winTitle - Window to affect
 ; ============================================================================
 RestoreWindowBorders(winTitle) {
-    WinSetStyle(0xC00000, winTitle)   ; restore title bar
-    WinSetStyle(0x800000, winTitle)   ; restore thin-line border
-    WinSetStyle(0x400000, winTitle)   ; restore dialog frame
-    WinSetStyle(0x40000, winTitle)    ; restore thickframe/sizebox
+    ; Restore all decorations in single operation (0xC00000 | 0x800000 | 0x400000 | 0x40000 = 0xEC0000)
+    WinSetStyle(0xEC0000, winTitle)
 }

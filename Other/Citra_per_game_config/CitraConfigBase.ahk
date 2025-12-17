@@ -21,4 +21,5 @@ SendMode Input
 SetTitleMatchMode, 3
 
 ; Global config file path
-global CitraConfigFile := "C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\nightly-mingw\user\config\qt-config.ini"
+EnvGet, OneDriveDir, OneDrive
+global CitraConfigFile := OneDriveDir . "\Backup\Game\Emul\Citra\nightly-mingw\user\config\qt-config.ini"
