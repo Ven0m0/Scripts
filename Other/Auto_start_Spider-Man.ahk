@@ -1,17 +1,24 @@
-#Include %A_ScriptDir%\..\Lib\v1\AHK_Common.ahk
+#Requires AutoHotkey v2.0
 
-InitScript()
+; ============================================================================
+; Auto_start_Spider-Man.ahk - Auto-start Spider-Man with splash screen dismiss
+; ============================================================================
 
-#NoEnv
-SetWorkingDir %A_ScriptDir%
-DetectHiddenText, Off
-DetectHiddenWindows, Off
-SetTitleMatchMode, 2
-SetTitleMatchMode, Fast
+#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#SingleInstance Force
+
+InitScript(false, false, true)
+
+SetWorkingDir(A_ScriptDir)
+DetectHiddenText(false)
+DetectHiddenWindows(false)
+SetTitleMatchMode(2)
+SetTitleMatchMode("Fast")
 
 ; Spider-Man requires Enter key to dismiss splash screen
-WinWait, ahk_exe Spider-Man.exe
-Sleep, 500
-ControlSend, , {Enter}, ahk_exe Spider-Man.exe
-Sleep, 3500
-WinActivate, ahk_exe Spider-Man.exe
+WinWait("ahk_exe Spider-Man.exe")
+Sleep(500)
+ControlSend("{Enter}", , "ahk_exe Spider-Man.exe")
+Sleep(3500)
+WinActivate("ahk_exe Spider-Man.exe")
+ExitApp()

@@ -61,23 +61,33 @@ This repository has undergone a comprehensive migration from AutoHotkey v1.1 to 
 
 ### Migration Strategy
 
-**Migrated to v2** (35+ scripts):
+**Migrated to v2** (45+ scripts):
 - ✅ All core libraries (Lib/v2/)
 - ✅ All AFK macros (Black Ops 6, Minecraft)
 - ✅ All GUI scripts (GUI_PC, GUI_Laptop, GUI_Shared, WM)
 - ✅ All Playnite launcher variants (4 scripts)
 - ✅ Utility scripts (ControllerQuit, Powerplan, Fullscreen, etc.)
 - ✅ Lossless_Scaling automation scripts
+- ✅ Other/Auto_start_Spider-Man.ahk - Custom splash screen handling
+- ✅ Other/Auto_start_Fullscreen_and_Rotate_Bluestacks.ahk - Rotation automation
+- ✅ Other/Ryujinx_LDN.ahk - Fixed hardcoded paths using OneDrive env var
+- ✅ Other/RemotePlay_Whatever.ahk - Fixed hardcoded paths
+- ✅ Other/UIA Install.ahk - v2 compatible installer
+- ✅ Other/7zEmuPrepper/Final.ahk - GUI migrated to v2 object-oriented syntax
 
 **Kept in v1.1** (scripts with complex dependencies):
 - 🔒 Keys.ahk - Complex COM interactions, extensive testing required
 - 🔒 Citra configuration scripts - Dependency on tf.ahk library (v1 only)
 - 🔒 Downloader scripts - Legacy but functional, security patches applied
+- 🔒 String.ahk - Unused third-party library (can be deleted or migrated if needed)
 
-**Consolidated & Deleted** (13 duplicates):
+**Consolidated & Deleted** (24 files):
 - ❌ 9 auto-start scripts → 1 data-driven AutoStartManager.ahk with AutoStartConfig.ini
 - ❌ 3 fullscreen variants → 1 unified AHK_v2/Fullscreen.ahk
 - ❌ 4 duplicate downloader drafts removed
+- ❌ 7 deprecated auto-start v1 files (covered by AutoStartManager)
+- ❌ 4 deprecated v1 utility files (Close_Window, Kill_Bluestacks, Lossless_Scaling_*)
+- ❌ 1 deprecated Playnite_fullscreen/ directory (replaced by Playnite_fullscreen_v2/)
 
 ### Dual Library Architecture
 
@@ -1734,18 +1744,26 @@ DllCall("Sleep", UInt, 100)  ; Exactly 100ms
 ## Changelog
 
 ### 2025-12-17
-- **MAJOR:** Completed AutoHotkey v2 migration (35+ scripts migrated)
+- **MAJOR:** Completed AutoHotkey v2 migration (45+ scripts migrated)
 - Created dual library architecture (Lib/v1/ and Lib/v2/)
 - Consolidated 9 auto-start scripts into data-driven AutoStartManager.ahk
 - Unified 3 fullscreen variants into single Fullscreen.ahk
 - Migrated all AFK macros (Black Ops 6, Minecraft) to v2
 - Migrated all GUI scripts (GUI_PC, GUI_Laptop, GUI_Shared, WM) to v2
 - Migrated all Playnite launcher scripts (4 variants) to v2
+- Migrated Other/ directory scripts to v2:
+  - Auto_start_Spider-Man.ahk (custom splash screen handling)
+  - Auto_start_Fullscreen_and_Rotate_Bluestacks.ahk (rotation automation)
+  - Ryujinx_LDN.ahk (fixed hardcoded paths using OneDrive env var)
+  - RemotePlay_Whatever.ahk (fixed hardcoded paths)
+  - UIA Install.ahk (v2 compatible installer)
+  - 7zEmuPrepper/Final.ahk (GUI migrated to v2 object-oriented syntax)
 - **SECURITY:** Fixed command injection vulnerability in all downloader scripts
+- **CLEANUP:** Fixed hardcoded user paths in Ryujinx_LDN.ahk and RemotePlay_Whatever.ahk
 - Updated CI/CD workflow for automatic v1/v2 version detection
 - Added comprehensive v2 migration documentation and syntax reference
 - Updated Known Issues section (2 HIGH priority issues resolved)
-- Reduced codebase by 13 duplicate/redundant files
+- Reduced codebase by 24 duplicate/redundant files
 
 ### 2025-12-04
 - Initial creation of CLAUDE.md

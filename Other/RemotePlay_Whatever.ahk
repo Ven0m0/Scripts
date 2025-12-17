@@ -1,21 +1,45 @@
-#SingleInstance Force
-#Warn  ; Enable warnings to assist with detecting common errors.
-#NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
-#KeyHistory 0 
-ListLines Off ; ListLines and #KeyHistory are functions used to "log your keys". Disable them as they're only useful for debugging purposes.
-SetKeyDelay, -1, -1
-SetMouseDelay, -1
-SetDefaultMouseSpeed, 0 ; Even though SendInput ignores SetKeyDelay, SetMouseDelay and SetDefaultMouseSpeed, having these delays at -1 improves SendEvent's speed just in case SendInput is not available and falls back to SendEvent.
-SetWinDelay, -1
-SetControlDelay, -1 ; SetWinDelay and SetControlDelay may affect performance depending on the script.
-SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
-SetTitleMatchMode, 2 ; Use SetTitleMatchMode 2 when you want to use wintitle that contains text anywhere in the title
-SetTitleMatchMode, Fast
+#Requires AutoHotkey v2.0
 
-Run, C:\Program Files (x86)\Steam\steam.exe
+; ============================================================================
+; RemotePlay_Whatever.ahk - Launch Steam and RemotePlayWhatever
+; ============================================================================
+
+#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#SingleInstance Force
+
+InitScript(false, false, true)
+
+SetWorkingDir(A_ScriptDir)
+SetTitleMatchMode(2)
+SetTitleMatchMode("Fast")
+
+; Launch Steam (standard x86 installation path)
+steamPath := "C:\Program Files (x86)\Steam\steam.exe"
+
+; Try alternate 64-bit path if x86 doesn't exist
+if (!FileExist(steamPath)) {
+    steamPath := "C:\Program Files\Steam\steam.exe"
+}
+
+Run(steamPath)
 DllCall("kernel32.dll\Sleep", "UInt", 2000)
-If !WinExist("ahk_exe steam.exe")
-Run, C:\Program Files (x86)\Steam\steam.exe
-WinWait, ahk_exe steam.exe
-Run, C:\Users\janni\OneDrive\Backup\Game\Other\Tools\Multiplayer\RemotePlayWhatever\RemotePlayWhatever.exe
+
+; Retry if Steam window not found
+if (!WinExist("ahk_exe steam.exe")) {
+    Run(steamPath)
+}
+
+WinWait("ahk_exe steam.exe")
+
+; Construct RemotePlayWhatever path using OneDrive environment variable
+; NOTE: Update this path if your RemotePlayWhatever installation is in a different location
+oneDrivePath := EnvGet("OneDrive")
+remotePlayPath := oneDrivePath . "\Backup\Game\Other\Tools\Multiplayer\RemotePlayWhatever\RemotePlayWhatever.exe"
+
+; Fallback to hardcoded path if OneDrive env var not found
+if (oneDrivePath = "") {
+    remotePlayPath := "C:\Users\" . A_UserName . "\OneDrive\Backup\Game\Other\Tools\Multiplayer\RemotePlayWhatever\RemotePlayWhatever.exe"
+}
+
+Run(remotePlayPath)
+ExitApp()
