@@ -55,7 +55,8 @@ return ; End of auto-execute
 
 FileActions(Root, Button)
 {
-        Zielpfad = C:\Users\janni\OneDrive\Backup\Game\Emul\Citra\nightly-mingw\user\load\mods
+        EnvGet, OneDriveDir, OneDrive
+        Zielpfad = %OneDriveDir%\Backup\Game\Emul\Citra\nightly-mingw\user\load\mods
         Fullpath := Zielpfad "\" button.Ziel "\" button.Name
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path
