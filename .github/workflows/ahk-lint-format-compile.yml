@@ -18,38 +18,66 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install AutoHotkey
+      - name: Install AutoHotkey v1.1 (Portable)
+        run: choco install autohotkey.portable --version=1.1.37.02 -y
+        shell: pwsh
+
+      - name: Install AutoHotkey v2
         run: choco install autohotkey --version=2.0.19 -y
         shell: pwsh
 
-      - name: Verify Installation
+      - name: Verify Installations
         run: |
-          $ahk = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-          if (!(Test-Path $ahk)) { throw "Installation failed: $ahk not found" }
-          Write-Host "Installed: $(& $ahk --version)"
+          $ahkV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\AutoHotkey.exe"
+          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+
+          if (!(Test-Path $ahkV1)) { throw "V1 Installation failed: $ahkV1 not found" }
+          if (!(Test-Path $ahkV2)) { throw "V2 Installation failed: $ahkV2 not found" }
+
+          Write-Host "Installed AHK v1: $((Get-Item $ahkV1).VersionInfo.FileVersion)"
+          Write-Host "Installed AHK v2: $(& $ahkV2 --version)"
         shell: pwsh
 
       - name: Syntax Check & Format Validation
         run: |
-          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          $compilerV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
+          $compilerV2 = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
           $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
           $syntaxErrors = @()
           $formatIssues = @()
           $checked = 0
-          
+          $v1Count = 0
+          $v2Count = 0
+
           Get-ChildItem -Recurse -Filter *.ahk | % {
             $checked++
             $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
-            
+
+            # Detect AHK version
+            $content = Get-Content $_.FullName -Raw -Encoding UTF8
+            $isV2 = $false
+
+            # Check for #Requires AutoHotkey v2 directive
+            if ($content -match '(?m)^#Requires\s+AutoHotkey\s+v2') {
+              $isV2 = $true
+            }
+            # Check for v2 directory paths
+            elseif ($rel -match '(Lib[\\/]v2[\\/]|AHK_v2[\\/])') {
+              $isV2 = $true
+            }
+
+            $compiler = if ($isV2) { $compilerV2; $v2Count++ } else { $compilerV1; $v1Count++ }
+            $version = if ($isV2) { "v2" } else { "v1" }
+
             # Syntax check
             $tempExe = Join-Path $tempDir "$([IO.Path]::GetRandomFileName()).exe"
             & $compiler /in $_.FullName /out $tempExe 2>&1 | Out-Null
-            
+
             if ($LASTEXITCODE -eq 0 -and (Test-Path $tempExe)) {
-              Write-Host "✓ $rel" -ForegroundColor Green
+              Write-Host "✓ $rel ($version)" -ForegroundColor Green
               Remove-Item $tempExe -Force -EA SilentlyContinue
             } else {
-              Write-Host "❌ $rel - syntax error" -ForegroundColor Red
+              Write-Host "❌ $rel ($version) - syntax error" -ForegroundColor Red
               $syntaxErrors += $rel
             }
             
@@ -67,8 +95,8 @@ jobs:
           }
           
           Remove-Item $tempDir -Recurse -Force -EA SilentlyContinue
-          
-          Write-Host "`nChecked: $checked | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
+
+          Write-Host "`nChecked: $checked (v1: $v1Count, v2: $v2Count) | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
           
           if ($syntaxErrors) {
             Write-Host "`nSyntax errors in:" -ForegroundColor Red
