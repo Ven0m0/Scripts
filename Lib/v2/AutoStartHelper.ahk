@@ -1,65 +1,41 @@
 #Requires AutoHotkey v2.0
 
-; ============================================================================
-; AutoStartHelper.ahk - Helper functions for auto-start fullscreen scripts
-; Version: 2.0.0 (Migrated to AHK v2)
-; ============================================================================
+; AutoStartHelper – wait, maximize, fullscreen helpers
 
-; ============================================================================
-; AutoStartFullscreen(exeName, fullscreenKey := "F11", maximize := true, delay := 0, activate := false)
-; Waits for a process to start and makes it fullscreen
-;
-; Parameters:
-;   exeName         - Executable name (e.g., "citra-qt.exe")
-;   fullscreenKey   - Key to send for fullscreen (default: "F11")
-;   maximize        - Whether to maximize window first (default: true)
-;   delay           - Delay in milliseconds before sending fullscreen key (default: 0)
-;   activate        - Whether to activate window before maximizing (default: false)
-; ============================================================================
-AutoStartFullscreen(exeName, fullscreenKey := "F11", maximize := true, delay := 0, activate := false) {
-    ; Wait for the window to appear
-    WinWait("ahk_exe " . exeName)
-
-    ; Apply initial delay if specified
-    if (delay > 0)
-        Sleep(delay)
-
-    ; Activate window if requested
-    if (activate)
-        WinActivate("ahk_exe " . exeName)
-
-    ; Maximize if requested
-    if (maximize)
-        WinMaximize("ahk_exe " . exeName)
-
-    ; Send fullscreen key
-    if (fullscreenKey != "")
-        ControlSend("{" . fullscreenKey . "}", , "ahk_exe " . exeName)
+WaitWin(target, timeout := 0) {
+    try {
+        WinWait(target, , timeout)
+        return true
+    } catch TimeoutError {
+        return false
+    }
 }
 
-; ============================================================================
-; AutoStartFullscreenWithTitle(winTitle, fullscreenKey := "F11", maximize := true, delay := 0)
-; Waits for a window with specific title and makes it fullscreen
-;
-; Parameters:
-;   winTitle        - Window title to wait for
-;   fullscreenKey   - Key to send for fullscreen (default: "F11")
-;   maximize        - Whether to maximize window first (default: true)
-;   delay           - Delay in milliseconds before sending fullscreen key (default: 0)
-; ============================================================================
-AutoStartFullscreenWithTitle(winTitle, fullscreenKey := "F11", maximize := true, delay := 0) {
-    ; Wait for the window to appear
-    WinWait(winTitle)
+MaybeActivateMaximize(target, maximize, activate) {
+    if activate
+        WinActivate(target)
+    if maximize
+        WinMaximize(target)
+}
 
-    ; Maximize if requested
-    if (maximize)
-        WinMaximize(winTitle)
-
-    ; Apply delay if specified
+AutoStartFullscreen(exeName, fullscreenKey := "F11", maximize := true, delay := 0, activate := false) {
+    target := "ahk_exe " . exeName
+    if !WaitWin(target)
+        return
     if (delay > 0)
         Sleep(delay)
+    MaybeActivateMaximize(target, maximize, activate)
+    if fullscreenKey != ""
+        ControlSend("{" . fullscreenKey . "}", , target)
+}
 
-    ; Send fullscreen key
-    if (fullscreenKey != "")
-        ControlSend("{" . fullscreenKey . "}", , winTitle)
+AutoStartFullscreenWithTitle(winTitle, fullscreenKey := "F11", maximize := true, delay := 0) {
+    target := winTitle
+    if !WaitWin(target)
+        return
+    MaybeActivateMaximize(target, maximize, false)
+    if (delay > 0)
+        Sleep(delay)
+    if fullscreenKey != ""
+        ControlSend("{" . fullscreenKey . "}", , target)
 }
