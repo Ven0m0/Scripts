@@ -1,101 +1,113 @@
-param (
-    [Parameter(Mandatory=$True)]
-    [string]$7ZipPath, # File location of the 7Zip exe
-    [Parameter(Mandatory=$True)]
-    [string]$emulatorPath, # File location of the Emulator exe
-    [Parameter(Mandatory=$True)]
-    [string]$emulatorArguments, # Arguments for the Emulator
-    [Parameter(Mandatory=$True)]
-    [string]$extractionPath, # Path to extract to
-    [Parameter(Mandatory=$True)]
-    [string]$filePath, # Exact location of the compressed file
-    [Parameter(Mandatory=$True)]
-    [string]$launchFile, # File extension to try and launch
-    [Parameter(Mandatory=$False)]
-    [switch]$KeepExtracted # Determines whether extracted files are kept or deleted
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory)]
+    [string]$SevenZipPath,          # Path to 7z.exe
+    [Parameter(Mandatory)]
+    [string]$EmulatorPath,          # Path to emulator exe
+    [Parameter()]
+    [string]$EmulatorArguments = "",# Arguments for emulator (single string)
+    [Parameter(Mandatory)]
+    [string]$ExtractionPath,        # Where to extract
+    [Parameter(Mandatory)]
+    [string]$ArchivePath,           # Compressed file
+    [Parameter(Mandatory)]
+    [string]$LaunchExtensions,      # Extension(s) to launch, e.g. ".iso" or ".iso,.bin"
+    [switch]$KeepExtracted          # Keep extracted content
 )
 
-#create the here-string
-$here_string = @"
-------------------------------------------------------------
-7Z-Emu-Prepper by UnluckyForSome
-------------------------------------------------------------
-7Zip                    = $7ZipPath
-Emulator                = $emulatorPath
-Emulator Arguments      = $emulatorArguments
-Archive                 = $filePath
-Extracting To           = $extractionPath
-Filetype(s) To Launch   = $launchFile
-Keep Extracted          = $keepExtracted
-"@
+$ErrorActionPreference = "Stop"
 
-# Print Intro & Settings
-$here_string
+function Write-Info { param($msg) Write-Host $msg }
+function Fail { param($msg) Write-Error $msg; exit 1 }
 
-# Define the individual filename without the rest of the path
-$fileName = [System.IO.Path]::GetFileNameWithoutExtension("$filePath")
-
-# See if the game is already extracted
-
-
-# Set location
-Set-Location -Path $extractionPath
-
-if (Test-Path "$fileName.*") {
-
-""
-
-# Define the path of the correct file to try and launch with the emulator
-$extractedFile = Get-Item -Path "$fileName*.*" | Where-Object -Property Extension -Match -Value $launchFile | Select-Object -Last 1 -ExpandProperty FullName
-if ($extractedFile) {
-    "Archive Already Extracted. Launching [$extractedFile]..."
-    Start-Process $emulatorPath -ArgumentList $emulatorArguments, "`"$extractedFile`"" -Wait
-} else {
-    Write-Error "No matching file found to launch with extension: $launchFile"
-    exit 1
+function Validate-Path {
+    param($path, [switch]$File, [switch]$Dir, [string]$name)
+    if ($File -and -not (Test-Path $path -PathType Leaf)) { Fail "$name not found: $path" }
+    if ($Dir  -and -not (Test-Path $path -PathType Container)) { Fail "$name not found: $path" }
 }
 
-
-}
-else {
-""
-
-# Start extraction in 7Zip, skip files already present and output progress
-"Extracting [$filePath]..."
-& $7ZipPath "x" $filePath "-o$extractionPath" "-aos" "-bsp1" | out-string -stream | Select-String -Pattern "\d{1,3}%" -AllMatches | ForEach-Object { $_.Matches.Value } | foreach {
-    [System.Console]::SetCursorPosition(0, [System.Console]::CursorTop) 
-    Write-Host "Progress:" $_ -NoNewLine
-}
-
-
-# Define the path of the correct file to try and launch with the emulator
-$extractedFile = Get-Item -Path "$fileName*.*" | Where-Object -Property Extension -Match -Value $launchFile | Select-Object -Last 1 -ExpandProperty FullName
-if ($extractedFile) {
-    ""
-    "Archive Extraction Complete. Launching [$extractedFile]..."
-    Start-Process $emulatorPath -ArgumentList $emulatorArguments, "`"$extractedFile`"" -Wait
-} else {
-    Write-Error "No matching file found to launch with extension: $launchFile"
-    exit 1
-}
-}
-# If "KeepExtracted" argument passed, exit before removal
-if ($KeepExtracted)
-{ 
-    "Process Complete!"
-    exit
-}
-
-# If "KeepExtracted" argument is not passed, remove all of the extracted files when emulator closes
-else
-{
-    # Get the name of the extracted file without the extension so we can delete everything with that name
-    if ($extractedFile -and $extractedFile.Contains(".")) {
-        $extractedFileNoExtension = $extractedFile.Substring(0, $extractedFile.LastIndexOf("."))
-
-        "Removing the extracted file..."
-        Remove-Item "$extractedFileNoExtension.*"
+function Normalize-Extensions {
+    param($extString)
+    $exts = $extString -split "," | ForEach-Object { $_.Trim() }
+    $exts = $exts | Where-Object { $_ -ne "" } | ForEach-Object {
+        if ($_ -notmatch '^\.') { ".$_" } else { $_ }
     }
-    "Process Complete!"
-    exit
+    if (-not $exts) { Fail "No launch extensions provided." }
+    return $exts
+}
+
+function Find-LaunchFile {
+    param($baseName, $extensions)
+    foreach ($ext in $extensions) {
+        $match = Get-ChildItem -LiteralPath . -Filter "$baseName*$ext" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($match) { return $match.FullName }
+    }
+    return $null
+}
+
+function Extract-Archive {
+    param($sevenZip, $archive, $outDir)
+    Write-Info "Extracting [$archive]..."
+    $progressPattern = '\d{1,3}%'
+    & $sevenZip "x" $archive "-o$outDir" "-aos" "-bsp1" |
+        Select-String -Pattern $progressPattern -AllMatches |
+        ForEach-Object {
+            $pct = $_.Matches.Value | Select-Object -Last 1
+            if ($pct) {
+                [Console]::SetCursorPosition(0, [Console]::CursorTop)
+                Write-Host -NoNewline "Progress: $pct"
+            }
+        }
+    Write-Host
+}
+
+function Launch-Emulator {
+    param($emu, $args, $fileToLaunch)
+    Write-Info "Launching [$fileToLaunch]..."
+    $fullArgs = $args
+    if ($fullArgs -ne "") { $fullArgs += " " }
+    $fullArgs += ('"{0}"' -f $fileToLaunch)
+    Start-Process -FilePath $emu -ArgumentList $fullArgs -Wait
+}
+
+# --- Validation ---
+Validate-Path -File $SevenZipPath -name "7-Zip"
+Validate-Path -File $EmulatorPath -name "Emulator"
+Validate-Path -File $ArchivePath -name "Archive"
+if (-not (Test-Path $ExtractionPath -PathType Container)) { New-Item -ItemType Directory -Path $ExtractionPath | Out-Null }
+
+$baseName   = [IO.Path]::GetFileNameWithoutExtension($ArchivePath)
+$extensions = Normalize-Extensions $LaunchExtensions
+
+Write-Host "------------------------------------------------------------"
+Write-Host "7Z-Emu-Prepper"
+Write-Host "------------------------------------------------------------"
+Write-Host "7Zip          = $SevenZipPath"
+Write-Host "Emulator      = $EmulatorPath"
+Write-Host "Emu Args      = $EmulatorArguments"
+Write-Host "Archive       = $ArchivePath"
+Write-Host "Extracting To = $ExtractionPath"
+Write-Host "Launch Ext(s) = $($extensions -join ', ')"
+Write-Host "Keep Extract  = $KeepExtracted"
+Write-Host "------------------------------------------------------------"
+
+Push-Location $ExtractionPath
+try {
+    $existing = Find-LaunchFile -baseName $baseName -extensions $extensions
+    if ($existing) {
+        Write-Info "Archive already extracted. Found: [$existing]"
+        Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $existing
+    } else {
+        Extract-Archive -sevenZip $SevenZipPath -archive $ArchivePath -outDir $ExtractionPath
+        $extracted = Find-LaunchFile -baseName $baseName -extensions $extensions
+        if (-not $extracted) { Fail "No matching file found after extraction for extensions: $($extensions -join ', ')" }
+        Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $extracted
+        if (-not $KeepExtracted) {
+            Write-Info "Removing extracted files..."
+            Remove-Item -LiteralPath ($baseName + "*") -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    }
+    Write-Info "Process complete."
+} finally {
+    Pop-Location
 }
