@@ -24,7 +24,7 @@ GroupAdd("Safe", "ahk_class CabinetWClass")
 GroupAdd("Safe", "ahk_class WorkerW")
 GroupAdd("Safe", "ahk_exe Playnite.DesktopApp.exe")
 GroupAdd("Safe", "ahk_exe Playnite.FullscreenApp.exe")
-GroupAdd("Safe", "ahk_exe msedge.exe")
+GroupAdd("Safe", "ahk_exe firefox.exe")
 
 ; Only close if not a safe window
 if (!WinActive("ahk_group Safe")) {
