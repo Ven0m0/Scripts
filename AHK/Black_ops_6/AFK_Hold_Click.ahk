@@ -1,18 +1,12 @@
-#Include %A_ScriptDir%\..\..\Lib\v1\AHK_Common.ahk
-InitScript()
+#Requires AutoHotkey v2.0
+#SingleInstance Force
 
-#SingleInstance, Force
-#NoEnv
-#Warn
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
-SetBatchLines, -1
-Process, Priority, , A
+g_registerDefaultHotkeys := false
+g_autostartMode := ""
+#Include %A_ScriptDir%\..\..\AHK_v2\Black_ops_6\bo6-afk.ahk
 
-F6::
-Send {LButton down}
-return
-
-F7::
-Send {LButton up}
-ExitApp
+F6::StartMode("hold_click")
+F7:: {
+  StopAll()
+  ExitApp()
+}

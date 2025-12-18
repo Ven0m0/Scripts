@@ -1,24 +1,12 @@
-#Include %A_ScriptDir%\..\..\Lib\v1\AHK_Common.ahk
-InitScript()
+#Requires AutoHotkey v2.0
+#SingleInstance Force
 
-$*F7::
-Loop{
-Click, down, right
-Sleep 100
-Click, up, right
-Sleep 9500
-Click, down, right
-Sleep 100
-Click, up, right
+target := A_ScriptDir "\..\..\AHK_v2\Minecraft\MC_AFK.ahk"
+
+if !FileExist(target) {
+  MsgBox("Unable to find v2 script: " target, "Missing File", "Iconx")
+  ExitApp()
 }
 
-
-
-
-$*F8::
-Pause
-Return
-
-$*F9::
-ExitApp
-Return
+Run('"' target '"')
+ExitApp()

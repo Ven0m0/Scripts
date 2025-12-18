@@ -1,23 +1,12 @@
-#Include %A_ScriptDir%\..\..\Lib\v1\AHK_Common.ahk
-InitScript()
+#Requires AutoHotkey v2.0
+#SingleInstance Force
 
-#SingleInstance, Force
-#NoEnv
-#Warn
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
-SetBatchLines, -1
-Process, Priority, , A
+g_registerDefaultHotkeys := false
+g_autostartMode := ""
+#Include %A_ScriptDir%\..\..\AHK_v2\Black_ops_6\bo6-afk.ahk
 
-F6::
-Loop {
-    Random, rand, 0, 20
-    DllCall("Sleep","UInt",rand)
-    Send {LButton}
-    Sleep 10
-    Send {g}
-    Sleep 90  ; Total ~120ms per iteration (similar to original behavior)
+F6::StartMode("bank_always")
+F7:: {
+  StopAll()
+  ExitApp()
 }
-return
-
-F7::ExitApp

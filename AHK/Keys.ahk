@@ -1,225 +1,206 @@
-#Include %A_ScriptDir%\..\Lib\v1\AHK_Common.ahk
-InitScript(true, false, false)  ; UIA required, no admin, no optimization (manual settings below)
+#Requires AutoHotkey v2.0
 
-#SingleInstance, Force
-#NoEnv
-#KeyHistory 0 
-#Warn
-#MaxHotkeysPerInterval 99000000
-#HotkeyInterval 99000000
-DetectHiddenText, Off
-DetectHiddenWindows, Off
-ListLines Off
-SetBatchLines, 10ms
-SetKeyDelay, -1, -1
-SetMouseDelay, -1
-SetDefaultMouseSpeed, 0
-SetWinDelay, -1
-SetControlDelay, -1
-SendMode Input
-SetTitleMatchMode, 3
-SetTitleMatchMode, Fast
-SetNumlockState, AlwaysOn
-SetCapsLockState, AlwaysOff
-SetScrollLockState, AlwaysOff
-Menu, Tray, Add, Documentation, Item1
+#SingleInstance Force
+SendMode "Input"
+SetWorkingDir A_ScriptDir
 
-; GLobal Variables for window snapping
-mw := GetMonitorWidth()             ; Monitor width
-mh := GetMonitorHeight()            ; Monitor height
-pw := mw / 3                        ; 1 / 3 of monitor width
-ph := mh / 3                        ; 1 / 3 of monitor height
-lw := 2 * pw > 1024 ? 1024: 2 * pw  ; Left side width (1024 is preffered)
-rw := mw - lw                       ; Right side width
-th := round(2 * ph)                 ; Top side height
-bh := ceil(ph)                      ; Bottom side height
-positions := {}                     ; Saves Window position before snapping
+#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+InitScript(true, false, false)  ; UIA required, no admin, manual tuning
 
-; Set windows on top
-SetTimer, SetAlwaysOnTop, 1000
-Return
-    SetAlwaysOnTop(){
-        if WinExist("Calculator") {
-            WinSet, AlwaysOnTop, On, Calculator
-        } else {
-            SetTimer, SetAlwaysOnTop, Off
-        }
-    }
+KeyHistory(0)
+ListLines False
+SetBatchLines(-1)
+SetKeyDelay(-1, -1)
+SetMouseDelay(-1)
+SetDefaultMouseSpeed(0)
+SetWinDelay(-1)
+SetControlDelay(-1)
+SetTitleMatchMode(3)
+SetTitleMatchMode("Fast")
+SetNumLockState("AlwaysOn")
+SetCapsLockState("AlwaysOff")
+SetScrollLockState("AlwaysOff")
 
-; Shift + F1 Minimizes the active window
-#IfWinNotActive ahk_exe Explorer.EXE
-$*+F1::WinMinimize,A
-#IfWinNotActive
+; Monitor metrics
+mw := GetMonitorWidth()
+mh := GetMonitorHeight()
+pw := mw / 3
+ph := mh / 3
+lw := (2 * pw > 1024) ? 1024 : 2 * pw
+rw := mw - lw
+positions := Map()
 
-; Empties the clipboard and recycle bin, Shift + F2
-$*+F2::
-FileRecycleEmpty
-clipboard := ""   ; Empty the clipboard.
-Return
+; Keep Calculator always on top while it exists
+SetTimer(SetAlwaysOnTop, 1000)
 
-;Media control, Alt+Scroll wheel (and Mbutton)
-$*!WheelUp::Media_Next
-$*!WheelDown::Media_Prev
-$*!MButton::Media_Play_Pause
-$*F24::Media_Play_Pause
+; Tray documentation entry
+A_TrayMenu.Add("Documentation", ShowDocumentation)
 
-;Always on top, Alt+t
-$*!t::WinSet, AlwaysOnTop, Toggle, A
+#HotIf !WinActive("ahk_exe Explorer.EXE")
++F1::WinMinimize("A")
+#HotIf
 
-;----------------------------------------------------------------------------
-; Add date to selected file, Win+j
-$*#j::
-if !Explorer_GetSelection()
-   {
-   msgbox,,,No files were selected,2   
-   return
-   }
-for each,Fn in strsplit(Explorer_GetSelection(),"`n","`r")
-   {
-   FileGetTime, InputVar, % Fn, C
-   SplitPath, % Fn,,oDir, oExt, oNNE
-   FormatTime, oNow, % InputVar, yyyyyMMdd
-   nFn := oDir "\" oNow "_" oNNE "." oExt
-   filemove,%Fn%,%nFn% 
-   }
-return
-
-Explorer_GetSelection() {
-   WinGetClass, winClass, % "ahk_id" . hWnd := WinExist("A")
-   if (winClass ~= "Progman|WorkerW")
-      oShellFolderView := GetDesktopIShellFolderViewDual()
-   else if (winClass ~= "(Cabinet|Explore)WClass") {
-      for window in ComObjCreate("Shell.Application").Windows
-         if (hWnd = window.HWND) && (oShellFolderView := window.document)
-            break
-   }
-   else
-      Return
-   
-   result := ""
-   for item in oShellFolderView.SelectedItems
-      result .= (result = "" ? "" : "`n") . item.path
-   if !result
-      result := oShellFolderView.Folder.Self.Path
-   Return result
++F2:: {
+  FileRecycleEmpty()
+  A_Clipboard := ""
 }
 
-GetDesktopIShellFolderViewDual()
-{
-    IShellWindows := ComObjCreate("{9BA05972-F6A8-11CF-A442-00A0C90A8F39}")
-    desktop := IShellWindows.Item(ComObj(19, 8)) ; VT_UI4, SCW_DESKTOP                
-   
-    ; Retrieve top-level browser object.
-    if ptlb := ComObjQuery(desktop
-        , "{4C96BE40-915C-11CF-99D3-00AA004AE837}"  ; SID_STopLevelBrowser
-        , "{000214E2-0000-0000-C000-000000000046}") ; IID_IShellBrowser
-    {
-        ; IShellBrowser.QueryActiveShellView -> IShellView
-        if DllCall(NumGet(NumGet(ptlb+0)+15*A_PtrSize), "ptr", ptlb, "ptr*", psv) = 0
-        {
-            ; Define IID_IDispatch.
-            VarSetCapacity(IID_IDispatch, 16)
-            NumPut(0x46000000000000C0, NumPut(0x20400, IID_IDispatch, "int64"), "int64")
-           
-            ; IShellView.GetItemObject -> IDispatch (object which implements IShellFolderViewDual)
-            DllCall(NumGet(NumGet(psv+0)+15*A_PtrSize), "ptr", psv
-                , "uint", 0, "ptr", &IID_IDispatch, "ptr*", pdisp)
-           
-            IShellFolderViewDual := ComObjEnwrap(pdisp)
-            ObjRelease(psv)
-        }
-        ObjRelease(ptlb)
-    }
-    return IShellFolderViewDual
-}
+*!WheelUp::Send("{Media_Next}")
+*!WheelDown::Send("{Media_Prev}")
+*!MButton::Send("{Media_Play_Pause}")
+*F24::Send("{Media_Play_Pause}")
 
-; Window Snapping to left and right
+*!t::WinSetAlwaysOnTop("Toggle", "A")
+
+#j::AddDateToSelection()
+
 #Left::MoveWindowLeft()
 #Right::MoveWindowRight()
 #Down::RestoreWindowPosition()
 
-SaveWindowPosition() {
-    global positions
-    hwnd := WinExist("A")
-    WinGetPos, x, y, w, h, A
-    positions[hwnd] := [x, y, w, h]
+; ---------------------------------------------------------------------------
+; Timers / Helpers
+; ---------------------------------------------------------------------------
+
+SetAlwaysOnTop(*) {
+  if WinExist("Calculator") {
+    WinSetAlwaysOnTop("On", "Calculator")
+  } else {
+    SetTimer(SetAlwaysOnTop, 0)
+  }
 }
 
-RestoreWindowPosition() {
-    global positions
-    hwnd := WinExist("A")
-    pos := positions[hwnd]
-    WinMove, A, , pos[1], pos[2], pos[3], pos[4]
+AddDateToSelection() {
+  selection := Explorer_GetSelection()
+  if !selection {
+    MsgBox("No files were selected", "Selection Required", "Icon!")
+    return
+  }
+
+  for Fn in StrSplit(selection, "`n", "`r") {
+    created := FileGetTime(Fn, "C")
+    SplitPath(Fn, , &dir, &ext, &nameNoExt)
+    stamp := FormatTime(created, "yyyyMMdd")
+    newName := dir . "\" . stamp . "_" . nameNoExt . "." . ext
+    FileMove(Fn, newName, 1)
+  }
 }
 
 MoveWindowLeft() {
-    global
-    SaveWindowPosition()
-    if (IsResizable()) {
-        WinMove, A,, 0, 0, lw, mh
-    } else {
-        WinMove, A,, 0, 0
-    }
+  global lw, mh
+  SaveWindowPosition()
+  if IsResizable() {
+    WinMove(0, 0, lw, mh, "A")
+  } else {
+    WinMove(0, 0, , , "A")
+  }
 }
 
 MoveWindowRight() {
-    global
-    SaveWindowPosition()
-    if (IsResizable()) {
-        WinMove, A,, lw, 0, rw, mh
-    } else {
-        WinMove, A,, lw, 0
-    }
+  global lw, rw, mh
+  SaveWindowPosition()
+  if IsResizable() {
+    WinMove(lw, 0, rw, mh, "A")
+  } else {
+    WinMove(lw, 0, , , "A")
+  }
 }
 
-; Helper functions
+RestoreWindowPosition() {
+  global positions
+  hwnd := WinExist("A")
+  if !positions.Has(hwnd)
+    return
+
+  pos := positions[hwnd]
+  WinMove(pos[1], pos[2], pos[3], pos[4], "A")
+}
+
+SaveWindowPosition() {
+  global positions
+  hwnd := WinExist("A")
+  WinGetPos(&x, &y, &w, &h, "A")
+  positions[hwnd] := [x, y, w, h]
+}
+
 GetMonitorWidth() {
-    SysGet, mon, MonitorWorkArea
-    return monRight - monLeft
+  MonitorGetWorkArea(1, &left, &top, &right, &bottom)
+  return right - left
 }
 
 GetMonitorHeight() {
-    SysGet, mon, MonitorWorkArea
-    return monBottom - monTop
+  MonitorGetWorkArea(1, &left, &top, &right, &bottom)
+  return bottom - top
 }
 
 IsResizable() {
-    WinGet, Style, Style, A
-    return (Style & 0x40000) ; WS_SIZEBOX
+  style := WinGetStyle("A")
+  return (style & 0x00040000) != 0  ; WS_SIZEBOX
 }
 
-Item1:
-Gui +AlwaysOnTop
-Gui, Add, Tab3,, Hotkeys|Functions|Links
-Gui, Add, Text,, Shift + F1 Minimizes the active window.
-Gui, Add, Text,, Shift + F2 Empties the clipboard and recycle bin
-Gui, Add, Text,, Alt + Mousewheel Gives media control
-Gui, Add, Text,, Alt + T Sets the active window on top.
-Gui, Add, Text,, End makes the active window fullscreen.
-Gui, Add, Text,, Win + J adds the creation date to the selected file.
-Gui, Add, Text,, Win + Left snaps the active window to the left.
-Gui, Add, Text,, Win + Right snaps the active window to the right.
-Gui, Add, Text,, Win + Down Restores the active window to the position before the snapping.
-Gui, Tab, 2
-Gui, Add, Text,, The script sets the calculator to always on top.
-Gui, Tab, 3
-Gui, Add, Button, gTLink, LinkTree
-Gui, Add, Button, gGLink, Github
-Gui, Add, Button, gYLink, Youtube
-Gui, Add, Text, x25 y125, Email:
-Gui, Add, Edit, x55 y120 ReadOnly, ven0m0.wastaken@gmail.com
-Gui, Tab
-Gui, Show, Center, Documentation
-return
+Explorer_GetSelection() {
+  hwnd := WinExist("A")
+  winClass := WinGetClass("ahk_id " hwnd)
+  shell := ComObject("Shell.Application")
+  doc := ""
 
-TLink:
-Run, https://linktr.ee/Ven0m0
-return
+  for window in shell.Windows {
+    try {
+      if (window.HWND = hwnd) {
+        doc := window.Document
+        break
+      }
+    } catch {
+      continue
+    }
+  }
 
-GLink:
-Run, https://github.com/Ven0m0
-return
+  if !doc && RegExMatch(winClass, "Progman|WorkerW") {
+    try doc := shell.Windows.Item(0).Document
+  }
 
-YLink:
-Run, https://www.youtube.com/@ven0m017
-return
+  if !doc
+    return ""
+
+  result := ""
+  for item in doc.SelectedItems
+    result .= (result ? "`n" : "") . item.Path
+
+  if !result
+    result := doc.Folder.Self.Path
+
+  return result
+}
+
+; ---------------------------------------------------------------------------
+; Documentation GUI
+; ---------------------------------------------------------------------------
+
+ShowDocumentation(*) {
+  docGui := Gui("+AlwaysOnTop", "Documentation")
+  tabs := docGui.Add("Tab3", , ["Hotkeys", "Functions", "Links"])
+
+  tabs.UseTab(1)
+  docGui.Add("Text", , "Shift + F1 Minimizes the active window.")
+  docGui.Add("Text", , "Shift + F2 Empties the clipboard and recycle bin")
+  docGui.Add("Text", , "Alt + Mousewheel Gives media control")
+  docGui.Add("Text", , "Alt + T Sets the active window on top.")
+  docGui.Add("Text", , "End makes the active window fullscreen.")
+  docGui.Add("Text", , "Win + J adds the creation date to the selected file.")
+  docGui.Add("Text", , "Win + Left snaps the active window to the left.")
+  docGui.Add("Text", , "Win + Right snaps the active window to the right.")
+  docGui.Add("Text", , "Win + Down Restores the active window to the position before the snapping.")
+
+  tabs.UseTab(2)
+  docGui.Add("Text", , "The script sets the calculator to always on top.")
+
+  tabs.UseTab(3)
+  docGui.Add("Button", "x25 y120 w80", "LinkTree").OnEvent("Click", (*) => Run("https://linktr.ee/Ven0m0"))
+  docGui.Add("Button", "x115 y120 w80", "Github").OnEvent("Click", (*) => Run("https://github.com/Ven0m0"))
+  docGui.Add("Button", "x205 y120 w80", "Youtube").OnEvent("Click", (*) => Run("https://www.youtube.com/@ven0m017"))
+  docGui.Add("Text", "x25 y165", "Email:")
+  docGui.Add("Edit", "x65 y160 w230 ReadOnly", "ven0m0.wastaken@gmail.com")
+
+  tabs.UseTab()
+  docGui.Show("Center")
+}

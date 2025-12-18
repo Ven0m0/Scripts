@@ -3,7 +3,7 @@
 ProcessSetPriority("High")
 ListLines False
 
-; Hotkeys:
+; Hotkeys (default bindings):
 ;   F1 – Toggle Balcony loop
 ;   F2 – Toggle Bank Roof (basic) loop
 ;   F3 – Toggle Bank Roof + Loot loop
@@ -11,9 +11,26 @@ ListLines False
 ;   F5 – Toggle Hold LMB (press/release)
 ;   F7 – Stop all
 ;   F9 – Exit
+;
+; To reuse this file from wrapper scripts:
+;   - Set g_registerDefaultHotkeys := false before #Including
+;   - Optionally set g_autostartMode := "<mode>" to auto-start a loop
+
+if !IsSet(g_registerDefaultHotkeys)
+    g_registerDefaultHotkeys := true
+
+if !IsSet(g_autostartMode)
+    g_autostartMode := ""
 
 global runningMode := ""
 global runId := 0
+global ModeHandlers := Map(
+    "balcony", BalconyLoop,
+    "bank_basic", BankRoofCleanLoop,
+    "bank_loot", BankRoofLootLoop,
+    "bank_always", BankRoofAlwaysLoop,
+    "hold_click", HoldClickLoop
+)
 
 StopAll() {
     global runningMode, runId
@@ -22,17 +39,36 @@ StopAll() {
     Send("{LButton up}")  ; ensure button released
 }
 
-StartMode(mode, runner) {
-    global runningMode, runId
+StartMode(mode) {
+    global runningMode, runId, ModeHandlers
+    if !ModeHandlers.Has(mode)
+        return
+
+    runner := ModeHandlers[mode]
     if (runningMode = mode) {
         StopAll()
         return
     }
+
     StopAll()
     runningMode := mode
     thisId := ++runId
     ; launch asynchronously so hotkey returns immediately
     SetTimer(() => runner(thisId), -10)
+}
+
+RegisterDefaultHotkeys() {
+    global g_registerDefaultHotkeys
+    if !g_registerDefaultHotkeys
+        return
+
+    Hotkey("F1", (*) => StartMode("balcony"))
+    Hotkey("F2", (*) => StartMode("bank_basic"))
+    Hotkey("F3", (*) => StartMode("bank_loot"))
+    Hotkey("F4", (*) => StartMode("bank_always"))
+    Hotkey("F5", (*) => StartMode("hold_click"))
+    Hotkey("F7", (*) => StopAll())
+    Hotkey("F9", (*) => ExitApp())
 }
 
 ; ---------------- Loops ----------------
@@ -150,13 +186,10 @@ CleanUpZombies() {
     }
 }
 
-; ---------------- Hotkeys ----------------
+; ---------------- Dispatch ----------------
 
-F1:: StartMode("balcony", BalconyLoop)
-F2:: StartMode("bank_basic", BankRoofCleanLoop)
-F3:: StartMode("bank_loot", BankRoofLootLoop)
-F4:: StartMode("bank_always", BankRoofAlwaysLoop)
-F5:: StartMode("hold_click", HoldClickLoop)
+RegisterDefaultHotkeys()
 
-F7:: StopAll()
-F9:: ExitApp()
+if (g_autostartMode != "" && ModeHandlers.Has(g_autostartMode)) {
+    SetTimer(() => StartMode(g_autostartMode), -10)
+}
