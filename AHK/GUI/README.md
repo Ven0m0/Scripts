@@ -1,1 +1,0 @@
-This is a GUI for launching and closing apps and games. Its written entirely in Autohotkey
