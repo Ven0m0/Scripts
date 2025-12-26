@@ -239,23 +239,29 @@ This repository has undergone a **comprehensive migration** to AutoHotkey v2.0 w
 
 ### For Users
 
-- **This README** - Quick start and overview
+- **[README.md](README.md)** (this file) - Quick start and overview
+- **[EXAMPLES.md](EXAMPLES.md)** - Common usage patterns and practical examples
 - **Script-specific READMEs** - See subdirectories:
-  - `Other/Downloader/README.MD`
-  - `Other/Citra_mods/README.MD`
-  - `Other/Citra_per_game_config/README.MD`
-  - `AHK/GUI/README.md`
+  - [Other/Downloader/](Other/Downloader/README.md)
+  - [Other/Citra_mods/](Other/Citra_mods/README.md)
+  - [Other/Citra_per_game_config/](Other/Citra_per_game_config/README.md)
+  - [AHK_v2/](AHK_v2/README.md)
+  - [AHK_v2/GUI/](AHK_v2/GUI/README.md)
+  - [Lib/](Lib/README.md)
 
 ### For Developers & AI Assistants
 
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Contribution guidelines and standards
 - **[CLAUDE.md](CLAUDE.md)** - Comprehensive development guide (1700+ lines)
   - Codebase structure and conventions
   - v2 migration strategy and syntax reference
   - Common patterns and templates
   - Known issues and technical debt
   - CI/CD workflows and testing
-
 - **[GEMINI.md](GEMINI.md)** - Additional AI assistant documentation
+- **[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)** - Community guidelines
+- **[CHANGELOG.md](CHANGELOG.md)** - Version history and release notes
+- **[Links.md](Links.md)** - Useful resources and external links
 
 ---
 
