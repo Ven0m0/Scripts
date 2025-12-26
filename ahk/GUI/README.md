@@ -381,7 +381,7 @@ myGui.Show()
 ## Resources
 
 - [AutoHotkey v2 GUI Documentation](https://www.autohotkey.com/docs/v2/lib/Gui.htm)
-- [AHK_v2/README.md](../README.md) - Parent directory documentation
+- [ahk/README.md](../README.md) - Parent directory documentation
 - [CLAUDE.md](../../CLAUDE.md) - Developer guide
 
 ## Contributing

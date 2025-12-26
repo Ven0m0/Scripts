@@ -60,7 +60,7 @@ GUI for managing mods and HD texture packs for Citra 3DS emulator.
 
 ### 🖥️ Window Management
 
-#### [Borderless Fullscreen](../AHK_v2/Fullscreen.ahk)
+#### [Borderless Fullscreen](../ahk/Fullscreen.ahk)
 
 Toggle borderless fullscreen on any window with multi-monitor support.
 
@@ -85,15 +85,15 @@ Unified data-driven auto-fullscreen launcher for all major emulators.
 
 ### 🛠️ System Utilities
 
-#### [Power Plan Automation](../AHK_v2/Powerplan.ahk)
+#### [Power Plan Automation](../ahk/Powerplan.ahk)
 
 Automatically switch Windows power plan based on running applications.
 
-#### [Controller Quit](../AHK_v2/ControllerQuit.ahk)
+#### [Controller Quit](../ahk/ControllerQuit.ahk)
 
 Close applications using gamepad button combinations.
 
-#### [GUI Launchers](../AHK_v2/GUI/)
+#### [GUI Launchers](../ahk/GUI/)
 
 Centralized script launchers with graphical interface for easy management.
 

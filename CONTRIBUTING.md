@@ -50,7 +50,7 @@ This project follows a simple code of conduct: be respectful, constructive, and 
 
 ```
 Scripts/
-├── AHK_v2/          # AutoHotkey v2 scripts
+├── ahk/             # AutoHotkey v2 scripts
 ├── Lib/             # Shared libraries (v1 and v2)
 ├── Other/           # Specialized utilities
 ├── .github/         # CI/CD workflows and instructions

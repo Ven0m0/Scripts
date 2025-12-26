@@ -1,11 +1,11 @@
-# AHK_v2 - AutoHotkey v2 Scripts
+# ahk - AutoHotkey v2 Scripts
 
 This directory contains AutoHotkey v2.0 scripts for gaming automation, window management, and system utilities. All scripts in this directory use the modern v2 syntax and require AutoHotkey v2.0.19+.
 
 ## Directory Structure
 
 ```
-AHK_v2/
+ahk/
 ├── Black_ops_6/         # Call of Duty Black Ops 6 AFK macros
 ├── Minecraft/           # Minecraft AFK farming scripts
 ├── GUI/                 # GUI launcher applications

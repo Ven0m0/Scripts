@@ -20,7 +20,7 @@ This document provides practical examples and common usage patterns for the scri
 **Use Case:** Make any game fullscreen without borders
 
 ```autohotkey
-; AHK_v2/Fullscreen.ahk
+; ahk/Fullscreen.ahk
 #Requires AutoHotkey v2.0
 #Include A_ScriptDir "\..\Lib\v2\WindowManager.ahk"
 

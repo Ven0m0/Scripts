@@ -86,7 +86,7 @@ This repository has undergone a comprehensive migration from AutoHotkey v1.1 to 
 **Consolidated & Deleted** (24 files):
 
 - ❌ 9 auto-start scripts → 1 data-driven AutoStartManager.ahk with AutoStartConfig.ini
-- ❌ 3 fullscreen variants → 1 unified AHK_v2/Fullscreen.ahk
+- ❌ 3 fullscreen variants → 1 unified ahk/Fullscreen.ahk
 - ❌ 4 duplicate downloader drafts removed
 - ❌ 7 deprecated auto-start v1 files (covered by AutoStartManager)
 - ❌ 4 deprecated v1 utility files (Close*Window, Kill_Bluestacks, Lossless_Scaling*\*)
@@ -127,7 +127,7 @@ Lib/
 The build system (`ahk-lint-format-compile.yml`) now **automatically detects** script version:
 
 - Checks for `#Requires AutoHotkey v2` directive
-- Checks for `Lib/v2/` or `AHK_v2/` in file path
+- Checks for `Lib/v2/` or `ahk/` in file path
 - Compiles with appropriate AHK version (v1.1.37.02 or v2.0.19)
 
 ### v1 to v2 Syntax Quick Reference
