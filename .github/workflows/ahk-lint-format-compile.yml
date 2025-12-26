@@ -61,8 +61,8 @@ jobs:
             if ($content -match '(?m)^#Requires\s+AutoHotkey\s+v2') {
               $isV2 = $true
             }
-            # Check for v2 directory paths
-            elseif ($rel -match '(Lib[\\/]v2[\\/]|AHK_v2[\\/])') {
+            # Check for v2 directory paths (Lib/v2, ahk/, Other/**/v2/)
+            elseif ($rel -match '(Lib[\\/]v2[\\/]|ahk[\\/]|Other.*[\\/]v2[\\/])') {
               $isV2 = $true
             }
 

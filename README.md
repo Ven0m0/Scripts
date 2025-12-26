@@ -126,9 +126,14 @@ Scripts/
 │   ├── Keys.ahk                # Main hotkey suite (v1)
 │   └── Powerplan.ahk           # Auto power plan switching
 │
-├── AHK_v2/                       # v2-specific scripts
-│   ├── Fullscreen.ahk          # v2 fullscreen implementation
-│   └── (other v2 scripts)
+├── ahk/                          # AutoHotkey v2 scripts
+│   ├── Black_ops_6/             # CoD BO6 AFK macros
+│   ├── GUI/                     # Script launcher GUIs
+│   ├── Minecraft/               # Minecraft AFK automation
+│   ├── ControllerQuit.ahk      # Quit apps with controller
+│   ├── Fullscreen.ahk          # Borderless fullscreen toggle
+│   ├── Keys.ahk                # Main hotkey suite
+│   └── Powerplan.ahk           # Auto power plan switching
 │
 ├── Lib/                          # Shared libraries
 │   ├── v1/                      # AutoHotkey v1.1 libraries
@@ -164,11 +169,11 @@ Scripts/
 
 ### Window Management
 
-| Script                  | Description                                           | Version |
-| ----------------------- | ----------------------------------------------------- | ------- |
-| `AHK_v2/Fullscreen.ahk` | Toggle borderless fullscreen (multi-monitor)          | v2      |
-| `AHK/Keys.ahk`          | Comprehensive hotkey suite (Win+Arrow snapping, etc.) | v1      |
-| `AHK/GUI/WM.ahk`        | Window management GUI controls                        | v2      |
+| Script                 | Description                                           | Version |
+| ---------------------- | ----------------------------------------------------- | ------- |
+| `ahk/Fullscreen.ahk`   | Toggle borderless fullscreen (multi-monitor)          | v2      |
+| `ahk/Keys.ahk`         | Comprehensive hotkey suite (Win+Arrow snapping, etc.) | v2      |
+| `ahk/GUI/WM.ahk`       | Window management GUI controls                        | v2      |
 
 ### Emulator Automation
 
@@ -182,10 +187,10 @@ Scripts/
 
 | Script                       | Description                     | Version |
 | ---------------------------- | ------------------------------- | ------- |
-| `AHK/Black_ops_6/AFK_*.ahk`  | Black Ops 6 AFK farming macros  | v2      |
-| `AHK/Minecraft/MC_AFK_*.ahk` | Minecraft AFK automation        | v2      |
-| `AHK/ControllerQuit.ahk`     | Quit apps with controller combo | v2      |
-| `AHK/Powerplan.ahk`          | Auto power plan switching       | v2      |
+| `ahk/Black_ops_6/bo6-afk.ahk`| Black Ops 6 AFK farming macros  | v2      |
+| `ahk/Minecraft/MC_AFK*.ahk`  | Minecraft AFK automation        | v2      |
+| `ahk/ControllerQuit.ahk`     | Quit apps with controller combo | v2      |
+| `ahk/Powerplan.ahk`          | Auto power plan switching       | v2      |
 
 ### Media & Downloaders
 
@@ -245,8 +250,8 @@ This repository has undergone a **comprehensive migration** to AutoHotkey v2.0 w
   - [Other/Downloader/](Other/Downloader/README.md)
   - [Other/Citra_mods/](Other/Citra_mods/README.md)
   - [Other/Citra_per_game_config/](Other/Citra_per_game_config/README.md)
-  - [AHK_v2/](AHK_v2/README.md)
-  - [AHK_v2/GUI/](AHK_v2/GUI/README.md)
+  - [ahk/](ahk/README.md)
+  - [ahk/GUI/](ahk/GUI/README.md)
   - [Lib/](Lib/README.md)
 
 ### For Developers & AI Assistants
