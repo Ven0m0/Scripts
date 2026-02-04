@@ -8,6 +8,7 @@ if (!InStr(A_AhkPath, "_UIA.exe")) {
 #SingleInstance Force
 #Warn ; Enable warnings to assist with detecting common errors.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SetBatchLines, -1  ; Run as fast as possible.
 SetWorkingDir % A_ScriptDir ; Ensures a consistent starting directory.
 Menu, Tray, Tip, Citra Mod Manager
 EnvGet OneDrive, ONEDRIVE
