@@ -42,6 +42,12 @@ jobs:
         run: |
           $compilerV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
           $compilerV2 = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+
+          # Fallback: If v2 compiler is missing, use the one from v1 package (Ahk2Exe is universal)
+          if (!(Test-Path $compilerV2)) {
+             Write-Host "⚠️ Compiler not found at $compilerV2. Using fallback from v1 package." -ForegroundColor Yellow
+             $compilerV2 = $compilerV1
+          }
           $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
           $syntaxErrors = @()
           $formatIssues = @()
