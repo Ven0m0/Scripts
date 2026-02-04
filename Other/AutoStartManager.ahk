@@ -35,12 +35,28 @@ if (!FileExist(configFile)) {
 
 ; Read configuration
 try {
-    exeName := IniRead(configFile, emulatorName, "exe")
-    key := IniRead(configFile, emulatorName, "key", "F11")
-    maximize := IniRead(configFile, emulatorName, "maximize", "true") = "true"
-    delay := Integer(IniRead(configFile, emulatorName, "delay", "0"))
-    activate := IniRead(configFile, emulatorName, "activate", "false") = "true"
-    special := IniRead(configFile, emulatorName, "special", "none")
+    ; Optimization: Read the entire section once to reduce disk I/O
+    sectionContent := IniRead(configFile, emulatorName)
+    config := Map()
+    config.CaseSense := "Off" ; Ensure case-insensitive lookups (INI standard)
+    Loop Parse, sectionContent, "`n", "`r" {
+        if (p := InStr(A_LoopField, "=")) {
+            k := Trim(SubStr(A_LoopField, 1, p-1))
+            v := Trim(SubStr(A_LoopField, p+1))
+            config[k] := v
+        }
+    }
+
+    if !config.Has("exe")
+        throw Error("Key 'exe' not found in section '" . emulatorName . "'")
+
+    exeName := config["exe"]
+    key := config.Has("key") ? config["key"] : "F11"
+    maximize := (config.Has("maximize") ? config["maximize"] : "true") = "true"
+    delay := Integer(config.Has("delay") ? config["delay"] : "0")
+    activate := (config.Has("activate") ? config["activate"] : "false") = "true"
+    special := config.Has("special") ? config["special"] : "none"
+
 } catch Error as err {
     MsgBox("Error reading config for " . emulatorName . ":`n" . err.Message)
     ExitApp()
