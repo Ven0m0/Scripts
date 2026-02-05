@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install AutoHotkey v1.1 (Portable)
-        run: choco install autohotkey.portable --version=1.1.37.02 -y
+        run: choco install autohotkey.portable -y
         shell: pwsh
 
       - name: Install AutoHotkey v2
