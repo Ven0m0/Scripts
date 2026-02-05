@@ -40,7 +40,15 @@ jobs:
 
       - name: Syntax Check & Format Validation
         run: |
-          $compilerV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
+          # Dynamically find Ahk2Exe in the portable package
+          $compilerV1Obj = Get-ChildItem -Path "C:\ProgramData\chocolatey\lib\autohotkey.portable" -Filter "Ahk2Exe.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($compilerV1Obj) {
+              $compilerV1 = $compilerV1Obj.FullName
+              Write-Host "Found v1 compiler: $compilerV1"
+          } else {
+              $compilerV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
+              Write-Host "Warning: Could not find Ahk2Exe via search, using default" -ForegroundColor Yellow
+          }
           $compilerV2 = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
           if (!(Test-Path $compilerV2)) { $compilerV2 = $compilerV1; Write-Host "Using v1 compiler for v2 fallback" }
           $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
