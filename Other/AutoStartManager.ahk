@@ -47,8 +47,12 @@ try {
         }
     }
 
-    if !config.Has("exe")
-        throw Error("Key 'exe' not found in section '" . emulatorName . "'")
+    if !config.Has("exe") {
+        if (config.Count = 0)
+            throw Error("Section '" . emulatorName . "' is empty or missing required key 'exe'")
+        else
+            throw Error("Key 'exe' not found in section '" . emulatorName . "'")
+    }
 
     exeName := config["exe"]
     key := config.Has("key") ? config["key"] : "F11"
