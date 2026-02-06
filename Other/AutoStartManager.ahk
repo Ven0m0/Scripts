@@ -37,6 +37,9 @@ if (!FileExist(configFile)) {
 try {
     ; Optimization: Read the entire section once to reduce disk I/O
     sectionContent := IniRead(configFile, emulatorName)
+    if (sectionContent = "") {
+        throw Error("Section '" . emulatorName . "' not found in config file or is empty")
+    }
     config := Map()
     config.CaseSense := "Off" ; Ensure case-insensitive lookups (INI standard)
     Loop Parse, sectionContent, "`n", "`r" {
