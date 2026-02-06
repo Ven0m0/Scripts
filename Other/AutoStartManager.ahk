@@ -53,7 +53,16 @@ try {
     exeName := config["exe"]
     key := config.Has("key") ? config["key"] : "F11"
     maximize := (config.Has("maximize") ? config["maximize"] : "true") = "true"
-    delay := Integer(config.Has("delay") ? config["delay"] : "0")
+    if config.Has("delay") {
+        delayRaw := config["delay"]
+        if RegExMatch(delayRaw, "^[+-]?\d+$") {
+            delay := Integer(delayRaw)
+        } else {
+            throw Error("Invalid delay value '" . delayRaw . "' in section '" . emulatorName . "': must be an integer number of milliseconds")
+        }
+    } else {
+        delay := 0
+    }
     activate := (config.Has("activate") ? config["activate"] : "false") = "true"
     special := config.Has("special") ? config["special"] : "none"
 
