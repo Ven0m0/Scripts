@@ -62,12 +62,12 @@ UpdateConfig(content, updates){
     line := A_LoopField
     pos := InStr(line, "=")
     if (pos > 1){
-       keyCandidate := RTrim(SubStr(line, 1, pos-1))
-       if (remaining.HasKey(keyCandidate)){
-           val := remaining[keyCandidate]
-           line := keyCandidate "=" val
-           remaining.Delete(keyCandidate)
-       }
+      keyCandidate := RTrim(SubStr(line, 1, pos-1))
+      if (remaining.HasKey(keyCandidate)){
+        val := remaining[keyCandidate]
+        line := keyCandidate "=" val
+        remaining.Delete(keyCandidate)
+      }
     }
     newContent .= line "`n"
   }
