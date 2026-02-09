@@ -21,9 +21,18 @@ jobs:
       - name: Install AutoHotkey v1.1 (Portable)
         run: choco install autohotkey.portable --version=1.1.36.01 -y
         shell: pwsh
-
       - name: Install AutoHotkey v2
-        run: choco install autohotkey --version=2.0.19 -y
+        run: choco install autohotkey -y
+        shell: pwsh
+      - name: Install Ahk2Exe
+        run: |
+          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/latest/download/Ahk2Exe1.zip"
+          $dest = "C:\Ahk2Exe"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          Invoke-WebRequest -Uri $url -OutFile "$dest\Ahk2Exe.zip"
+          Expand-Archive "$dest\Ahk2Exe.zip" -DestinationPath $dest -Force
+          Remove-Item "$dest\Ahk2Exe.zip"
+          Write-Host "Ahk2Exe installed to $dest"
         shell: pwsh
 
       - name: Verify Installations
@@ -37,7 +46,6 @@ jobs:
           Write-Host "Installed AHK v1: $((Get-Item $ahkV1).VersionInfo.FileVersion)"
           Write-Host "Installed AHK v2: $(& $ahkV2 --version)"
         shell: pwsh
-
       - name: Syntax Check & Format Validation
         run: |
           $ahk2Exe = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
