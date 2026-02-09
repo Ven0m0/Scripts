@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Install AutoHotkey v1.1 (Portable)
-        run: choco install autohotkey.portable -y
+        run: choco install autohotkey.portable --version=1.1.36.01 -y
         shell: pwsh
       - name: Install AutoHotkey v2
         run: choco install autohotkey -y
@@ -48,8 +48,8 @@ jobs:
         shell: pwsh
       - name: Syntax Check & Format Validation
         run: |
-          $compilerExe = "C:\Ahk2Exe\Ahk2Exe.exe"
-
+          $ahk2Exe = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
+          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
           $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
           $syntaxErrors = @()
           $formatIssues = @()
@@ -59,28 +59,32 @@ jobs:
 
           Get-ChildItem -Recurse -Filter *.ahk | % {
             $checked++
-            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
+            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ""
 
             # Detect AHK version
             $content = Get-Content $_.FullName -Raw -Encoding UTF8
             $isV2 = $false
 
             # Check for #Requires AutoHotkey v2 directive
-            if ($content -match '(?m)^#Requires\s+AutoHotkey\s+v2') {
+            if ($content -match "(?m)^#Requires\s+AutoHotkey\s+v2") {
               $isV2 = $true
             }
             # Check for v2 directory paths (Lib/v2, ahk/, Other/**/v2/)
-            elseif ($rel -match '(Lib[\\/]v2[\\/]|ahk[\\/]|Other.*[\\/]v2[\\/])') {
+            elseif ($rel -match "(Lib[\\/]v2[\\/]|ahk[\\/]|Other.*[\\/]v2[\\/])") {
               $isV2 = $true
             }
 
-            if ($isV2) { $v2Count++ } else { $v1Count++ }
-            $compiler = $compilerExe
             $version = if ($isV2) { "v2" } else { "v1" }
+            if ($isV2) { $v2Count++ } else { $v1Count++ }
 
             # Syntax check
             $tempExe = Join-Path $tempDir "$([IO.Path]::GetRandomFileName()).exe"
-            & $compiler /in $_.FullName /out $tempExe 2>&1 | Out-Null
+
+            if ($isV2) {
+              & $ahk2Exe /in $_.FullName /out $tempExe /base $ahkV2 2>&1 | Out-Null
+            } else {
+              & $ahk2Exe /in $_.FullName /out $tempExe 2>&1 | Out-Null
+            }
 
             if ($LASTEXITCODE -eq 0 -and (Test-Path $tempExe)) {
               Write-Host "✓ $rel ($version)" -ForegroundColor Green
@@ -93,12 +97,12 @@ jobs:
             # Format check
             $content = Get-Content $_.FullName -Raw
             $problems = @()
-            if (($content -match '(?m)^\t') -and ($content -match '(?m)^    ')) { $problems += 'mixed indent' }
-            if ($content -match '[ \t]+`r?`n') { $problems += 'trailing space' }
-            if (($content -match '`r`n') -and ($content -match '(?<!`r)`n')) { $problems += 'mixed line endings' }
+            if (($content -match "(?m)^\t") -and ($content -match "(?m)^    ")) { $problems += "mixed indent" }
+            if ($content -match "[ \t]+`r?`n") { $problems += "trailing space" }
+            if (($content -match "`r`n") -and ($content -match "(?<!`r)`n")) { $problems += "mixed line endings" }
             
             if ($problems) {
-              Write-Host "⚠ $rel : $($problems -join ', ')" -ForegroundColor Yellow
+              Write-Host "⚠ $rel : $($problems -join ", ")" -ForegroundColor Yellow
               $formatIssues += $rel
             }
           }
