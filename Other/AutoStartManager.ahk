@@ -35,12 +35,44 @@ if (!FileExist(configFile)) {
 
 ; Read configuration
 try {
-    exeName := IniRead(configFile, emulatorName, "exe")
-    key := IniRead(configFile, emulatorName, "key", "F11")
-    maximize := IniRead(configFile, emulatorName, "maximize", "true") = "true"
-    delay := Integer(IniRead(configFile, emulatorName, "delay", "0"))
-    activate := IniRead(configFile, emulatorName, "activate", "false") = "true"
-    special := IniRead(configFile, emulatorName, "special", "none")
+    ; Optimization: Read the entire section once to reduce disk I/O
+    sectionContent := IniRead(configFile, emulatorName)
+    if (sectionContent = "") {
+        throw Error("Section '" . emulatorName . "' not found in config file or is empty")
+    }
+    config := Map()
+    config.CaseSense := "Off" ; Ensure case-insensitive lookups (INI standard)
+    Loop Parse, sectionContent, "`n", "`r" {
+        if (p := InStr(A_LoopField, "=")) {
+            k := Trim(SubStr(A_LoopField, 1, p-1))
+            v := Trim(SubStr(A_LoopField, p+1))
+            config[k] := v
+        }
+    }
+
+    if !config.Has("exe") {
+        if (config.Count = 0)
+            throw Error("Section '" . emulatorName . "' is empty or missing required key 'exe'")
+        else
+            throw Error("Key 'exe' not found in section '" . emulatorName . "'")
+    }
+
+    exeName := config["exe"]
+    key := config.Has("key") ? config["key"] : "F11"
+    maximize := (config.Has("maximize") ? config["maximize"] : "true") = "true"
+    if config.Has("delay") {
+        delayRaw := config["delay"]
+        if RegExMatch(delayRaw, "^[+-]?\d+$") {
+            delay := Integer(delayRaw)
+        } else {
+            throw Error("Invalid delay value '" . delayRaw . "' in section '" . emulatorName . "': must be an integer number of milliseconds")
+        }
+    } else {
+        delay := 0
+    }
+    activate := (config.Has("activate") ? config["activate"] : "false") = "true"
+    special := config.Has("special") ? config["special"] : "none"
+
 } catch Error as err {
     MsgBox("Error reading config for " . emulatorName . ":`n" . err.Message)
     ExitApp()
