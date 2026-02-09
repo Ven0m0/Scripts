@@ -1,6 +1,7 @@
 #SingleInstance Force
 #Warn
 #NoEnv
+SetBatchLines, -1
 SetWorkingDir %A_ScriptDir%
 ListLines Off
 DetectHiddenWindows, Off
