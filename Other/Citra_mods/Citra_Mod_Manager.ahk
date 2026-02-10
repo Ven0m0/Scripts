@@ -62,14 +62,17 @@ FileActions(Root, Button)
         Quellpfad := button.Path
         vCount :=0
         Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir
+        {
           vCount++                          ;Increment vCount for each item
+          Break                             ;Optimization: Break after finding the first item
+        }
         If !vCount                          ;Is vCount empty?
         {                         
           FileCopyDir, %Quellpfad%, %Fullpath%
           MsgBox % "Copied " button.Name
         }
         Else                                   ;Otherwise vCount is NOT empty...
-          MsgBox % "Dir has " vCount " item(s). Can't copy"
+          MsgBox % "Dir is not empty. Can't copy"
 }
 
 GuiClose:
