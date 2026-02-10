@@ -116,7 +116,10 @@ if (game="default"){
 }
 
 ; Save config file once
-TF_Save(ConfigText, CitraConfigFile)
-
-MsgBox, 64, CitraPerGame, Applied config for '%game%'.
-ExitApp 0
+if (!TF_Save(ConfigText, CitraConfigFile)) {
+    MsgBox, 16, CitraPerGame, Failed to save config for '%game%' to:`n%CitraConfigFile%
+    ExitApp 1
+} else {
+    MsgBox, 64, CitraPerGame, Applied config for '%game%'.
+    ExitApp 0
+}
