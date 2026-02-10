@@ -1403,7 +1403,7 @@ Error 03: Invalid StartLine parameter (only one + allowed)`nFunction used: %Call
      If (Col = 1)
         {
          LongestLine:=TF_Stat(Text)
-         If (End > LongestLine) or (End = 1) ; FIXITHERE BUG
+         If (End > LongestLine) or (End = 0) or (End = "")
             End:=LongestLine
         }
 
