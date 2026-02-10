@@ -3,27 +3,41 @@
 ; Usage: Run this script with first arg = game key (see list in ShowHelp()).
 
 ;--- Helpers ---------------------------------------------------------------
-SetRes(f){ TF_RegExReplace(CitraConfigFile, "resolution_factor=([2-9]|10|1)", "resolution_factor=" f) }
+SetRes(f){
+  global ConfigText
+  ConfigText := TF_RegExReplace(ConfigText, "resolution_factor=([2-9]|10|1)", "resolution_factor=" f)
+}
 SetFilter(name, isDefaultTrue){
+  global ConfigText
   if (name="none")
-    TF_Replace(CitraConfigFile, "texture_filter_name=xBRZ freescale", "texture_filter_name=none")
+    ConfigText := TF_Replace(ConfigText, "texture_filter_name=xBRZ freescale", "texture_filter_name=none")
   else if (name="xBRZ freescale")
-    TF_Replace(CitraConfigFile, "texture_filter_name=none", "texture_filter_name=xBRZ freescale")
-  TF_Replace(CitraConfigFile, "texture_filter_name\\default=" (isDefaultTrue ? "false" : "true"), "texture_filter_name\\default=" (isDefaultTrue ? "true" : "false"))
+    ConfigText := TF_Replace(ConfigText, "texture_filter_name=none", "texture_filter_name=xBRZ freescale")
+  ConfigText := TF_Replace(ConfigText, "texture_filter_name\\default=" (isDefaultTrue ? "false" : "true"), "texture_filter_name\\default=" (isDefaultTrue ? "true" : "false"))
 }
 SetShader(name, wantDefaultFalse){
+  global ConfigText
   if (name="none (builtin)")
-    TF_Replace(CitraConfigFile, "pp_shader_name=Bump_Mapping_AA_optimize", "pp_shader_name=none (builtin)")
+    ConfigText := TF_Replace(ConfigText, "pp_shader_name=Bump_Mapping_AA_optimize", "pp_shader_name=none (builtin)")
   else if (name="Bump_Mapping_AA_optimize")
-    TF_Replace(CitraConfigFile, "pp_shader_name=none (builtin)", "pp_shader_name=Bump_Mapping_AA_optimize")
-  TF_Replace(CitraConfigFile, "pp_shader_name\\default=" (wantDefaultFalse ? "true" : "false"), "pp_shader_name\\default=" (wantDefaultFalse ? "false" : "true"))
+    ConfigText := TF_Replace(ConfigText, "pp_shader_name=none (builtin)", "pp_shader_name=Bump_Mapping_AA_optimize")
+  ConfigText := TF_Replace(ConfigText, "pp_shader_name\\default=" (wantDefaultFalse ? "true" : "false"), "pp_shader_name\\default=" (wantDefaultFalse ? "false" : "true"))
 }
 SetPreload(on){
-  TF_Replace(CitraConfigFile, "preload_textures\\default=" (on ? "true" : "false"), "preload_textures\\default=" (on ? "false" : "true"))
-  TF_Replace(CitraConfigFile, "preload_textures=" (on ? "false" : "false"), "preload_textures=" (on ? "true" : "false"))
+  global ConfigText
+  ConfigText := TF_Replace(ConfigText, "preload_textures\\default=" (on ? "true" : "false"), "preload_textures\\default=" (on ? "false" : "true"))
+  ConfigText := TF_Replace(ConfigText, "preload_textures=" (on ? "false" : "false"), "preload_textures=" (on ? "true" : "false"))
 }
-SetClock(pct){ TF_Replace(CitraConfigFile, "cpu_clock_percentage=125", "cpu_clock_percentage=" pct) , TF_Replace(CitraConfigFile, "cpu_clock_percentage=25", "cpu_clock_percentage=" pct) }
-SetLayout(opt){ TF_Replace(CitraConfigFile, "layout_option=2", "layout_option=" opt), TF_Replace(CitraConfigFile, "layout_option=0", "layout_option=" opt) }
+SetClock(pct){
+  global ConfigText
+  ConfigText := TF_Replace(ConfigText, "cpu_clock_percentage=125", "cpu_clock_percentage=" pct)
+  ConfigText := TF_Replace(ConfigText, "cpu_clock_percentage=25", "cpu_clock_percentage=" pct)
+}
+SetLayout(opt){
+  global ConfigText
+  ConfigText := TF_Replace(ConfigText, "layout_option=2", "layout_option=" opt)
+  ConfigText := TF_Replace(ConfigText, "layout_option=0", "layout_option=" opt)
+}
 
 NormKey(k){
   StringLower, k, k
@@ -50,6 +64,10 @@ else if (game="mario_luigi_bis")
   game := "mario_luigi_bowser_s_inside_story"
 else if (game="mario_luigi_bowsers_inside_story")
   game := "mario_luigi_bowser_s_inside_story"
+
+; Read config file once
+global ConfigText
+FileRead, ConfigText, %CitraConfigFile%
 
 ; Apply configs
 if (game="default"){
@@ -96,6 +114,9 @@ if (game="default"){
 } else {
   ShowHelp()
 }
+
+; Save config file once
+TF_Save(ConfigText, CitraConfigFile)
 
 MsgBox, 64, CitraPerGame, Applied config for '%game%'.
 ExitApp 0
