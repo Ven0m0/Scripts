@@ -36,3 +36,31 @@ InitScript(requireUIA := true, requireAdmin := false, optimize := true) {
     if optimize
         SetOptimalPerformance()
 }
+
+FindExe(name, fallbacks := []) {
+    if FileExist(name)
+        return name
+    Loop Parse, EnvGet("PATH"), ";"
+    {
+        p := Trim(A_LoopField)
+        if !p
+            continue
+        cand := p . "\" . name
+        if FileExist(cand)
+            return cand
+    }
+    for _, fb in fallbacks
+        if FileExist(fb)
+            return fb
+    return ""
+}
+
+MustGetExe(name, fallbacks := []) {
+    exe := FindExe(name, fallbacks)
+    if exe = ""
+    {
+        MsgBox("Required executable not found: " . name . "`nChecked PATH and fallbacks.")
+        ExitApp(1)
+    }
+    return exe
+}

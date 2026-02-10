@@ -6,6 +6,7 @@
 #SingleInstance Force
 ; #Warn  ; Enable warnings to assist with detecting common errors. Warn needs to be off for tf library.
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+SetBatchLines, -1
 #KeyHistory 0
 #include %A_ScriptDir%\tf.ahk
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
