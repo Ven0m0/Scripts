@@ -60,18 +60,18 @@ FileActions(Root, Button)
         Fullpath := Zielpfad "\" button.Ziel "\" button.Name
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path
-        vCount :=0
-        Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir, stopping after the first one found
+        dirHasItems := false
+        Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir
         {
-          vCount++                          ;Set vCount > 0 once to indicate that the directory has at least one item
+          dirHasItems := true               ;Mark that we found at least one item
           Break                             ;Optimization: Break after finding the first item
         }
-        If !vCount                          ;Is vCount still zero (directory empty)?
+        If !dirHasItems                     ;Is directory empty?
         {                         
           FileCopyDir, %Quellpfad%, %Fullpath%
           MsgBox % "Copied " button.Name
         }
-        Else                                   ;Otherwise vCount is NOT empty...
+        Else                                   ;Otherwise directory is NOT empty...
           MsgBox % "Dir is not empty. Can't copy"
 }
 
