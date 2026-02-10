@@ -1,5 +1,3 @@
-import sys
-
 file_path = "Other/Citra_mods/Citra_Mod_Manager.ahk"
 
 with open(file_path, "r") as f:
