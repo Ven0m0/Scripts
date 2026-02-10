@@ -61,12 +61,12 @@ FileActions(Root, Button)
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path
         vCount :=0
-        Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir
+        Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir, stopping after the first one found
         {
-          vCount++                          ;Increment vCount for each item
+          vCount++                          ;Set vCount > 0 once to indicate that the directory has at least one item
           Break                             ;Optimization: Break after finding the first item
         }
-        If !vCount                          ;Is vCount empty?
+        If !vCount                          ;Is vCount still zero (directory empty)?
         {                         
           FileCopyDir, %Quellpfad%, %Fullpath%
           MsgBox % "Copied " button.Name
