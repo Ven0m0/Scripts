@@ -1,6 +1,7 @@
 #SingleInstance Force
 #Warn
 #NoEnv
+SetBatchLines, -1
 SetWorkingDir %A_ScriptDir%
 ListLines Off
 DetectHiddenWindows, Off
@@ -53,20 +54,30 @@ ScanMods(){
 }
 
 ;----------------- Config Helpers -----------------
-RegExEscape(str){
-  static specials := "()[]{}?*+|^$.\"
-  out := ""
-  Loop, Parse, str
-    out .= InStr(specials, A_LoopField) ? "\" A_LoopField : A_LoopField
-  return out
-}
+UpdateConfig(content, updates){
+  newContent := ""
+  remaining := updates.Clone()
 
-SetKey(content, key, value){
-  pat := "m)^(" . RegExEscape(key) . ")\s*=.*$"
-  if (RegExMatch(content, pat))
-    return RegExReplace(content, pat, "$1=" value, , 1)
-  else
-    return content "`n" key "=" value
+  Loop, Parse, content, `n, `r
+  {
+    line := A_LoopField
+    pos := InStr(line, "=")
+    if (pos > 1){
+      keyCandidate := RTrim(SubStr(line, 1, pos-1))
+      if (remaining.HasKey(keyCandidate)){
+        val := remaining[keyCandidate]
+        line := keyCandidate "=" val
+        remaining.Delete(keyCandidate)
+      }
+    }
+    newContent .= line "`n"
+  }
+
+  for k, v in remaining {
+     newContent .= k "=" v "`n"
+  }
+
+  return SubStr(newContent, 1, -1)
 }
 
 LoadConfig(){
@@ -95,64 +106,68 @@ ApplyPreset(game){
     return "Config missing"
 
   norm := NormKey(game)
+  updates := {}
+
   ; defaults
-  cfg := SetKey(cfg, "resolution_factor", "10")
-  cfg := SetKey(cfg, "texture_filter_name", "xBRZ freescale")
-  cfg := SetKey(cfg, "texture_filter_name\\default", "false")
-  cfg := SetKey(cfg, "pp_shader_name", "Bump_Mapping_AA_optimize")
-  cfg := SetKey(cfg, "pp_shader_name\\default", "false")
-  cfg := SetKey(cfg, "preload_textures\\default", "false")
-  cfg := SetKey(cfg, "preload_textures", "true")
-  cfg := SetKey(cfg, "cpu_clock_percentage", "125")
-  cfg := SetKey(cfg, "layout_option", "2")
+  updates["resolution_factor"] := "10"
+  updates["texture_filter_name"] := "xBRZ freescale"
+  updates["texture_filter_name\\default"] := "false"
+  updates["pp_shader_name"] := "Bump_Mapping_AA_optimize"
+  updates["pp_shader_name\\default"] := "false"
+  updates["preload_textures\\default"] := "false"
+  updates["preload_textures"] := "true"
+  updates["cpu_clock_percentage"] := "125"
+  updates["layout_option"] := "2"
 
   if (norm = "3d_land"){
-    cfg := SetKey(cfg, "resolution_factor", "8")
-    cfg := SetKey(cfg, "texture_filter_name", "none")
-    cfg := SetKey(cfg, "texture_filter_name\\default", "true")
-    cfg := SetKey(cfg, "pp_shader_name", "none (builtin)")
-    cfg := SetKey(cfg, "pp_shader_name\\default", "false")
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["resolution_factor"] := "8"
+    updates["texture_filter_name"] := "none"
+    updates["texture_filter_name\\default"] := "true"
+    updates["pp_shader_name"] := "none (builtin)"
+    updates["pp_shader_name\\default"] := "false"
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   } else if (norm = "hd_texture_pack"){
-    cfg := SetKey(cfg, "resolution_factor", "4")
-    cfg := SetKey(cfg, "texture_filter_name", "none")
-    cfg := SetKey(cfg, "texture_filter_name\\default", "true")
-    cfg := SetKey(cfg, "pp_shader_name", "none (builtin)")
-    cfg := SetKey(cfg, "pp_shader_name\\default", "false")
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["resolution_factor"] := "4"
+    updates["texture_filter_name"] := "none"
+    updates["texture_filter_name\\default"] := "true"
+    updates["pp_shader_name"] := "none (builtin)"
+    updates["pp_shader_name\\default"] := "false"
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   } else if (norm = "luigi_s_mansion_2"){
-    cfg := SetKey(cfg, "resolution_factor", "6")
-    cfg := SetKey(cfg, "cpu_clock_percentage", "25")
+    updates["resolution_factor"] := "6"
+    updates["cpu_clock_percentage"] := "25"
   } else if (norm = "mario_kart_7"){
-    cfg := SetKey(cfg, "resolution_factor", "5")
-    cfg := SetKey(cfg, "texture_filter_name", "none")
-    cfg := SetKey(cfg, "texture_filter_name\\default", "true")
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["resolution_factor"] := "5"
+    updates["texture_filter_name"] := "none"
+    updates["texture_filter_name\\default"] := "true"
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   } else if (norm = "mario_luigi_bowser_s_inside_story"){
-    cfg := SetKey(cfg, "layout_option", "0")
-    cfg := SetKey(cfg, "texture_filter_name", "none")
-    cfg := SetKey(cfg, "texture_filter_name\\default", "true")
-    cfg := SetKey(cfg, "pp_shader_name", "none (builtin)")
-    cfg := SetKey(cfg, "pp_shader_name\\default", "false")
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["layout_option"] := "0"
+    updates["texture_filter_name"] := "none"
+    updates["texture_filter_name\\default"] := "true"
+    updates["pp_shader_name"] := "none (builtin)"
+    updates["pp_shader_name\\default"] := "false"
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   } else if (norm = "mario_luigi"){
-    cfg := SetKey(cfg, "layout_option", "0")
+    updates["layout_option"] := "0"
   } else if (norm = "no_preloading"){
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   } else if (norm = "nsmb2"){
-    cfg := SetKey(cfg, "resolution_factor", "10")
-    cfg := SetKey(cfg, "texture_filter_name", "none")
-    cfg := SetKey(cfg, "texture_filter_name\\default", "true")
-    cfg := SetKey(cfg, "pp_shader_name", "none (builtin)")
-    cfg := SetKey(cfg, "pp_shader_name\\default", "false")
-    cfg := SetKey(cfg, "preload_textures", "false")
-    cfg := SetKey(cfg, "preload_textures\\default", "true")
+    updates["resolution_factor"] := "10"
+    updates["texture_filter_name"] := "none"
+    updates["texture_filter_name\\default"] := "true"
+    updates["pp_shader_name"] := "none (builtin)"
+    updates["pp_shader_name\\default"] := "false"
+    updates["preload_textures"] := "false"
+    updates["preload_textures\\default"] := "true"
   }
+
+  cfg := UpdateConfig(cfg, updates)
 
   if (!SaveConfig(cfg))
     return "Failed to write config"
