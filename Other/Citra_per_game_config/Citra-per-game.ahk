@@ -25,8 +25,13 @@ SetShader(name, wantDefaultFalse){
 }
 SetPreload(on){
   global ConfigText
-  ConfigText := TF_Replace(ConfigText, "preload_textures\\default=" (on ? "true" : "false"), "preload_textures\\default=" (on ? "false" : "true"))
-  ConfigText := TF_Replace(ConfigText, "preload_textures=" (on ? "false" : "false"), "preload_textures=" (on ? "true" : "false"))
+  val := on ? "true" : "false"
+  ; Ensure both default and explicit preload settings match the desired state,
+  ; regardless of their current value (handle true→false and false→true).
+  ConfigText := TF_Replace(ConfigText, "preload_textures\\default=true",  "preload_textures\\default=" . val)
+  ConfigText := TF_Replace(ConfigText, "preload_textures\\default=false", "preload_textures\\default=" . val)
+  ConfigText := TF_Replace(ConfigText, "preload_textures=true",  "preload_textures=" . val)
+  ConfigText := TF_Replace(ConfigText, "preload_textures=false", "preload_textures=" . val)
 }
 SetClock(pct){
   global ConfigText
