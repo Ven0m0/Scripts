@@ -73,6 +73,11 @@ else if (game="mario_luigi_bowsers_inside_story")
 ; Read config file once
 global ConfigText
 FileRead, ConfigText, %CitraConfigFile%
+if (ErrorLevel or ConfigText = "")
+{
+  MsgBox, 16, CitraPerGame, Failed to read Citra config file:`n  %CitraConfigFile%`n`nMake sure the path is correct and the file is readable.
+  ExitApp 1
+}
 
 ; Apply configs
 if (game="default"){
