@@ -33,11 +33,11 @@ Loop {
 
     ; Only run command when state changes
     if (fortniteIsRunning && !fortniteWasRunning) {
-        Run(A_ComSpec . " /c " . cmdOnLaunch, , "Hide")
+        Run(cmdOnLaunch, , "Hide")
         fortniteWasRunning := true
     }
     else if (!fortniteIsRunning && fortniteWasRunning) {
-        Run(A_ComSpec . " /c " . cmdOnClose, , "Hide")
+        Run(cmdOnClose, , "Hide")
         fortniteWasRunning := false
     }
 
