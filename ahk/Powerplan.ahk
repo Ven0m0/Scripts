@@ -25,21 +25,10 @@ cmdOnLaunch := "powercfg /s 8fcdad7d-7d71-4ea2-bb4c-158ca7f696de"
 ; Balanced power plan GUID
 cmdOnClose := "powercfg /s 77777777-7777-7777-7777-777777777777"
 
-; Track previous state
-fortniteWasRunning := false
-
 Loop {
-    fortniteIsRunning := WinExist("ahk_exe FortniteClient-Win64-Shipping.exe")
+    WinWait("ahk_exe FortniteClient-Win64-Shipping.exe")
+    Run(A_ComSpec . " /c " . cmdOnLaunch, , "Hide")
 
-    ; Only run command when state changes
-    if (fortniteIsRunning && !fortniteWasRunning) {
-        Run(cmdOnLaunch, , "Hide")
-        fortniteWasRunning := true
-    }
-    else if (!fortniteIsRunning && fortniteWasRunning) {
-        Run(cmdOnClose, , "Hide")
-        fortniteWasRunning := false
-    }
-
-    DllCall("kernel32.dll\Sleep", "UInt", 5000)
+    WinWaitClose("ahk_exe FortniteClient-Win64-Shipping.exe")
+    Run(A_ComSpec . " /c " . cmdOnClose, , "Hide")
 }
