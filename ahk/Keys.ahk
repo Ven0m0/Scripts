@@ -9,7 +9,6 @@ InitScript(true, false, false)  ; UIA required, no admin, manual tuning
 
 KeyHistory(0)
 ListLines False
-SetBatchLines(-1)
 SetKeyDelay(-1, -1)
 SetMouseDelay(-1)
 SetDefaultMouseSpeed(0)
