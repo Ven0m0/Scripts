@@ -40,14 +40,7 @@ WaitForWindow(winTitle, timeout := 30) {
 }
 
 WaitForProcess(processName, timeout := 30) {
-    start := A_TickCount
-    limit := timeout * 1000
-    while !ProcessExist(processName) {
-        if (A_TickCount - start > limit)
-            return false
-        Sleep(100)
-    }
-    return true
+    return ProcessWait(processName, timeout) != 0
 }
 
 GetMonitorAtPos(x, y) {
