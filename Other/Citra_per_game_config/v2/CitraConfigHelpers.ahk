@@ -18,11 +18,7 @@
 ;   Escaped string safe for use in regex patterns
 ; ============================================================================
 RegExEscape(str) {
-    static specials := "()[]{}?*+|^$.\"
-    out := ""
-    for char in StrSplit(str)
-        out .= InStr(specials, char) ? "\" char : char
-    return out
+    return RegExReplace(str, "([\\()\[\]{}?*+|^$.])", "\$1")
 }
 
 ; ============================================================================
