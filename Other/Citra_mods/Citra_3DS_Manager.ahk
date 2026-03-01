@@ -199,11 +199,14 @@ CopyMod(idx){
   FileCreateDir, %tgtDir%
 
   ; check emptiness of target parent dir
-  vCount := 0
+  isNotEmpty := false
   Loop, Files, %tgtDir%\*, DF
-    vCount++
-  if (vCount)
-    return "Dir has " vCount " item(s). Can't copy"
+  {
+    isNotEmpty := true
+    break
+  }
+  if (isNotEmpty)
+    return "Dir not empty. Can't copy"
 
   FileCopyDir, %src%, %target%, 1
   if (ErrorLevel)
