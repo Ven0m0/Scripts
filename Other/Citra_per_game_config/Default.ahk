@@ -1,4 +1,4 @@
-#include %A_ScriptDir%\CitraConfigBase.ahk
+#include %A_ScriptDir%\Citra-base.ahk
 
 ; Internal Resolution to 10x
 TF_RegExReplace(CitraConfigFile, "resolution_factor=([2-9]|10|1)", "resolution_factor=10")
