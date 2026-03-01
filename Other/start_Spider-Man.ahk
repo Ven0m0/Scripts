@@ -17,8 +17,7 @@ SetTitleMatchMode("Fast")
 
 ; Spider-Man requires Enter key to dismiss splash screen
 WinWait("ahk_exe Spider-Man.exe")
-Sleep(500)
+WinWaitActive("ahk_exe Spider-Man.exe")
 ControlSend("{Enter}", , "ahk_exe Spider-Man.exe")
-Sleep(3500)
 WinActivate("ahk_exe Spider-Man.exe")
 ExitApp()
