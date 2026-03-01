@@ -1,6 +1,7 @@
 #Warn
 #SingleInstance
 #NoEnv
+SetBatchLines, -1
 
 ; Initialise variables
 Youtube := ""
