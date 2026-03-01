@@ -9,65 +9,48 @@
 
 ;--- Helpers ---------------------------------------------------------------
 
-SetRes(f) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
+SetRes(cfg, f) {
     ; Replace resolution_factor with value f (supports 1-10)
     cfg := RegExReplace(cfg, "m)^resolution_factor=([2-9]|10|1)$", "resolution_factor=" f)
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
-SetFilter(name, isDefaultTrue) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
-
+SetFilter(cfg, name, isDefaultTrue) {
     if (name = "none")
         cfg := StrReplace(cfg, "texture_filter_name=xBRZ freescale", "texture_filter_name=none")
     else if (name = "xBRZ freescale")
         cfg := StrReplace(cfg, "texture_filter_name=none", "texture_filter_name=xBRZ freescale")
 
     cfg := StrReplace(cfg, "texture_filter_name\default=" (isDefaultTrue ? "false" : "true"), "texture_filter_name\default=" (isDefaultTrue ? "true" : "false"))
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
-SetShader(name, wantDefaultFalse) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
-
+SetShader(cfg, name, wantDefaultFalse) {
     if (name = "none (builtin)")
         cfg := StrReplace(cfg, "pp_shader_name=Bump_Mapping_AA_optimize", "pp_shader_name=none (builtin)")
     else if (name = "Bump_Mapping_AA_optimize")
         cfg := StrReplace(cfg, "pp_shader_name=none (builtin)", "pp_shader_name=Bump_Mapping_AA_optimize")
 
     cfg := StrReplace(cfg, "pp_shader_name\default=" (wantDefaultFalse ? "true" : "false"), "pp_shader_name\default=" (wantDefaultFalse ? "false" : "true"))
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
-SetPreload(on) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
-
+SetPreload(cfg, on) {
     cfg := StrReplace(cfg, "preload_textures\default=" (on ? "true" : "false"), "preload_textures\default=" (on ? "false" : "true"))
     cfg := StrReplace(cfg, "preload_textures=" (on ? "false" : "false"), "preload_textures=" (on ? "true" : "false"))
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
-SetClock(pct) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
-
+SetClock(cfg, pct) {
     cfg := StrReplace(cfg, "cpu_clock_percentage=125", "cpu_clock_percentage=" pct)
     cfg := StrReplace(cfg, "cpu_clock_percentage=25", "cpu_clock_percentage=" pct)
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
-SetLayout(opt) {
-    global CitraConfigFile
-    cfg := LoadConfig(CitraConfigFile)
-
+SetLayout(cfg, opt) {
     cfg := StrReplace(cfg, "layout_option=2", "layout_option=" opt)
     cfg := StrReplace(cfg, "layout_option=0", "layout_option=" opt)
-    SaveConfig(cfg, CitraConfigFile)
+    return cfg
 }
 
 NormKey(k) {
@@ -114,51 +97,56 @@ else if (game = "mario_luigi_bis")
 else if (game = "mario_luigi_bowsers_inside_story")
     game := "mario_luigi_bowser_s_inside_story"
 
+global CitraConfigFile
+cfg := LoadConfig(CitraConfigFile)
+
 ; Apply configs
 if (game = "default") {
-    SetRes(10)
-    SetFilter("xBRZ freescale", false)
-    SetShader("Bump_Mapping_AA_optimize", true)
-    SetPreload(true)
-    SetClock(125)
-    SetLayout(2)
+    cfg := SetRes(cfg, 10)
+    cfg := SetFilter(cfg, "xBRZ freescale", false)
+    cfg := SetShader(cfg, "Bump_Mapping_AA_optimize", true)
+    cfg := SetPreload(cfg, true)
+    cfg := SetClock(cfg, 125)
+    cfg := SetLayout(cfg, 2)
 } else if (game = "3d_land") {
-    SetRes(8)
-    SetFilter("none", true)
-    SetShader("none (builtin)", false)
-    SetPreload(false)
+    cfg := SetRes(cfg, 8)
+    cfg := SetFilter(cfg, "none", true)
+    cfg := SetShader(cfg, "none (builtin)", false)
+    cfg := SetPreload(cfg, false)
 } else if (game = "hd_texture_pack") {
-    SetRes(4)
-    SetFilter("none", true)
-    SetShader("none (builtin)", false)
-    SetPreload(false)
+    cfg := SetRes(cfg, 4)
+    cfg := SetFilter(cfg, "none", true)
+    cfg := SetShader(cfg, "none (builtin)", false)
+    cfg := SetPreload(cfg, false)
 } else if (game = "luigi_s_mansion_2") {
-    SetRes(6)
-    SetClock(25)
+    cfg := SetRes(cfg, 6)
+    cfg := SetClock(cfg, 25)
 } else if (game = "mario_kart_7") {
-    SetRes(5)
-    SetFilter("none", true)
-    SetPreload(false)
+    cfg := SetRes(cfg, 5)
+    cfg := SetFilter(cfg, "none", true)
+    cfg := SetPreload(cfg, false)
 } else if (game = "mario_luigi_bowser_s_inside_story") {
-    SetLayout(0)
-    SetFilter("none", true)
-    SetShader("none (builtin)", false)
-    SetPreload(false)
+    cfg := SetLayout(cfg, 0)
+    cfg := SetFilter(cfg, "none", true)
+    cfg := SetShader(cfg, "none (builtin)", false)
+    cfg := SetPreload(cfg, false)
 } else if (game = "mario_luigi") {
-    SetLayout(0)
+    cfg := SetLayout(cfg, 0)
 } else if (game = "no_preloading") {
-    SetRes(10)
-    SetFilter("xBRZ freescale", false)
-    SetShader("Bump_Mapping_AA_optimize", true)
-    SetPreload(false)
+    cfg := SetRes(cfg, 10)
+    cfg := SetFilter(cfg, "xBRZ freescale", false)
+    cfg := SetShader(cfg, "Bump_Mapping_AA_optimize", true)
+    cfg := SetPreload(cfg, false)
 } else if (game = "nsmb2") {
-    SetRes(10)
-    SetFilter("none", true)
-    SetShader("none (builtin)", false)
-    SetPreload(false)
+    cfg := SetRes(cfg, 10)
+    cfg := SetFilter(cfg, "none", true)
+    cfg := SetShader(cfg, "none (builtin)", false)
+    cfg := SetPreload(cfg, false)
 } else {
     ShowHelp()
 }
+
+SaveConfig(cfg, CitraConfigFile)
 
 MsgBox("Applied config for '" game "'.", "CitraPerGame", 64)
 ExitApp 0
