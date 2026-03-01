@@ -12,7 +12,7 @@
 #SingleInstance Force
 
 ; Find first available joystick
-JoystickNumber := 0
+global JoystickNumber := 0
 Loop 16 {
     try {
         JoyName := GetKeyState(A_Index . "JoyName")
@@ -28,25 +28,24 @@ if (JoystickNumber == 0) {
     ExitApp()
 }
 
-; Get number of buttons
-joy_buttons := GetKeyState(JoystickNumber . "JoyButtons")
+; Register individual hotkeys for Joy9 & Joy10
+; This is event-driven and much more efficient than a continuous polling loop
+Hotkey(JoystickNumber . "Joy9", CheckButtons)
+Hotkey(JoystickNumber . "Joy10", CheckButtons)
 
-Loop {
-    ; Check all buttons
-    buttons_down := ""
-    Loop joy_buttons {
-        if (GetKeyState(JoystickNumber . "Joy" . A_Index)) {
-            buttons_down .= " " . A_Index
-        }
-    }
+; Keep script running since there is no longer a loop
+Persistent()
 
-    ; If Joy9 (Select) and Joy10 (Start) are pressed, close active window
-    if (InStr(buttons_down, " 9") && InStr(buttons_down, " 10")) {
+CheckButtons(HotkeyName) {
+    ; Extract the button number that was pressed (9 or 10)
+    pressed_btn := RegExReplace(HotkeyName, "^\d+Joy")
+    other_btn := (pressed_btn = "9") ? "10" : "9"
+
+    ; If the other button is also currently held down
+    if (GetKeyState(JoystickNumber . "Joy" . other_btn)) {
         ; Don't close desktop
         if (!WinActive("ahk_class WorkerW")) {
             WinClose("A")
         }
     }
-
-    Sleep(200)
 }
