@@ -1,4 +1,4 @@
-#include %A_ScriptDir%\CitraConfigBase.ahk
+#include %A_ScriptDir%\Citra-base.ahk
 ; Unified per-game Citra config applicator
 ; Usage: Run this script with first arg = game key (see list in ShowHelp()).
 

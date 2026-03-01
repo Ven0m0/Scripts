@@ -19,6 +19,9 @@ ProcessSetPriority("Normal")
 MatchList := ""
 ExclusionList := ["ShellExperienceHost.exe", "SearchUI.exe"]
 LastSaved := Map()  ; Cache for last saved positions to avoid redundant INI writes
+LastSaved.CaseSense := "Off"
+PendingWrites := Map()
+PendingWrites.CaseSense := "Off"
 
 ; Build initial list of windows
 try {
@@ -33,6 +36,7 @@ try {
 
 ; Main loop - monitor windows and save/restore positions
 SetTimer(MonitorWindows, 350)
+SetTimer(ProcessPendingWrites, 1000)
 
 MonitorWindows() {
     global MatchList, ExclusionList, LastSaved
@@ -76,7 +80,7 @@ MonitorWindows() {
 }
 
 SaveCurrentWindowPosition() {
-    global ExclusionList, LastSaved
+    global ExclusionList, LastSaved, PendingWrites
 
     try {
         WinGetPos(&X, &Y, &Width, &Height, "A")
@@ -102,9 +106,27 @@ SaveCurrentWindowPosition() {
             ; Only write if position/size changed
             currentValue := X . "," . Y . "," . Width . "," . Height
             if (!LastSaved.Has(active_ProcessName) || LastSaved[active_ProcessName] != currentValue) {
-                IniWrite(currentValue, A_ScriptDir . "\WindowSizePosLog.ini", "Process Names", active_ProcessName)
                 LastSaved[active_ProcessName] := currentValue
+                PendingWrites[active_ProcessName] := A_TickCount
             }
         }
+    }
+}
+
+ProcessPendingWrites() {
+    global PendingWrites, LastSaved
+    currentTime := A_TickCount
+    keysToDelete := []
+    for processName, lastChangeTime in PendingWrites {
+        if (currentTime - lastChangeTime >= 1000) {
+            if (LastSaved.Has(processName)) {
+                currentValue := LastSaved[processName]
+                IniWrite(currentValue, A_ScriptDir . "\WindowSizePosLog.ini", "Process Names", processName)
+            }
+            keysToDelete.Push(processName)
+        }
+    }
+    for key in keysToDelete {
+        PendingWrites.Delete(key)
     }
 }
