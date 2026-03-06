@@ -3,22 +3,11 @@
   "extends": [
     "config:recommended",
     ":configMigration",
-    ":dependencyDashboard",
-    ":maintainLockFilesWeekly",
-    ":semanticPrefixFixDepsChoreOthers",
     ":preserveSemverRanges",
-    ":ignoreModulesAndTests",
     "abandonments:recommended",
     "group:all",
-    "helpers:githubDigestChangelogs",
-    "helpers:goXPackagesChangelogLink",
-    "helpers:goXPackagesNameLink",
-    "mergeConfidence:age-confidence-badges",
-    "packages:eslint",
     "packages:linters",
-    "replacements:all",
-    "schedule:weekly",
-    "workarounds:all"
+    "schedule:weekly"
   ],
   "enabled": true,
   "automerge": true,
@@ -27,8 +16,6 @@
   "pinDigests": false,
   "separateMajorMinor": false,
   "separateMinorPatch": false,
-  "configMigration": true,
-  "dependencyDashboard": true,
   "ignoreUnstable": true,
   "prConcurrentLimit": 10,
   "respectLatest": true,
@@ -68,11 +55,6 @@
       "automerge": true,
       "automergeType": "branch",
       "schedule": ["at any time"]
-    },
-    {
-      "description": "Group arg1 packages into same branch/PR",
-      "extends": ["arg0"],
-      "groupName": "arg1"
     }
   ],
   "customManagers": [
