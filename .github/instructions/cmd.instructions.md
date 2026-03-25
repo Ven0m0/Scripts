@@ -1,70 +1,61 @@
 ---
-description: "Batch/CMD scripting standards for Windows utilities"
-applyTo: "**/*.cmd, **/*.bat"
+description: "CMD/Batch scripting standards for Windows batch file development"
+applyTo: "**/*.{bat,cmd}"
 ---
 
-# CMD/Batch Scripting Guidelines
+# CMD/Batch Scripting Standards
 
-Instructions for writing minimal, reliable CMD/Batch scripts for Windows utilities and bootstrap tasks.
+<Goals>
 
-## General Instructions
+- Fail fast: check errorlevel after commands
+- Performance: minimize overhead, batch operations
+- Clarity: descriptive names, consistent style
 
-- Target `cmd.exe`; assume Windows 10+.
-- Keep scripts **self-contained**; avoid external tools unless already standard on Windows.
-- Use CRLF line endings; ASCII/UTF-8 without BOM.
+</Goals>
 
-## Code Standards
+## Template
 
-- Start with `@echo off` and `setlocal enabledelayedexpansion`.
-- Quote all paths: `"%%~dp0"` for script dir; never parse `dir` output—use `for`.
-- Use `if defined`/`if not defined` for presence checks; prefer `if /i` for case-insensitive compares.
-- Avoid `%random%` for security decisions.
-- Prefer `for %%V in (...) do` for iteration; avoid unbounded `goto` spaghetti—structure with labels and early exits.
-
-## Environment & Safety
-
-- Do not mutate global environment; end with `endlocal`.
-- Validate prerequisites (admin, files) before actions.
-- Use `%ERRORLEVEL%` checks after critical commands; `exit /b 1` on failure.
-
-## I/O & Logging
-
-- Use `>nul 2>&1` to silence noisy commands; log to `%TEMP%\script.log` when debugging.
-- Avoid `findstr` regex complexity; keep patterns simple and quoted.
-
-## Examples
-
-### Good Example – Safe path handling
-
-```bat
+```batch
 @echo off
 setlocal enabledelayedexpansion
-set "ROOT=%~dp0"
-if not exist "%ROOT%data.txt" (
-  echo Missing data.txt>&2
-  exit /b 1
-)
-for /f "usebackq delims=" %%L in ("%ROOT%data.txt") do (
-  echo %%L
-)
-endlocal
+setlocal enableextensions
 ```
 
-### Bad Example – Unquoted paths, env pollution
+<Standards>
 
-```bat
-echo on
-set PATH=%CD%\tools;%PATH%
-type data.txt
+**Variables**: `set "name=value"` for assignment. `%var%` immediate, `!var!` delayed (in code blocks)
+**Control Flow**: `if exist`, `if "%errorlevel%"=="0"`, `for %%i in (...) do`
+**Subroutines**: `call :label`, `exit /b 0` to return
+**Errors**: `if errorlevel 1` or `command && echo Success || echo Failure`
+
+</Standards>
+
+```batch
+:: Subroutine with parameters
+call :process_file "input.txt"
+goto :eof
+
+:process_file
+set "filename=%~1"
+set "fullpath=%~f1"
+echo Processing: %fullpath%
+exit /b 0
 ```
 
-## Validation
+<Limitations>
 
-- Run in clean `cmd.exe` session.
-- Test with spaces in paths.
-- Confirm correct exit codes for success/failure.
+- No unquoted paths with spaces
+- No `%var%` inside code blocks (use `!var!` with delayed expansion)
+- No missing errorlevel checks
+- No environment modification without `setlocal`
 
-## Maintenance
+</Limitations>
 
-- Keep logic minimal; prefer moving complex flows to PowerShell.
-- Re-test after Windows updates that may affect built-ins.
+<Security>
+
+- No hardcoded credentials
+- Input validation before use
+- Use `setlocal` to avoid polluting environment
+- Temporary files created securely
+
+</Security>
