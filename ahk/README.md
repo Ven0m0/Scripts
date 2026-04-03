@@ -115,7 +115,7 @@ ControllerQuit.ahk
 
 #### Keys.ahk
 
-**Purpose:**  hotkey suite for productivity and window management
+**Purpose:** hotkey suite for productivity and window management
 
 **Hotkeys:**
 - `Win+Arrow Keys` - Snap windows to screen edges
@@ -313,7 +313,7 @@ If you're familiar with AutoHotkey v1:
 
 ### Migration Guide
 
-See [CLAUDE.md](../CLAUDE.md#autohotkey-v2-migration-status) for  migration information.
+See [AGENTS.md](../AGENTS.md) for migration information.
 
 ## Development
 
@@ -409,7 +409,7 @@ MyFunction() {
 
 - [AutoHotkey v2 Documentation](https://www.autohotkey.com/docs/v2/)
 - [v1 to v2 Changes](https://www.autohotkey.com/docs/v2/v2-changes.htm)
-- [CLAUDE.md](../CLAUDE.md) - Detailed developer guide
+- [AGENTS.md](../AGENTS.md) - Detailed developer guide
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 
 ## Contributing

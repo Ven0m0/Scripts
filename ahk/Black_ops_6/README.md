@@ -44,7 +44,7 @@ moveDelay := 500     ; Time for movement inputs
 ; Modify the Loop section to change what keys are pressed
 ```
 
-##  Important Warnings
+## Important Warnings
 
 ### Game Terms of Service
 

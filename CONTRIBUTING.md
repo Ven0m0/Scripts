@@ -255,7 +255,7 @@ monitor as primary display.
 
 - [ ] Code follows the style guidelines
 - [ ] Comments added for complex logic
-- [ ] Documentation updated (README, CLAUDE.md, etc.)
+- [ ] Documentation updated (README, AGENTS.md, etc.)
 - [ ] No trailing whitespace
 - [ ] CRLF line endings for `.ahk` files
 - [ ] Scripts tested locally
@@ -321,7 +321,7 @@ Update documentation when you:
 ### Documentation Files
 
 - **README.md** - User-facing overview and quick start
-- **CLAUDE.md** - Developer guide and AI assistant instructions
+- **AGENTS.md** - Developer guide and AI assistant instructions
 - **CONTRIBUTING.md** - This file
 - **Directory READMEs** - Specific documentation for subdirectories
 - **Inline comments** - Complex logic and function documentation
@@ -341,13 +341,13 @@ Update documentation when you:
 
 - [AutoHotkey Documentation](https://www.autohotkey.com/docs/)
 - [AutoHotkey Forum](https://www.autohotkey.com/boards/)
-- [CLAUDE.md](CLAUDE.md) -  development guide
+- [AGENTS.md](AGENTS.md) - development guide
 - [GitHub Issues](https://github.com/Ven0m0/Scripts/issues)
 
 ### Asking Questions
 
 - Check existing [Issues](https://github.com/Ven0m0/Scripts/issues)
-- Read [CLAUDE.md](CLAUDE.md) for common patterns
+- Read [AGENTS.md](AGENTS.md) for common patterns
 - Open a new issue with:
   - Clear description
   - Steps to reproduce (for bugs)
