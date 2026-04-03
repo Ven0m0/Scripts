@@ -11,7 +11,7 @@ ahk/
 ├── GUI/                 # GUI launcher applications
 ├── ControllerQuit.ahk   # Quit apps with controller button combo
 ├── Fullscreen.ahk       # Borderless fullscreen toggle
-├── Keys.ahk             # Comprehensive hotkey suite
+├── Keys.ahk             # Hotkey suite
 └── Powerplan.ahk        # Automatic power plan switching
 ```
 
@@ -115,7 +115,7 @@ ControllerQuit.ahk
 
 #### Keys.ahk
 
-**Purpose:** Comprehensive hotkey suite for productivity and window management
+**Purpose:** hotkey suite for productivity and window management
 
 **Hotkeys:**
 - `Win+Arrow Keys` - Snap windows to screen edges
@@ -313,7 +313,7 @@ If you're familiar with AutoHotkey v1:
 
 ### Migration Guide
 
-See [CLAUDE.md](../CLAUDE.md#autohotkey-v2-migration-status) for comprehensive migration information.
+See [AGENTS.md](../AGENTS.md) for migration information.
 
 ## Development
 
@@ -328,14 +328,14 @@ See [CLAUDE.md](../CLAUDE.md#autohotkey-v2-migration-status) for comprehensive m
 ; Author: Your Name
 ; Version: 1.0.0
 ; Last Updated: YYYY-MM-DD
-; 
+;
 ; Requirements:
 ;   - AutoHotkey v2.0.19+
 ;   - Admin privileges (if needed)
-; 
+;
 ; Usage:
 ;   Brief usage instructions
-; 
+;
 ; Hotkeys:
 ;   F1 - Action description
 ; =============================================================================
@@ -409,7 +409,7 @@ MyFunction() {
 
 - [AutoHotkey v2 Documentation](https://www.autohotkey.com/docs/v2/)
 - [v1 to v2 Changes](https://www.autohotkey.com/docs/v2/v2-changes.htm)
-- [CLAUDE.md](../CLAUDE.md) - Detailed developer guide
+- [AGENTS.md](../AGENTS.md) - Detailed developer guide
 - [CONTRIBUTING.md](../CONTRIBUTING.md) - Contribution guidelines
 
 ## Contributing

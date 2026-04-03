@@ -61,7 +61,7 @@ InitScript(true, true)  ; Require Admin + Performance optimization (UIA built-in
 
 **Functions:**
 
-- `ToggleFakeFullscreenMultiMonitor(winTitle)` ⭐ Most used
+- `ToggleFakeFullscreenMultiMonitor(winTitle)` — most used
   - Multi-monitor aware borderless fullscreen toggle
   - Detects current monitor and calculates bounds
   - Saves/restores window state
@@ -268,7 +268,7 @@ WinWait("ahk_exe game.exe")
 
 ## Testing Library Changes
 
-**⚠️ CRITICAL:** Changes to library files affect ALL dependent scripts!
+**CRITICAL:** Changes to library files affect ALL dependent scripts!
 
 ### Testing Process
 
@@ -292,7 +292,7 @@ WinWait("ahk_exe game.exe")
    - New required parameters
 
 4. **Update documentation:**
-   - CLAUDE.md
+   - AGENTS.md
    - This README
    - Inline comments
 
@@ -360,14 +360,14 @@ When modifying library files:
 1. **Document all changes** in function headers
 2. **Test thoroughly** with dependent scripts
 3. **Update version-specific libraries** (v1 and v2)
-4. **Update CLAUDE.md** with changes
+4. **Update AGENTS.md** with changes
 5. **Add migration notes** if breaking changes
 
 See [CONTRIBUTING.md](../CONTRIBUTING.md) for detailed guidelines.
 
 ## Additional Resources
 
-- [CLAUDE.md](../CLAUDE.md) - Comprehensive developer guide
+- [AGENTS.md](../AGENTS.md) - developer guide
 - [AutoHotkey v1 Documentation](https://www.autohotkey.com/docs/v1/)
 - [AutoHotkey v2 Documentation](https://www.autohotkey.com/docs/v2/)
 - [v1 to v2 Migration Guide](https://www.autohotkey.com/docs/v2/v2-changes.htm)

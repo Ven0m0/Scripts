@@ -51,7 +51,7 @@ This project follows a simple code of conduct: be respectful, constructive, and 
 ```
 Scripts/
 ├── ahk/             # AutoHotkey v2 scripts
-├── Lib/             # Shared libraries (v1 and v2)
+├── Lib/             # Shared libraries (v2)
 ├── Other/           # Specialized utilities
 ├── .github/         # CI/CD workflows and instructions
 └── docs/            # Additional documentation
@@ -104,11 +104,11 @@ Add header comments to all scripts:
 ; Author: Your Name
 ; Version: 1.0.0
 ; Last Updated: YYYY-MM-DD
-; 
+;
 ; Requirements:
 ;   - AutoHotkey v2.0+
 ;   - Admin privileges (if needed)
-; 
+;
 ; Usage:
 ;   Brief usage instructions
 ; =============================================================================
@@ -255,7 +255,7 @@ monitor as primary display.
 
 - [ ] Code follows the style guidelines
 - [ ] Comments added for complex logic
-- [ ] Documentation updated (README, CLAUDE.md, etc.)
+- [ ] Documentation updated (README, AGENTS.md, etc.)
 - [ ] No trailing whitespace
 - [ ] CRLF line endings for `.ahk` files
 - [ ] Scripts tested locally
@@ -321,7 +321,7 @@ Update documentation when you:
 ### Documentation Files
 
 - **README.md** - User-facing overview and quick start
-- **CLAUDE.md** - Developer guide and AI assistant instructions
+- **AGENTS.md** - Developer guide and AI assistant instructions
 - **CONTRIBUTING.md** - This file
 - **Directory READMEs** - Specific documentation for subdirectories
 - **Inline comments** - Complex logic and function documentation
@@ -341,13 +341,13 @@ Update documentation when you:
 
 - [AutoHotkey Documentation](https://www.autohotkey.com/docs/)
 - [AutoHotkey Forum](https://www.autohotkey.com/boards/)
-- [CLAUDE.md](CLAUDE.md) - Comprehensive development guide
+- [AGENTS.md](AGENTS.md) - development guide
 - [GitHub Issues](https://github.com/Ven0m0/Scripts/issues)
 
 ### Asking Questions
 
 - Check existing [Issues](https://github.com/Ven0m0/Scripts/issues)
-- Read [CLAUDE.md](CLAUDE.md) for common patterns
+- Read [AGENTS.md](AGENTS.md) for common patterns
 - Open a new issue with:
   - Clear description
   - Steps to reproduce (for bugs)
@@ -362,4 +362,4 @@ Contributors will be acknowledged in:
 - Release notes
 - Project README (for significant contributions)
 
-Thank you for contributing! 🎉
+Thank you for contributing!

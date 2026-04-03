@@ -182,11 +182,11 @@ F7:: {  ; Start XP macro
     Sleep(500)
     Send("{w up}")
     Sleep(100)
-    
+
     ; Shoot periodically
     Send("{Mouse1}")
     Sleep(RandomDelay(800, 1200))
-    
+
     ; Anti-AFK movement every 30 seconds
     if (Mod(A_Index, 30) == 0) {
       Send("{Space}")  ; Jump
@@ -436,17 +436,17 @@ try {
   if !FileExist("emulator.exe") {
     throw Error("Emulator not found!")
   }
-  
+
   Run("emulator.exe", , , &pid)
-  
+
   ; Wait for window
   if !WinWait("ahk_pid " pid, , 10) {
     throw Error("Window did not appear!")
   }
-  
+
   ; Success
   MsgBox("Emulator launched successfully!")
-  
+
 } catch as e {
   ; Handle error
   MsgBox("Error: " e.Message, "Error", "Icon!")

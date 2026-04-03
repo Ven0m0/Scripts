@@ -56,8 +56,8 @@ This directory contains AutoHotkey v1 scripts that provide a user-friendly graph
    ```bash
    # Place these files in Other/Downloader/:
    - yt-dlp.exe
-   - spotdl.exe  (renamed from spotdl-*.exe)
-   - ffmpeg.exe  (run update.cmd or download manually)
+   - spotdl.exe (renamed from spotdl-*.exe)
+   - ffmpeg.exe (run update.cmd or download manually)
    ```
 
 2. **Verify file structure:**
@@ -65,9 +65,9 @@ This directory contains AutoHotkey v1 scripts that provide a user-friendly graph
    Other/Downloader/
    ├── YT_Spotify_Downloader.ahk
    ├── update.cmd
-   ├── yt-dlp.exe          ← Download this
-   ├── spotdl.exe          ← Download and rename this
-   └── ffmpeg.exe          ← Run update.cmd or download
+   ├── yt-dlp.exe ← Download this
+   ├── spotdl.exe ← Download and rename this
+   └── ffmpeg.exe ← Run update.cmd or download
    ```
 
 3. **Run the downloader:**
@@ -247,7 +247,7 @@ update.cmd
 
 ## Security Note
 
-⚠️ **Input Validation:** The scripts have been updated with input validation to prevent command injection vulnerabilities. Do not modify the validation code unless you understand the security implications.
+**Input Validation:** The scripts have been updated with input validation to prevent command injection vulnerabilities. Do not modify the validation code unless you understand the security implications.
 
 ```autohotkey
 ; Security feature - do not remove

@@ -9,7 +9,7 @@ This directory contains CMD/Batch scripts that simplify using Microsoft's **Robo
 ## Features
 
 - **Extension Filtering** - Copy only specific file types
-- **Multi-threaded** - Faster copying with parallel operations  
+- **Multi-threaded** - Faster copying with parallel operations
 - **Recursive** - Automatically copy subdirectories
 - **Logging** - Optional copy operation logs
 - **Simple Configuration** - Edit paths directly in script
@@ -36,7 +36,7 @@ This directory contains CMD/Batch scripts that simplify using Microsoft's **Robo
 
 1. **Edit the script** `Copy_images.cmd`:
    ```cmd
-   set ext=*.jpg *.png *.webp *.bmp *.ico 
+   set ext=*.jpg *.png *.webp *.bmp *.ico
    robocopy "input Path" "output path" %ext% /s /MT:32
    ```
 

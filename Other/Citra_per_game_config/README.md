@@ -72,7 +72,7 @@ Other/Citra_per_game_config/
 └── tf.ahk              # REQUIRED - Do not delete!
 ```
 
-**⚠️ Important:** `tf.ahk` must be in the same folder as the other scripts!
+**Important:** `tf.ahk` must be in the same folder as the other scripts!
 
 ### Step 3: Backup Original Config
 
