@@ -51,7 +51,7 @@ This project follows a simple code of conduct: be respectful, constructive, and 
 ```
 Scripts/
 ├── ahk/             # AutoHotkey v2 scripts
-├── Lib/             # Shared libraries (v1 and v2)
+├── Lib/             # Shared libraries (v2)
 ├── Other/           # Specialized utilities
 ├── .github/         # CI/CD workflows and instructions
 └── docs/            # Additional documentation
@@ -104,11 +104,11 @@ Add header comments to all scripts:
 ; Author: Your Name
 ; Version: 1.0.0
 ; Last Updated: YYYY-MM-DD
-; 
+;
 ; Requirements:
 ;   - AutoHotkey v2.0+
 ;   - Admin privileges (if needed)
-; 
+;
 ; Usage:
 ;   Brief usage instructions
 ; =============================================================================
@@ -341,7 +341,7 @@ Update documentation when you:
 
 - [AutoHotkey Documentation](https://www.autohotkey.com/docs/)
 - [AutoHotkey Forum](https://www.autohotkey.com/boards/)
-- [CLAUDE.md](CLAUDE.md) - Comprehensive development guide
+- [CLAUDE.md](CLAUDE.md) -  development guide
 - [GitHub Issues](https://github.com/Ven0m0/Scripts/issues)
 
 ### Asking Questions
@@ -362,4 +362,4 @@ Contributors will be acknowledged in:
 - Release notes
 - Project README (for significant contributions)
 
-Thank you for contributing! 🎉
+Thank you for contributing!

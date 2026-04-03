@@ -216,12 +216,12 @@ return
 LaunchScript(*) {
   global scriptPID
   scriptPath := A_ScriptDir "\..\MyScript.ahk"
-  
+
   if WinExist("ahk_pid " scriptPID) {
     MsgBox("Script already running!")
     return
   }
-  
+
   try {
     Run(scriptPath, , , &scriptPID)
     MsgBox("Script launched!")
@@ -325,7 +325,7 @@ GuiClose(*) {
     WinClose("ahk_pid " script1PID)
   if WinExist("ahk_pid " script2PID)
     WinClose("ahk_pid " script2PID)
-  
+
   ExitApp
 }
 ```

@@ -128,14 +128,14 @@ Pass additional parameters to the emulator:
 
 ## Trade-offs
 
-### Advantages ✅
+### Advantages
 
 - **Huge space savings** (50-80% reduction)
 - **No manual decompression** needed
 - **Original archives remain intact**
 - **Works with any emulator**
 
-### Disadvantages ❌
+### Disadvantages
 
 - **Longer launch time** (depends on game size and CPU)
 - **Requires disk space** for temporary extraction

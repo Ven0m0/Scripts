@@ -67,10 +67,10 @@ Same as MC_AFK.ahk but optimized for Bedrock Edition
 Loop {
   Send("{Mouse2}")  ; Cast fishing rod
   Sleep(RandomDelay(1000, 2000))  ; Wait for bite
-  
+
   ; Detect bite (pixel color check or timer)
   Sleep(RandomDelay(500, 1000))
-  
+
   Send("{Mouse2}")  ; Reel in
   Sleep(500)
 }
@@ -103,13 +103,13 @@ Loop {
   Send("{w down}")
   Sleep(500)
   Send("{w up}")
-  
+
   ; Break and replant
   Send("{Mouse1}")  ; Break
   Sleep(100)
   Send("{Mouse2}")  ; Plant
   Sleep(500)
-  
+
   ; Turn at end of row
   if (Mod(A_Index, 10) == 0) {
     Send("{d down}")
@@ -135,7 +135,7 @@ Loop {
 Loop {
   Send("{Mouse1}")  ; Attack
   Sleep(500)
-  
+
   ; Collect items periodically
   if (Mod(A_Index, 20) == 0) {
     Send("{e}")  ; Open inventory
@@ -175,11 +175,11 @@ F7:: {
   ; Get reference color of bobber float
   MouseGetPos(&x, &y)
   baseColor := PixelGetColor(x, y)
-  
+
   Loop {
     Send("{Mouse2}")  ; Cast
     Sleep(500)
-    
+
     ; Wait for color change (bite)
     Loop {
       currentColor := PixelGetColor(x, y)
@@ -189,14 +189,14 @@ F7:: {
         break
       }
       Sleep(100)
-      
+
       ; Timeout after 30 seconds
       if (A_Index > 300) {
         Send("{Mouse2}")  ; Recast
         break
       }
     }
-    
+
     Sleep(2000)
   }
 }
@@ -212,14 +212,14 @@ F7:: {
     ; Hold wheat/carrots
     Send("{1}")  ; Switch to hotbar slot 1
     Sleep(500)
-    
+
     ; Right-click animals
     Loop 5 {
       Send("{Mouse2}")
       Sleep(100)
       MouseMove(50, 0, 10, "R")  ; Move mouse to next animal
     }
-    
+
     ; Wait for breeding cooldown
     Sleep(5 * 60 * 1000)  ; 5 minutes
   }
@@ -267,7 +267,7 @@ F7:: {
     ; Main actions here
     Send("{Mouse1}")
     Sleep(1000)
-    
+
     ; Anti-AFK movement every 60 seconds
     if (Mod(A_Index, 60) == 0) {
       Send("{w down}")
@@ -291,7 +291,7 @@ F7:: {
 DropJunk() {
   Send("{e}")  ; Open inventory
   Sleep(500)
-  
+
   ; Drop items from specific slots
   Loop 9 {
     Send("{" A_Index "}")  ; Select slot
@@ -299,7 +299,7 @@ DropJunk() {
     Send("{q}")  ; Drop item
     Sleep(50)
   }
-  
+
   Send("{Escape}")  ; Close inventory
 }
 
@@ -327,21 +327,21 @@ if (Mod(A_Index, 100) == 0) {
 F7:: {
   startTime := A_TickCount
   cycleCount := 0
-  
+
   Loop {
     ; Random delay between casts
     Send("{Mouse2}")
     Sleep(RandomDelay(1000, 3000))
-    
+
     ; Wait for bite (randomized)
     Sleep(RandomDelay(10000, 20000))
-    
+
     ; Reel in
     Send("{Mouse2}")
     Sleep(RandomDelay(500, 1000))
-    
+
     cycleCount++
-    
+
     ; Take break every 30 minutes
     elapsed := (A_TickCount - startTime) / 1000 / 60
     if (elapsed > 30 and Mod(cycleCount, 100) == 0) {
@@ -417,16 +417,16 @@ Loop {
 ## Server Compatibility
 
 ### Single-Player
-✅ Fully compatible - use any settings
+ Fully compatible - use any settings
 
 ### Multiplayer (Vanilla)
-⚠️ Check server rules - many servers ban AFK machines
+ Check server rules - many servers ban AFK machines
 
 ### Multiplayer (Modded)
-⚠️ Check for anti-cheat mods
+ Check for anti-cheat mods
 
 ### Realms
-⚠️ May violate Microsoft ToS
+ May violate Microsoft ToS
 
 ## Best Practices
 

@@ -44,7 +44,7 @@ moveDelay := 500     ; Time for movement inputs
 ; Modify the Loop section to change what keys are pressed
 ```
 
-## ⚠️ Important Warnings
+##  Important Warnings
 
 ### Game Terms of Service
 
@@ -255,7 +255,7 @@ Loop {
   Send("{w down}")
   Sleep(1000)
   Send("{w up}")
-  
+
   ; Unstuck every 30 seconds
   if (Mod(A_Index, 30) == 0) {
     Send("{Space}")  ; Jump
@@ -281,11 +281,11 @@ F7:: {
   global startTime, totalRuns
   startTime := A_TickCount
   totalRuns := 0
-  
+
   Loop {
     ; Your actions here
     totalRuns++
-    
+
     ; Show progress every 100 iterations
     if (Mod(totalRuns, 100) == 0) {
       elapsed := (A_TickCount - startTime) / 1000 / 60  ; Minutes
@@ -303,10 +303,10 @@ F7:: {
 F7:: {
   startTime := A_TickCount
   maxMinutes := 60  ; Run for 60 minutes
-  
+
   Loop {
     ; Your actions here
-    
+
     ; Check elapsed time
     elapsed := (A_TickCount - startTime) / 1000 / 60
     if (elapsed >= maxMinutes) {
