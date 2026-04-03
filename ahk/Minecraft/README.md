@@ -417,16 +417,16 @@ Loop {
 ## Server Compatibility
 
 ### Single-Player
- Fully compatible - use any settings
+Fully compatible - use any settings
 
 ### Multiplayer (Vanilla)
- Check server rules - many servers ban AFK machines
+Check server rules - many servers ban AFK machines
 
 ### Multiplayer (Modded)
- Check for anti-cheat mods
+Check for anti-cheat mods
 
 ### Realms
- May violate Microsoft ToS
+May violate Microsoft ToS
 
 ## Best Practices
 

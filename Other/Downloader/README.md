@@ -247,7 +247,7 @@ update.cmd
 
 ## Security Note
 
- **Input Validation:** The scripts have been updated with input validation to prevent command injection vulnerabilities. Do not modify the validation code unless you understand the security implications.
+**Input Validation:** The scripts have been updated with input validation to prevent command injection vulnerabilities. Do not modify the validation code unless you understand the security implications.
 
 ```autohotkey
 ; Security feature - do not remove

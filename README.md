@@ -143,6 +143,8 @@ Scripts/
 │   └── build-cached.yml        # Release compilation
 │
 ├── AGENTS.md                     # AI assistant development guide
+├── CLAUDE.md                     # Symlink to AGENTS.md
+├── GEMINI.md                     # Symlink to AGENTS.md
 └── LICENSE                       # MIT License
 ```
 

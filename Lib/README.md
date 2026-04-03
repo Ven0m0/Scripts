@@ -268,7 +268,7 @@ WinWait("ahk_exe game.exe")
 
 ## Testing Library Changes
 
-** CRITICAL:** Changes to library files affect ALL dependent scripts!
+**CRITICAL:** Changes to library files affect ALL dependent scripts!
 
 ### Testing Process
 

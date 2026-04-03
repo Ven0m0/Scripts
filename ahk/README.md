@@ -11,7 +11,7 @@ ahk/
 ├── GUI/                 # GUI launcher applications
 ├── ControllerQuit.ahk   # Quit apps with controller button combo
 ├── Fullscreen.ahk       # Borderless fullscreen toggle
-├── Keys.ahk             #  hotkey suite
+├── Keys.ahk             # Hotkey suite
 └── Powerplan.ahk        # Automatic power plan switching
 ```
 
