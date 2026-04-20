@@ -1,5 +1,4 @@
 ---
-description: "AutoHotkey v2 scripting standards for Windows automation"
 applyTo: "**/*.ahk"
 ---
 

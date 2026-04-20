@@ -1,0 +1,30 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - ".github/workflows/copilot-setup-steps.yml"
+  pull_request:
+    paths:
+      - ".github/workflows/copilot-setup-steps.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: "24"
+
+      - name: Note Windows validation workflows
+        shell: bash
+        run: |
+          echo "AutoHotkey compilation and PowerShell validation remain in the Windows workflows:"
+          echo "  - .github/workflows/ahk-lint-format-compile.yml"
+          echo "  - .github/workflows/powershell.yml"
