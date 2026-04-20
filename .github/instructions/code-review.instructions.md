@@ -11,6 +11,7 @@ Review changes in **English** and focus on the highest-risk issues first.
 
 1. **Security and safety**
    - No secrets, unsafe shell usage, or command injection paths
+   - No unquoted variables in shell commands or shell expansion of user-provided input
    - No hardcoded user-specific or machine-specific paths when a portable alternative exists
 2. **Correctness**
    - Automation still targets the right window, process, or config surface
@@ -41,7 +42,7 @@ Review changes in **English** and focus on the highest-risk issues first.
 
 - Quote paths with spaces
 - Keep fail-fast behavior and explicit error handling
-- Reject `Invoke-Expression` with untrusted input
+- Reject `Invoke-Expression` with user-provided or other external input
 - Check batch files for `setlocal`, delayed expansion rules, and `errorlevel` handling
 
 ### Copilot guidance and workflows

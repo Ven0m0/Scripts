@@ -22,7 +22,7 @@
 ahk/                    Primary AutoHotkey v2 scripts
 Lib/v2/                 Shared v2 helpers (`AHK_Common`, `WindowManager`, `AutoStartHelper`)
 Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and specialized tools
-.github/instructions/   Language and domain-specific guidance for Copilot
+.github/instructions/   Path-specific guidance for Copilot
 .github/skills/         Reusable Copilot task workflows for repo-specific work
 .github/workflows/      CI definitions; `ahk-lint-format-compile.yml` is the main AHK validation workflow
 ```
@@ -75,7 +75,8 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
 
 - The authoritative AHK CI workflow is `.github/workflows/ahk-lint-format-compile.yml`.
 - That workflow performs version detection, syntax compilation, and formatting checks on Windows.
-- Agent guidance changes should also run the guidance lint and normalization commands documented in `.github/skills/validate/SKILL.md`.
+- Agent guidance changes should run `ctxlint` and `agnix`.
+- Use `.github/skills/validate/SKILL.md` for the exact commands and scope.
 - If you need to reproduce CI locally, prefer matching the workflow definitions over older duplicated doc snippets.
 
 ## Release notes
