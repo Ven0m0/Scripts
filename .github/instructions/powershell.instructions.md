@@ -46,7 +46,7 @@ try {
 ```
 
 **Linting**: `Invoke-ScriptAnalyzer -Path script.ps1`
-**Testing**: `Invoke-Pester -Path tests/`
+**Testing**: Use repository-specific PowerShell entry points when they exist; otherwise rely on targeted ScriptAnalyzer checks.
 
 <Limitations>
 

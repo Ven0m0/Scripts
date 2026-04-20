@@ -1,6 +1,6 @@
 ---
 name: validate
-description: Run the correct validation checks for changed files in this repository (ruff, biome, shellcheck, claudelint, pytest).
+description: Use when running the narrowest repo-specific validation for AutoHotkey, PowerShell, CMD, workflows, and agent guidance changes.
 allowed-tools: 'Read, Bash, Grep, Glob'
 ---
 
@@ -8,49 +8,47 @@ allowed-tools: 'Read, Bash, Grep, Glob'
 
 Run the narrowest checks that cover the files you have changed.
 
-## Triggers
-
-Use this skill when asked to validate, lint, type-check, or test changes before committing.
-
 ## Steps
 
-1. Identify which file types were changed (Python, JS/TS, shell, Markdown/agent docs, or mixed).
+1. Identify which file types changed.
+2. Run only the checks that match those files.
 
-2. Run only the checks relevant to changed files:
+### Agent guidance, Copilot assets, and related workflows
 
-   **Python (`**/\*.py`)\*\*
+For `AGENTS.md`, `.github/copilot-instructions.md`, `.github/instructions/**`, `.github/skills/**`, and `.github/workflows/copilot-setup-steps.yml`:
 
-   ```bash
-   uv run ruff format --check <paths>
-   uv run ruff check <paths>
-   uv run pytest <test-target>
-   ```
+```bash
+npx -y @yawlabs/ctxlint --depth 3 --mcp --strict --fix --yes
+npx -y agnix --fix-safe .
+```
 
-   **JS / TS (`**/_.ts`, `\*\*/_.js`, etc.)\*\*
+### AutoHotkey
 
-   ```bash
-   bunx @biomejs/biome check <paths>
-   bun run tsc --noEmit
-   ```
+- The source of truth is `.github/workflows/ahk-lint-format-compile.yml`
+- If you are on Windows and can mirror that workflow safely, do so
+- If you are on a non-Windows agent, do not invent replacement tooling; inspect the changed scripts carefully and rely on the workflow for compile validation
 
-   **Shell (`**/\*.sh`)\*\*
+### PowerShell
 
-   ```bash
-   shellcheck <paths>
-   ```
+```bash
+pwsh -NoLogo -NoProfile -Command "Invoke-ScriptAnalyzer -Path '<path-to-file>'"
+```
 
-   **Agent / skill docs (`claude/agents/**`, `claude/skills/**`, `.github/skills/**`)\*\*
+### CMD or Batch
 
-   ```bash
-   bun run lint:claude
-   ```
+- No dedicated repo linter exists today
+- Re-read the file and verify quoting, `setlocal`, delayed expansion, and `errorlevel` checks manually
 
-3. Fix reported issues in the changed files only. Do not touch unrelated files.
+### Workflow and YAML changes
 
-4. Re-run the affected check to confirm it passes before reporting success.
+- Re-read every referenced path, runner, action, and command
+- Keep validation aligned with the repo's real toolchain and existing workflows
+
+3. Fix issues only in the files you changed.
+4. Re-run the affected checks before reporting success.
 
 ## Invariants
 
 - Never remove or skip a check to make it pass.
-- Do not modify test files to suppress failures unless the test itself is wrong.
-- Report any pre-existing failures that are unrelated to your changes rather than silently fixing them.
+- Do not invent tests or linters that the repo does not use.
+- Report pre-existing failures that are unrelated to your changes instead of silently fixing them.
