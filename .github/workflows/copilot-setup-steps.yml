@@ -20,15 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v5
         with:
-          node-version: "22"
-
-      - name: Verify guidance tooling
-        shell: bash
-        run: |
-          node --version
-          npm --version
-          npx -y @yawlabs/ctxlint --version
-          npx -y agnix --help > /dev/null
+          node-version: "24"
 
       - name: Note Windows validation workflows
         shell: bash
