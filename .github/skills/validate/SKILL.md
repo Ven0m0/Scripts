@@ -1,6 +1,6 @@
 ---
 name: validate
-description: Use when running the narrowest repo-specific validation for AutoHotkey, PowerShell, CMD, workflows, and agent guidance changes.
+description: Run the narrowest repo-specific validation for AutoHotkey, PowerShell, CMD, workflows, and agent guidance changes. Use when checking changes before reporting completion.
 allowed-tools: 'Read, Bash, Grep, Glob'
 ---
 

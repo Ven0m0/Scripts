@@ -62,6 +62,5 @@ Review changes in **English** and focus on the highest-risk issues first.
 
 ## Repo-specific reminders
 
-- `.ahk`, `.ps1`, `.cmd`, `.bat` use CRLF
-- `.md`, `.json`, `.yml`, `.yaml` use LF
+- Formatting rules live in `AGENTS.md`
 - `CLAUDE.md` should continue to resolve to `AGENTS.md`

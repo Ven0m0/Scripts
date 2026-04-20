@@ -1,6 +1,6 @@
 ---
 name: copilot-init
-description: Use when initializing or refreshing Copilot guidance for this Windows automation repo by updating bootstrap files, repo-specific instructions, and reusable skills.
+description: Initialize or refresh Copilot guidance for this Windows automation repo. Use when updating bootstrap files, repo-specific instructions, and reusable skills.
 allowed-tools: 'Read, Write, Edit, Glob, Grep, Bash'
 ---
 
