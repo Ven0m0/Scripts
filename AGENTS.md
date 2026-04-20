@@ -37,7 +37,7 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
    - `.md`, `.json`, `.yml`, `.yaml`: LF
    - Follow `.editorconfig` and `.gitattributes` when they differ from editor defaults.
 5. **Avoid hardcoded user-specific paths.** Prefer `A_ScriptDir`, `A_MyDocuments`, `%AppData%`, and environment-aware logic.
-6. **Preserve low-latency behavior.** Gaming and automation scripts keep `InitScript()` or equivalent performance settings unless the task documents a required exception.
+6. **Preserve low-latency behavior.** Gaming and automation scripts keep `InitScript()` or equivalent performance settings unless the task documents an explicit exception.
 7. **Keep documentation synchronized by design.** Put durable repo-wide rules here; keep shorter tool-entry docs concise and linked back here.
 
 ## AutoHotkey guidance
@@ -81,7 +81,7 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
 
 ## Release notes
 
-- `build.yml` and `build-cached.yml` create release artifacts on pushed tags.
+- Pushing a tag triggers `build.yml` and `build-cached.yml` to create release artifacts.
 - Treat tagged builds as the release path for compiled `.exe` outputs.
 
 ## Useful references
