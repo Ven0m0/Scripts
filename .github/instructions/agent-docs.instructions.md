@@ -1,5 +1,10 @@
 ---
-applyTo: "{AGENTS.md,.github/copilot-instructions.md,.github/instructions/*.md,.github/skills/*/SKILL.md,.github/workflows/copilot-setup-steps.yml}"
+applyTo:
+  - "AGENTS.md"
+  - ".github/copilot-instructions.md"
+  - ".github/instructions/*.md"
+  - ".github/skills/*/SKILL.md"
+  - ".github/workflows/copilot-setup-steps.yml"
 ---
 
 # Agent Guidance Instructions
