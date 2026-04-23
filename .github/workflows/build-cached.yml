@@ -1,6 +1,7 @@
 name: Build and Release (Cached)
 
 on:
+  workflow_dispatch:
   push:
     tags: ["*"]
 
