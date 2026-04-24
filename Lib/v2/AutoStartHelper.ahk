@@ -12,8 +12,10 @@ WaitWin(target, timeout := 0) {
 }
 
 MaybeActivateMaximize(target, maximize, activate) {
-    if activate
+    if activate {
         WinActivate(target)
+        WinWaitActive(target, , 5)
+    }
     if maximize
         WinMaximize(target)
 }
@@ -25,8 +27,11 @@ AutoStartFullscreen(exeName, fullscreenKey := "F11", maximize := true, delay := 
     if (delay > 0)
         Sleep(delay)
     MaybeActivateMaximize(target, maximize, activate)
-    if fullscreenKey != ""
+    if fullscreenKey != "" {
         ControlSend("{" . fullscreenKey . "}", , target)
+        if activate
+            WinActivate(target)
+    }
 }
 
 AutoStartFullscreenWithTitle(winTitle, fullscreenKey := "F11", maximize := true, delay := 0) {

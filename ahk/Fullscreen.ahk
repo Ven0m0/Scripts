@@ -20,7 +20,6 @@
 #Include %A_ScriptDir%\..\Lib\v2\WindowManager.ahk
 
 InitScript(true, true, true)  ; UIA + Admin + Performance optimizations
-#SingleInstance Force
 Persistent
 
 ; ============================================================================

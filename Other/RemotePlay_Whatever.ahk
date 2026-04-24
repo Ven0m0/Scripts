@@ -5,13 +5,7 @@
 ; ============================================================================
 
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
-#SingleInstance Force
-
 InitScript(false, false, true)
-
-SetWorkingDir(A_ScriptDir)
-SetTitleMatchMode(2)
-SetTitleMatchMode("Fast")
 
 ; Launch Steam (standard x86 installation path)
 steamPath := "C:\Program Files (x86)\Steam\steam.exe"
