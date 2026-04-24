@@ -8,31 +8,33 @@ on:
 permissions:
   contents: write
 
+env:
+  AHK_VERSION: "2.0.19"
+
 jobs:
   build-release:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v6
 
-     - name: Install AutoHotkey
-       shell: pwsh
-       run: |
-        choco install autohotkey --version=2.0.19 -y
-        $dest = "$env:ProgramFiles\AutoHotkey\Compiler"
-        New-Item -Type Directory -Force $dest | Out-Null
-        Invoke-WebRequest -Uri "https://github.com/AutoHotkey/Ahk2Exe/releases/latest/download/Ahk2Exe.zip" -OutFile "$env:TEMP\Ahk2Exe.zip"
-        Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath $dest -Force
-       
+      - name: Install AutoHotkey
+        shell: pwsh
+        run: |
+          $url = "https://github.com/AutoHotkey/AutoHotkey/releases/download/v$env:AHK_VERSION/AutoHotkey_$env:AHK_VERSION.zip"
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\ahk.zip"
+          Expand-Archive "$env:TEMP\ahk.zip" -DestinationPath C:\AutoHotkey-Portable -Force
+          Remove-Item "$env:TEMP\ahk.zip"
+
       - name: Verify Installation
         run: |
-          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
           if (!(Test-Path $compiler)) { throw "Compiler not found: $compiler" }
           Write-Host "Compiler ready"
         shell: pwsh
 
       - name: Compile Scripts
         run: |
-          $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
           $outDir = 'release'
           New-Item -Type Directory -Force $outDir | Out-Null
 
