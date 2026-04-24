@@ -55,8 +55,12 @@ ScanMods(){
 
 ;----------------- Config Helpers -----------------
 UpdateConfig(content, updates){
-  newContent := ""
   remaining := updates.Clone()
+
+  ; Pre-allocate buffer for performance.
+  ; content size + estimated size for updates + null terminator
+  VarSetCapacity(newContent, (StrLen(content) + updates.Count() * 100 + 1) * (A_IsUnicode ? 2 : 1))
+  newContent := ""
 
   Loop, Parse, content, `n, `r
   {
