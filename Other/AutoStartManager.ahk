@@ -13,7 +13,6 @@
 
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\v2\AutoStartHelper.ahk
-#SingleInstance Force
 
 ; Initialize script
 InitScript(true, false, true)

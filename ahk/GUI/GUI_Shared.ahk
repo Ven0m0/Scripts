@@ -10,7 +10,6 @@
 #Include %A_ScriptDir%\..\..\Lib\v2\AHK_Common.ahk
 InitScript(true, true, true)  ; UIA + Admin + Performance
 
-#SingleInstance Force
 Persistent
 
 global gButtonActions := Map()

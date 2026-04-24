@@ -12,11 +12,6 @@
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 InitScript(false, false, true)
 
-#SingleInstance Force
-DetectHiddenText(false)
-DetectHiddenWindows(false)
-SetTitleMatchMode(2)
-
 ; Create group of safe windows that shouldn't be closed
 GroupAdd("Safe", "ahk_exe Explorer.EXE")
 GroupAdd("Safe", "ahk_class ExploreWClass")

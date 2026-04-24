@@ -29,6 +29,12 @@ SetOptimalPerformance() {
 }
 
 InitScript(requireUIA := true, requireAdmin := false, optimize := true) {
+    SetWorkingDir(A_ScriptDir)
+    SetTitleMatchMode(2)
+    SetTitleMatchMode("Fast")
+    DetectHiddenText(false)
+    DetectHiddenWindows(false)
+
     if requireUIA
         InitUIA()
     if requireAdmin

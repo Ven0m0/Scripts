@@ -10,7 +10,6 @@
 ; ============================================================================
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 InitScript(false, false, true)
-#SingleInstance Force
 
 ShowHelp() {
     MsgBox("Usage:`n  " . A_ScriptName . " <mode>`n`nModes:`n  fullscreen`n  tv`n  tv_firefox`n  tv_sound")

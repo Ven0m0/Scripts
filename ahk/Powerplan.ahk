@@ -16,7 +16,6 @@
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 InitScript(false, false, true)
 
-#SingleInstance Force
 Persistent
 
 ; High Performance power plan GUID
