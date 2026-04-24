@@ -25,7 +25,7 @@ Return
 YTDLP:
   GuiControlGet, Youtube
   ; Add "yt-dlp.exe" in front of the input text
-  Cmd := "yt-dlp.exe --paths %userprofile%\Music -f ""bv*[height=1080]+ba/b"" --merge-output-format mp4 " . Youtube
+  Cmd := "yt-dlp.exe --paths %userprofile%\Music -f ""bv*[height=1080]+ba/b"" --merge-output-format mp4 -- """ . Youtube . """"
   ; Update the GroupBox with the combined text
   GuiControl,, Output, % Cmd
 return
@@ -33,7 +33,7 @@ return
 SpotYoutube:
   GuiControlGet, Spotify
   ; Add "spotdl" in front of the input text
-  Cmd := "spotdl download " Spotify " --output %userprofile%\Music --preload --sponsor-block --threads 16 "
+  Cmd := "spotdl download --output %userprofile%\Music --preload --sponsor-block --threads 16 -- """ . Spotify . """"
   ; Update the GroupBox with the combined text
   GuiControl,, Output, % Cmd
 return
@@ -41,8 +41,8 @@ return
 ; Function to validate input for command injection
 ValidateInput(input) {
     ; Check for dangerous characters that could enable command injection
-    ; Dangerous: & | ; < > ( ) $ ` ^ "
-    if RegExMatch(input, "[&|;<>()`$^""]") {
+    ; Dangerous: & | ; < > ( ) $ ` ^ " % !
+    if RegExMatch(input, "[&|;<>()``$^""%!]") {
         return false
     }
     return true
@@ -58,7 +58,7 @@ RunCmd:
 
   ; Validate input before executing
   if (!ValidateInput(inputToValidate)) {
-      MsgBox, 16, Security Error, Invalid characters detected in URL!`n`nThe following characters are not allowed:`n& | ; < > ( ) $ `` ^ "
+      MsgBox, 16, Security Error, Invalid characters detected in URL!`n`nThe following characters are not allowed:`n& | ; < > ( ) $ `` ^ " % !
       return
   }
 
