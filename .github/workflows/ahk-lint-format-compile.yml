@@ -24,17 +24,6 @@ jobs:
       - name: Install AutoHotkey v2
         run: choco install autohotkey -y
         shell: pwsh
-      - name: Install Ahk2Exe
-        run: |
-          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/latest/download/Ahk2Exe1.zip"
-          $dest = "C:\Ahk2Exe"
-          New-Item -ItemType Directory -Force -Path $dest | Out-Null
-          Invoke-WebRequest -Uri $url -OutFile "$dest\Ahk2Exe.zip"
-          Expand-Archive "$dest\Ahk2Exe.zip" -DestinationPath $dest -Force
-          Remove-Item "$dest\Ahk2Exe.zip"
-          Write-Host "Ahk2Exe installed to $dest"
-        shell: pwsh
-
       - name: Verify Installations
         run: |
           $ahkV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\AutoHotkey.exe"
