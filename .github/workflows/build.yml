@@ -9,7 +9,8 @@ permissions:
   contents: write
 
 env:
-  AHK_VERSION: "2.0.19"
+  AHK_VERSION: "2.0.23"
+  AHK2EXE_TAG: "Ahk2Exe1.1.37.02a2"
 
 jobs:
   build-release:
@@ -24,6 +25,28 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\ahk.zip"
           Expand-Archive "$env:TEMP\ahk.zip" -DestinationPath C:\AutoHotkey-Portable -Force
           Remove-Item "$env:TEMP\ahk.zip"
+
+      - name: Install Ahk2Exe
+        shell: pwsh
+        run: |
+          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
+          $compilerDir = "C:\AutoHotkey-Portable\Compiler"
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
+          New-Item -Type Directory -Force $compilerDir | Out-Null
+          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath $compilerDir -Force
+
+          $requiredFiles = @(
+            "Ahk2Exe.exe"
+            "Unicode 32-bit.bin"
+            "Unicode 64-bit.bin"
+          )
+          $missingFiles = $requiredFiles | Where-Object {
+            -not (Test-Path (Join-Path $compilerDir $_))
+          }
+          if ($missingFiles) {
+            throw "Ahk2Exe extraction failed or archive layout changed. Missing expected files in '$compilerDir': $($missingFiles -join ', ')"
+          }
+          Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
       - name: Compile Scripts
         run: |
@@ -61,7 +84,7 @@ jobs:
         shell: pwsh
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           files: release/*.exe
           fail_on_unmatched_files: true
