@@ -30,9 +30,22 @@ jobs:
         shell: pwsh
         run: |
           $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
+          $compilerDir = "C:\AutoHotkey-Portable\Compiler"
           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
-          New-Item -Type Directory -Force "C:\AutoHotkey-Portable\Compiler" | Out-Null
-          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath "C:\AutoHotkey-Portable\Compiler" -Force
+          New-Item -Type Directory -Force $compilerDir | Out-Null
+          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath $compilerDir -Force
+
+          $requiredFiles = @(
+            "Ahk2Exe.exe"
+            "Unicode 32-bit.bin"
+            "Unicode 64-bit.bin"
+          )
+          $missingFiles = $requiredFiles | Where-Object {
+            -not (Test-Path (Join-Path $compilerDir $_))
+          }
+          if ($missingFiles) {
+            throw "Ahk2Exe extraction failed or archive layout changed. Missing expected files in '$compilerDir': $($missingFiles -join ', ')"
+          }
           Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
       - name: Compile Scripts
