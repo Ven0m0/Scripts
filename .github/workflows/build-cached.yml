@@ -42,6 +42,14 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
           New-Item -Type Directory -Force "C:\AutoHotkey-Portable\Compiler" | Out-Null
           Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath "C:\AutoHotkey-Portable\Compiler" -Force
+          $requiredFiles = @(
+            "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe",
+            "C:\AutoHotkey-Portable\Compiler\AutoHotkeySC.bin"
+          )
+          $missingFiles = $requiredFiles | Where-Object { -not (Test-Path $_) }
+          if ($missingFiles) {
+            throw "Ahk2Exe extraction failed: expected compiler files were not found after expanding '$env:TEMP\Ahk2Exe.zip'. Missing: $($missingFiles -join ', '). Verify AHK2EXE_TAG '$env:AHK2EXE_TAG' and the Ahk2Exe.zip archive layout."
+          }
           Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
       - name: Compile Scripts
