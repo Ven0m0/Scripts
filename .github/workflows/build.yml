@@ -25,13 +25,6 @@ jobs:
           Expand-Archive "$env:TEMP\ahk.zip" -DestinationPath C:\AutoHotkey-Portable -Force
           Remove-Item "$env:TEMP\ahk.zip"
 
-      - name: Verify Installation
-        run: |
-          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
-          if (!(Test-Path $compiler)) { throw "Compiler not found: $compiler" }
-          Write-Host "Compiler ready"
-        shell: pwsh
-
       - name: Compile Scripts
         run: |
           $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
