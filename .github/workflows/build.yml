@@ -14,11 +14,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Install AutoHotkey
-        run: |
-         choco install autohotkey --version=2.0.19 -y
-         choco install ahk2exe -y
-        shell: pwsh
+     - name: Install AutoHotkey
+       shell: pwsh
+       run: |
+        choco install autohotkey --version=2.0.19 -y
+        $dest = "$env:ProgramFiles\AutoHotkey\Compiler"
+        New-Item -Type Directory -Force $dest | Out-Null
+        Invoke-WebRequest -Uri "https://github.com/AutoHotkey/Ahk2Exe/releases/latest/download/Ahk2Exe.zip" -OutFile "$env:TEMP\Ahk2Exe.zip"
+        Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath $dest -Force
+       
       - name: Verify Installation
         run: |
           $compiler = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
