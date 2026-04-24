@@ -9,13 +9,14 @@ permissions:
   contents: write
 
 env:
-  AHK_VERSION: "2.0.19"
+  AHK_VERSION: "2.0.23"
+  AHK2EXE_TAG: "Ahk2Exe1.1.37.02a2"
 
 jobs:
   build-release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install AutoHotkey
         shell: pwsh
@@ -24,6 +25,15 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\ahk.zip"
           Expand-Archive "$env:TEMP\ahk.zip" -DestinationPath C:\AutoHotkey-Portable -Force
           Remove-Item "$env:TEMP\ahk.zip"
+
+      - name: Install Ahk2Exe
+        shell: pwsh
+        run: |
+          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
+          New-Item -Type Directory -Force "C:\AutoHotkey-Portable\Compiler" | Out-Null
+          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath "C:\AutoHotkey-Portable\Compiler" -Force
+          Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
       - name: Compile Scripts
         run: |
@@ -61,7 +71,7 @@ jobs:
         shell: pwsh
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           files: release/*.exe
           fail_on_unmatched_files: true

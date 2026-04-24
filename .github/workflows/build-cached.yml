@@ -9,20 +9,21 @@ permissions:
   contents: write
 
 env:
-  AHK_VERSION: "2.0.19"
+  AHK_VERSION: "2.0.23"
+  AHK2EXE_TAG: "Ahk2Exe1.1.37.02a2"
 
 jobs:
   build-release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
-      - name: Cache AutoHotkey
+      - name: Cache AutoHotkey and Ahk2Exe
         uses: actions/cache@v5
         id: cache-ahk
         with:
           path: C:\AutoHotkey-Portable
-          key: ahk-${{ env.AHK_VERSION }}
+          key: ahk-${{ env.AHK_VERSION }}-ahk2exe-${{ env.AHK2EXE_TAG }}
 
       - name: Install AutoHotkey
         if: steps.cache-ahk.outputs.cache-hit != 'true'
@@ -32,6 +33,16 @@ jobs:
           Expand-Archive ahk.zip -DestinationPath C:\AutoHotkey-Portable -Force
           Remove-Item ahk.zip
         shell: pwsh
+
+      - name: Install Ahk2Exe
+        if: steps.cache-ahk.outputs.cache-hit != 'true'
+        shell: pwsh
+        run: |
+          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
+          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
+          New-Item -Type Directory -Force "C:\AutoHotkey-Portable\Compiler" | Out-Null
+          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath "C:\AutoHotkey-Portable\Compiler" -Force
+          Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
       - name: Compile Scripts
         run: |
@@ -69,7 +80,7 @@ jobs:
         shell: pwsh
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           files: release/*.exe
           fail_on_unmatched_files: true
