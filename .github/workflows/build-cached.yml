@@ -33,13 +33,6 @@ jobs:
           Remove-Item ahk.zip
         shell: pwsh
 
-      - name: Verify Installation
-        run: |
-          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
-          if (!(Test-Path $compiler)) { throw "Compiler not found" }
-          Write-Host "Compiler ready (cached: ${{ steps.cache-ahk.outputs.cache-hit }})"
-        shell: pwsh
-
       - name: Compile Scripts
         run: |
           $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
