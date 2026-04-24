@@ -1,5 +1,4 @@
 #Requires AutoHotkey v2.0
-#Include %A_ScriptDir%\..\ahk\GUI\GUI_Shared.ahk
 
 global failures := 0
 
@@ -50,3 +49,5 @@ if (failures > 0) {
     Print("`nAll tests passed successfully.")
     ExitApp(0)
 }
+
+#Include %A_ScriptDir%\..\GUI_Shared.ahk
