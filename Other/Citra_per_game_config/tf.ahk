@@ -1006,17 +1006,18 @@ TF_Substract(File1, File2, PartialMatch = 0) {
         }
     Else If (PartialMatch = 0)
         {
-         search:="m)^(.*)$"
-         replace=__bol__$1__eol__
-         Output:=RegExReplace(Output, search, replace)
-         StringReplace, Output, Output, `n__eol__,__eol__ , All ; strange fix but seems to be needed.
+         MatchList := {}
          Loop, Parse, Str1, `n, `r
-            StringReplace, Output, Output, __bol__%A_LoopField%__eol__, , All ; remove lines from file1 in file2
-        }
-    If (PartialMatch = 0)
-        {
-         StringReplace, Output, Output, __bol__, , All
-         StringReplace, Output, Output, __eol__, , All
+            MatchList[A_LoopField] := 1
+
+         NewOutput := ""
+         VarSetCapacity(NewOutput, StrLen(Output) * 2)
+         Loop, Parse, Output, `n, `r
+            {
+             If (!MatchList.HasKey(A_LoopField))
+                NewOutput .= A_LoopField "`r`n"
+            }
+         Output := NewOutput
         }
 
     ; Remove all blank lines from the text in a variable:
