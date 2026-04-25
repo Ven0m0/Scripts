@@ -3,12 +3,7 @@
 ; AutoStartHelper – wait, maximize, fullscreen helpers
 
 WaitWin(target, timeout := 0) {
-    try {
-        WinWait(target, , timeout)
-        return true
-    } catch TimeoutError {
-        return false
-    }
+    return WinWait(target, , timeout) != 0
 }
 
 MaybeActivateMaximize(target, maximize, activate) {
