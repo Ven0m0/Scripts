@@ -33,9 +33,14 @@ loop, Files, % root "\*.*", D
     Gamepath := A_LoopFileFullPath ; save game path
     Destination := Destinations[Gamename]  ; Look up from cached data
 
-    loop, Files, % Gamepath "\*.*", D
+    ; Only iterate inner directories if this is actually a game folder we care about
+    ; Mod folders contain subdirectories, so skip empty/file-only folders or those without destinations
+    if (Destination != "")
     {
-        Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath, "Ziel":Destination})
+        loop, Files, % Gamepath "\*.*", D
+        {
+            Buttons.Push({"Name":A_LoopFileName, "Path":A_LoopFileFullPath, "Ziel":Destination})
+        }
     }
 }
 
