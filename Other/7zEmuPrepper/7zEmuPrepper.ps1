@@ -18,7 +18,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 function Write-Info { param($msg) Write-Host $msg }
-function Fail { param($msg) Write-Error $msg; exit 1 }
+function Fail { param($msg) throw $msg }
 
 function Validate-Path {
     param($path, [switch]$File, [switch]$Dir, [string]$name)
@@ -70,6 +70,7 @@ function Launch-Emulator {
     Start-Process -FilePath $emu -ArgumentList $fullArgs -Wait
 }
 
+if ($MyInvocation.InvocationName -ne '.') {
 # --- Validation ---
 Validate-Path -File $SevenZipPath -name "7-Zip"
 Validate-Path -File $EmulatorPath -name "Emulator"
@@ -110,4 +111,5 @@ try {
     Write-Info "Process complete."
 } finally {
     Pop-Location
+}
 }
