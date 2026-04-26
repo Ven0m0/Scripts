@@ -18,7 +18,7 @@ param(
 $ErrorActionPreference = "Stop"
 
 function Write-Info { param($msg) Write-Host $msg }
-function Fail { param($msg) Write-Error $msg; exit 1 }
+function Fail { param($msg) throw $msg }
 
 function Validate-Path {
     param($path, [switch]$File, [switch]$Dir, [string]$name)
@@ -37,9 +37,9 @@ function Normalize-Extensions {
 }
 
 function Find-LaunchFile {
-    param($baseName, $extensions)
+    param($dir, $extensions)
     foreach ($ext in $extensions) {
-        $match = Get-ChildItem -LiteralPath . -Filter "$baseName*$ext" -File -ErrorAction SilentlyContinue | Select-Object -First 1
+        $match = Get-ChildItem -Path $dir -Filter "*$ext" -Recurse -File -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($match) { return $match.FullName }
     }
     return $null
@@ -70,44 +70,47 @@ function Launch-Emulator {
     Start-Process -FilePath $emu -ArgumentList $fullArgs -Wait
 }
 
-# --- Validation ---
-Validate-Path -File $SevenZipPath -name "7-Zip"
-Validate-Path -File $EmulatorPath -name "Emulator"
-Validate-Path -File $ArchivePath -name "Archive"
-if (-not (Test-Path $ExtractionPath -PathType Container)) { New-Item -ItemType Directory -Path $ExtractionPath | Out-Null }
+if ($MyInvocation.InvocationName -ne '.') {
+    # --- Validation ---
+    Validate-Path -File $SevenZipPath -name "7-Zip"
+    Validate-Path -File $EmulatorPath -name "Emulator"
+    Validate-Path -File $ArchivePath -name "Archive"
+    if (-not (Test-Path $ExtractionPath -PathType Container)) { New-Item -ItemType Directory -Path $ExtractionPath | Out-Null }
 
-$baseName   = [IO.Path]::GetFileNameWithoutExtension($ArchivePath)
-$extensions = Normalize-Extensions $LaunchExtensions
+    $baseName   = [IO.Path]::GetFileNameWithoutExtension($ArchivePath)
+    $extensions = Normalize-Extensions $LaunchExtensions
 
-Write-Host "------------------------------------------------------------"
-Write-Host "7Z-Emu-Prepper"
-Write-Host "------------------------------------------------------------"
-Write-Host "7Zip          = $SevenZipPath"
-Write-Host "Emulator      = $EmulatorPath"
-Write-Host "Emu Args      = $EmulatorArguments"
-Write-Host "Archive       = $ArchivePath"
-Write-Host "Extracting To = $ExtractionPath"
-Write-Host "Launch Ext(s) = $($extensions -join ', ')"
-Write-Host "Keep Extract  = $KeepExtracted"
-Write-Host "------------------------------------------------------------"
+    Write-Host "------------------------------------------------------------"
+    Write-Host "7Z-Emu-Prepper"
+    Write-Host "------------------------------------------------------------"
+    Write-Host "7Zip          = $SevenZipPath"
+    Write-Host "Emulator      = $EmulatorPath"
+    Write-Host "Emu Args      = $EmulatorArguments"
+    Write-Host "Archive       = $ArchivePath"
+    Write-Host "Extracting To = $ExtractionPath"
+    Write-Host "Launch Ext(s) = $($extensions -join ', ')"
+    Write-Host "Keep Extract  = $KeepExtracted"
+    Write-Host "------------------------------------------------------------"
 
-Push-Location $ExtractionPath
-try {
-    $existing = Find-LaunchFile -baseName $baseName -extensions $extensions
-    if ($existing) {
-        Write-Info "Archive already extracted. Found: [$existing]"
-        Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $existing
-    } else {
-        Extract-Archive -sevenZip $SevenZipPath -archive $ArchivePath -outDir $ExtractionPath
-        $extracted = Find-LaunchFile -baseName $baseName -extensions $extensions
-        if (-not $extracted) { Fail "No matching file found after extraction for extensions: $($extensions -join ', ')" }
-        Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $extracted
-        if (-not $KeepExtracted) {
-            Write-Info "Removing extracted files..."
-            Remove-Item -LiteralPath ($baseName + "*") -Recurse -Force -ErrorAction SilentlyContinue
+    Push-Location $ExtractionPath
+    try {
+        $existing = Find-LaunchFile -dir . -extensions $extensions
+        if ($existing) {
+            Write-Info "Archive already extracted. Found: [$existing]"
+            Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $existing
+        } else {
+            Extract-Archive -sevenZip $SevenZipPath -archive $ArchivePath -outDir $ExtractionPath
+            $extracted = Find-LaunchFile -dir . -extensions $extensions
+            if (-not $extracted) { Fail "No matching file found after extraction for extensions: $($extensions -join ', ')" }
+            Launch-Emulator -emu $EmulatorPath -args $EmulatorArguments -fileToLaunch $extracted
+            if (-not $KeepExtracted) {
+                Write-Info "Removing extracted files..."
+                Remove-Item -LiteralPath ($baseName + "*") -Recurse -Force -ErrorAction SilentlyContinue
+            }
         }
+        Write-Info "Process complete."
+    } finally {
+        Pop-Location
     }
-    Write-Info "Process complete."
-} finally {
-    Pop-Location
+
 }
