@@ -5,15 +5,18 @@
 static STYLE_DECORATIONS := 0xEC0000      ; title/menu/frame/sysmodal combined
 static STYLE_UNDECORATED := -0xEC0000
 
-ToggleFakeFullscreen(winTitle := "A") {
-    current := WinGetStyle(winTitle)
+ToggleFakeFullscreen(winTitle := "A", api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    current := api.WinGetStyle(winTitle)
     hasTitle := current & 0xC00000
     if hasTitle {
-        WinSetStyle(STYLE_UNDECORATED, winTitle)
-        WinMove(0, 0, A_ScreenWidth, A_ScreenHeight, winTitle)
+        api.WinSetStyle(STYLE_UNDECORATED, winTitle)
+        api.WinMove(0, 0, api.GetScreenWidth(), api.GetScreenHeight(), winTitle)
     } else {
-        WinSetStyle(STYLE_DECORATIONS, winTitle)
-        WinRestore(winTitle)
+        api.WinSetStyle(STYLE_DECORATIONS, winTitle)
+        api.WinRestore(winTitle)
     }
 }
 
@@ -84,4 +87,13 @@ ToggleFakeFullscreenMultiMonitor(winTitle := "A") {
 
 RestoreWindowBorders(winTitle) {
     WinSetStyle(STYLE_DECORATIONS, winTitle)
+}
+
+class SystemWindowAPI {
+    WinGetStyle(winTitle) => WinGetStyle(winTitle)
+    WinSetStyle(style, winTitle) => WinSetStyle(style, winTitle)
+    WinMove(x, y, w, h, winTitle) => WinMove(x, y, w, h, winTitle)
+    WinRestore(winTitle) => WinRestore(winTitle)
+    GetScreenWidth() => A_ScreenWidth
+    GetScreenHeight() => A_ScreenHeight
 }
