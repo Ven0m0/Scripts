@@ -18,13 +18,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - name: Install Scoop
+        shell: pwsh
+        run: |
+          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+          irm get.scoop.sh | iex
+          scoop bucket add extras
+          exit $LASTEXITCODE
+
       - name: Install AutoHotkey
         shell: pwsh
         run: |
-          $url = "https://github.com/AutoHotkey/AutoHotkey/releases/download/v$env:AHK_VERSION/AutoHotkey_$env:AHK_VERSION.zip"
-          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\ahk.zip"
-          Expand-Archive "$env:TEMP\ahk.zip" -DestinationPath C:\AutoHotkey-Portable -Force
-          Remove-Item "$env:TEMP\ahk.zip"
+          scoop install -y autohotkey
 
       - name: Install Ahk2Exe
         shell: pwsh
