@@ -29,7 +29,7 @@ jobs:
       - name: Install AutoHotkey
         shell: pwsh
         run: |
-          scoop install -y autohotkey
+          scoop install extras/autohotkey
 
       - name: Install Ahk2Exe
         shell: pwsh
