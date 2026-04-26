@@ -7,11 +7,15 @@ InitUIA() {
     ; UIA is built-in in v2 (no-op, kept for compatibility)
 }
 
-RequireAdmin() {
-    if A_IsAdmin
+RequireAdmin(mockIsAdmin := "", mockRun := "") {
+    isAdmin := mockIsAdmin !== "" ? mockIsAdmin : A_IsAdmin
+    if isAdmin
         return
     try {
-        Run('*RunAs "' . A_ScriptFullPath . '"')
+        if mockRun !== ""
+            mockRun('*RunAs "' . A_ScriptFullPath . '"')
+        else
+            Run('*RunAs "' . A_ScriptFullPath . '"')
         ExitApp()
     } catch Error as err {
         MsgBox("Failed to elevate: " . err.Message)
