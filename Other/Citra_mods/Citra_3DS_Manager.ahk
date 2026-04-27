@@ -123,52 +123,18 @@ ApplyPreset(game){
   updates["cpu_clock_percentage"] := "125"
   updates["layout_option"] := "2"
 
-  if (norm = "3d_land"){
-    updates["resolution_factor"] := "8"
-    updates["texture_filter_name"] := "none"
-    updates["texture_filter_name\\default"] := "true"
-    updates["pp_shader_name"] := "none (builtin)"
-    updates["pp_shader_name\\default"] := "false"
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
-  } else if (norm = "hd_texture_pack"){
-    updates["resolution_factor"] := "4"
-    updates["texture_filter_name"] := "none"
-    updates["texture_filter_name\\default"] := "true"
-    updates["pp_shader_name"] := "none (builtin)"
-    updates["pp_shader_name\\default"] := "false"
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
-  } else if (norm = "luigi_s_mansion_2"){
-    updates["resolution_factor"] := "6"
-    updates["cpu_clock_percentage"] := "25"
-  } else if (norm = "mario_kart_7"){
-    updates["resolution_factor"] := "5"
-    updates["texture_filter_name"] := "none"
-    updates["texture_filter_name\\default"] := "true"
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
-  } else if (norm = "mario_luigi_bowser_s_inside_story"){
-    updates["layout_option"] := "0"
-    updates["texture_filter_name"] := "none"
-    updates["texture_filter_name\\default"] := "true"
-    updates["pp_shader_name"] := "none (builtin)"
-    updates["pp_shader_name\\default"] := "false"
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
-  } else if (norm = "mario_luigi"){
-    updates["layout_option"] := "0"
-  } else if (norm = "no_preloading"){
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
-  } else if (norm = "nsmb2"){
-    updates["resolution_factor"] := "10"
-    updates["texture_filter_name"] := "none"
-    updates["texture_filter_name\\default"] := "true"
-    updates["pp_shader_name"] := "none (builtin)"
-    updates["pp_shader_name\\default"] := "false"
-    updates["preload_textures"] := "false"
-    updates["preload_textures\\default"] := "true"
+  static presets := { "3d_land": { "resolution_factor": "8", "texture_filter_name": "none", "texture_filter_name\\default": "true", "pp_shader_name": "none (builtin)", "pp_shader_name\\default": "false", "preload_textures": "false", "preload_textures\\default": "true" }
+                    , "hd_texture_pack": { "resolution_factor": "4", "texture_filter_name": "none", "texture_filter_name\\default": "true", "pp_shader_name": "none (builtin)", "pp_shader_name\\default": "false", "preload_textures": "false", "preload_textures\\default": "true" }
+                    , "luigi_s_mansion_2": { "resolution_factor": "6", "cpu_clock_percentage": "25" }
+                    , "mario_kart_7": { "resolution_factor": "5", "texture_filter_name": "none", "texture_filter_name\\default": "true", "preload_textures": "false", "preload_textures\\default": "true" }
+                    , "mario_luigi_bowser_s_inside_story": { "layout_option": "0", "texture_filter_name": "none", "texture_filter_name\\default": "true", "pp_shader_name": "none (builtin)", "pp_shader_name\\default": "false", "preload_textures": "false", "preload_textures\\default": "true" }
+                    , "mario_luigi": { "layout_option": "0" }
+                    , "no_preloading": { "preload_textures": "false", "preload_textures\\default": "true" }
+                    , "nsmb2": { "resolution_factor": "10", "texture_filter_name": "none", "texture_filter_name\\default": "true", "pp_shader_name": "none (builtin)", "pp_shader_name\\default": "false", "preload_textures": "false", "preload_textures\\default": "true" } }
+
+  if (presets.HasKey(norm)) {
+    for k, v in presets[norm]
+      updates[k] := v
   }
 
   cfg := UpdateConfig(cfg, updates)
