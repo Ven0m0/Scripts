@@ -24,7 +24,6 @@ SetScrollLockState("AlwaysOff")
 mw := GetMonitorWidth()
 mh := GetMonitorHeight()
 pw := mw / 3
-ph := mh / 3
 lw := (2 * pw > 1024) ? 1024 : 2 * pw
 rw := mw - lw
 positions := Map()
