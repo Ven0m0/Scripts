@@ -17,6 +17,36 @@ AssertEqual(actual, expected, testName) {
     }
 }
 
+TestSetKey() {
+    global stdout
+    stdout.WriteLine("Running TestSetKey...")
+
+    ; Test 1: Add new key
+    content := "key1=value1"
+    result := SetKey(content, "key2", "value2")
+    AssertEqual(result, "key1=value1`nkey2=value2", "SetKey appends new key")
+
+    ; Test 2: Update existing key
+    content := "key1=value1`nkey2=old_value"
+    result := SetKey(content, "key2", "new_value")
+    AssertEqual(result, "key1=value1`nkey2=new_value", "SetKey updates existing key")
+
+    ; Test 3: Update key with special regex characters
+    content := "my.key[1]=old"
+    result := SetKey(content, "my.key[1]", "new")
+    AssertEqual(result, "my.key[1]=new", "SetKey escapes special regex characters in key")
+
+    ; Test 4: Add to empty config
+    content := ""
+    result := SetKey(content, "key", "value")
+    AssertEqual(result, "`nkey=value", "SetKey handles empty config")
+
+    ; Test 5: Handle spaces before equals sign
+    content := "key    = old"
+    result := SetKey(content, "key", "new")
+    AssertEqual(result, "key=new", "SetKey handles spaces before equals sign")
+}
+
 TestReplaceInFile() {
     global stdout
     stdout.WriteLine("Running TestReplaceInFile...")
@@ -64,6 +94,7 @@ TestReplaceInFile() {
 }
 
 TestReplaceInFile()
+TestSetKey()
 
 stdout.WriteLine("Tests Passed: " . testsPassed)
 stdout.WriteLine("Tests Failed: " . testsFailed)
