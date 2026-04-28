@@ -10,7 +10,6 @@
 ;   - Fullscreen_double.ahk (separate enter/exit hotkeys)
 ;
 ; Hotkeys:
-;   End                - Toggle borderless fullscreen (multi-monitor aware)
 ;   Ctrl+Alt+K         - Enter borderless fullscreen
 ;   Ctrl+Alt+L         - Exit and restore window
 ;   Ctrl+Alt+End       - Toggle with always-on-top
@@ -21,13 +20,6 @@
 
 InitScript(true, true, true)  ; UIA + Admin + Performance optimizations
 Persistent
-
-; ============================================================================
-; Primary hotkey - End key toggles fullscreen with multi-monitor support
-; ============================================================================
-End:: {
-    ToggleFakeFullscreenMultiMonitor("A")
-}
 
 ; ============================================================================
 ; Alternative hotkeys for explicit enter/exit
