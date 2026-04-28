@@ -17,6 +17,26 @@ AssertEqual(actual, expected, testName) {
     }
 }
 
+TestRegExEscape() {
+    global stdout
+    stdout.WriteLine("Running TestRegExEscape...")
+
+    ; Test 1: Empty string
+    AssertEqual(RegExEscape(""), "", "RegExEscape handles empty string")
+
+    ; Test 2: No special characters
+    AssertEqual(RegExEscape("hello"), "hello", "RegExEscape leaves alphanumeric characters unchanged")
+
+    ; Test 3: Some special characters
+    AssertEqual(RegExEscape("h.e*l+l?o"), "h\.e\*l\+l\?o", "RegExEscape escapes dot, star, plus, question mark")
+
+    ; Test 4: Brackets and braces
+    AssertEqual(RegExEscape("(hello)[world]{test}"), "\(hello\)\[world\]\{test\}", "RegExEscape escapes brackets and braces")
+
+    ; Test 5: Caret, dollar, pipe, backslash
+    AssertEqual(RegExEscape("^hello$|world\"), "\^hello\$\|world\\", "RegExEscape escapes caret, dollar, pipe, backslash")
+}
+
 TestReplaceInFile() {
     global stdout
     stdout.WriteLine("Running TestReplaceInFile...")
@@ -63,6 +83,7 @@ TestReplaceInFile() {
         FileDelete(testFile . ".bak")
 }
 
+TestRegExEscape()
 TestReplaceInFile()
 
 stdout.WriteLine("Tests Passed: " . testsPassed)
