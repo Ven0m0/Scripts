@@ -56,29 +56,35 @@ ScanMods(){
 ;----------------- Config Helpers -----------------
 UpdateConfig(content, updates){
   remaining := updates.Clone()
+  remCount  := remaining.Count()
 
   ; Pre-allocate buffer for performance.
-  ; content size + estimated size for updates + null terminator
-  VarSetCapacity(newContent, (StrLen(content) + updates.Count() * 100 + 1) * (A_IsUnicode ? 2 : 1))
   newContent := ""
+  VarSetCapacity(newContent, (StrLen(content) + remCount * 100 + 1) * (A_IsUnicode ? 2 : 1))
 
   Loop, Parse, content, `n, `r
   {
     line := A_LoopField
-    pos := InStr(line, "=")
-    if (pos > 1){
-      keyCandidate := RTrim(SubStr(line, 1, pos-1))
-      if (remaining.HasKey(keyCandidate)){
-        val := remaining[keyCandidate]
-        line := keyCandidate "=" val
-        remaining.Delete(keyCandidate)
+    if (remCount > 0){
+      pos := InStr(line, "=")
+      if (pos > 1){
+        keyCandidate := RTrim(SubStr(line, 1, pos-1))
+        if (remaining.HasKey(keyCandidate)){
+          line := keyCandidate "=" remaining[keyCandidate]
+          remaining.Delete(keyCandidate)
+          remCount--
+        }
       }
     }
-    newContent .= line "`n"
+    newContent .= line
+    newContent .= "`n"
   }
 
   for k, v in remaining {
-     newContent .= k "=" v "`n"
+     newContent .= k
+     newContent .= "="
+     newContent .= v
+     newContent .= "`n"
   }
 
   return SubStr(newContent, 1, -1)
