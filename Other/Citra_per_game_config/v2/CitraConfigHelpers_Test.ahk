@@ -6,6 +6,12 @@ stdout := FileOpen("*", "w `n")
 testsPassed := 0
 testsFailed := 0
 
+CloseMsgBox() {
+    if WinExist("Config Save Error") {
+        WinClose("Config Save Error")
+    }
+}
+
 AssertEqual(actual, expected, testName) {
     global testsPassed, testsFailed, stdout
     if (actual == expected) {
@@ -52,11 +58,29 @@ TestReplaceInFile() {
     result := ReplaceInFile(testFile, "notfound", "replace")
     AssertEqual(result, 1, "ReplaceInFile returns true when text not found")
 
+
     ; Verify content remains unchanged
     content := FileRead(testFile)
     AssertEqual(content, "goodbye world`ngoodbye citra", "ReplaceInFile leaves content unchanged when text not found")
 
+    ; Test 5: ReplaceInFile handles try/catch error (SaveConfig fails or LoadConfig fails)
+    ; In this case, we can pass a directory to trigger an error
+    testDir := A_ScriptDir . "\test_replace_dir"
+    if !DirExist(testDir)
+        DirCreate(testDir)
+
+    ; Setup a timer to close the error msgbox if SaveConfig is reached
+    SetTimer(CloseMsgBox, 50)
+    result := ReplaceInFile(testDir, "search", "replace")
+    SetTimer(CloseMsgBox, 0)
+
+    AssertEqual(result, 0, "ReplaceInFile returns false on file error")
+
+    if DirExist(testDir)
+        DirRemove(testDir)
+
     ; Cleanup
+
     if FileExist(testFile)
         FileDelete(testFile)
     if FileExist(testFile . ".bak")
