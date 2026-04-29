@@ -59,6 +59,21 @@ try {
     EnvSet("PATH", ";;" . mockPath . ";;")
     AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle empty entries in PATH")
 
+    ; Test 6: Whitespace around PATH entries
+    EnvSet("PATH", "  " . testBaseDir . "\PathDir2  ")
+    AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle whitespace in PATH entries")
+
+    ; Test 7: Quotes in PATH entries
+    EnvSet("PATH", "`"" . testBaseDir . "\PathDir2`"")
+    AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle quotes in PATH entries")
+
+    ; Test 8: Trailing slashes in PATH entries
+    EnvSet("PATH", testBaseDir . "\PathDir2\")
+    AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle trailing slashes in PATH entries")
+
+    ; Test 9: Empty name parameter
+    AssertEqual("", FindExe(""), "Should return empty string if name is empty")
+
     ; Final Results
     stdout.WriteLine("---")
     stdout.WriteLine("Tests Passed: " . testsPassed)
