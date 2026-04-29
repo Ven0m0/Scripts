@@ -1,6 +1,5 @@
 #Requires AutoHotkey v2.0
 
-
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
 InitScript(true, false, true)  ; UIA required, no admin, optimize
 
