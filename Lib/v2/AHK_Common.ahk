@@ -48,6 +48,8 @@ InitScript(requireUIA := true, requireAdmin := false, optimize := true) {
 }
 
 FindExe(name, fallbacks := []) {
+    if (name = "")
+        return ""
     if FileExist(name)
         return name
     Loop Parse, EnvGet("PATH"), ";"
@@ -55,6 +57,7 @@ FindExe(name, fallbacks := []) {
         p := Trim(A_LoopField)
         if !p
             continue
+        p := RTrim(p, "\/")
         cand := p . "\" . name
         if FileExist(cand)
             return cand
