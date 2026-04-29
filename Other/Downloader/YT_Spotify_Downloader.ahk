@@ -8,7 +8,7 @@ Youtube := ""
 Spotify := ""
 
 Gui, Add, GroupBox, x22 y340 w430 h90 vMyGroupBox, Batch output
-Gui, Add, Edit, ReadOnly x32 y355 w410 h70 vOutput, 
+Gui, Add, Edit, ReadOnly x32 y355 w410 h70 vOutput,
 
 Gui, Add, GroupBox, x2 y19 w250 h30 , Youtube
 Gui, Add, Edit, x2 y34 w250 h20 vYoutube gYTDLP
