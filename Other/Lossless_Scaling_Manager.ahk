@@ -13,7 +13,9 @@ EnsureAdmin() {
   try Run('*RunAs "' A_AhkPath '" "' A_ScriptFullPath '" ' A_Args.Join(" "))
   ExitApp
 }
-EnsureAdmin()
+if (A_LineFile == A_ScriptFullPath) {
+  EnsureAdmin()
+}
 
 MinimizeLS() {
   try {
@@ -35,23 +37,29 @@ StopLS() {
   try ProcessClose("LosslessScaling.exe")
 }
 
-ToggleLS() {
-  if ProcessExist("LosslessScaling.exe")
-    StopLS()
+ToggleLS(mockProcessExist := "", mockStopLS := "", mockStartLS := "") {
+  fnProcessExist := (mockProcessExist != "") ? mockProcessExist : ProcessExist
+  fnStopLS := (mockStopLS != "") ? mockStopLS : StopLS
+  fnStartLS := (mockStartLS != "") ? mockStartLS : StartLS
+
+  if fnProcessExist("LosslessScaling.exe")
+    fnStopLS()
   else
-    StartLS()
+    fnStartLS()
 }
 
 ; ---------- Dispatch ----------
-cmd := (A_Args.Length ? StrLower(A_Args[1]) : "toggle")
-try {
-  switch cmd {
-    case "start":  StartLS()
-    case "stop", "close": StopLS()
-    case "toggle": ToggleLS()
-    default:
-      MsgBox("Usage: " A_ScriptName " [start|stop|toggle]")
+if (A_LineFile == A_ScriptFullPath) {
+  cmd := (A_Args.Length ? StrLower(A_Args[1]) : "toggle")
+  try {
+    switch cmd {
+      case "start":  StartLS()
+      case "stop", "close": StopLS()
+      case "toggle": ToggleLS()
+      default:
+        MsgBox("Usage: " A_ScriptName " [start|stop|toggle]")
+    }
+  } catch Error as err {
+    MsgBox("Error: " err.Message)
   }
-} catch Error as err {
-  MsgBox("Error: " err.Message)
 }
