@@ -1,21 +1,9 @@
 #Requires AutoHotkey v2.0
 
-#SingleInstance Force
-SendMode "Input"
-SetWorkingDir A_ScriptDir
-
 #Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
-InitScript(true, false, false)  ; UIA required, no admin, manual tuning
+InitScript(true, false, true)  ; UIA required, no admin, optimize
 
-KeyHistory(0)
-ListLines False
-SetKeyDelay(-1, -1)
-SetMouseDelay(-1)
-SetDefaultMouseSpeed(0)
-SetWinDelay(-1)
-SetControlDelay(-1)
 SetTitleMatchMode(3)
-SetTitleMatchMode("Fast")
 SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")
 SetScrollLockState("AlwaysOff")
