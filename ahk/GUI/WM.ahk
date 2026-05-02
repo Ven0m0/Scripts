@@ -17,7 +17,7 @@ SetWinDelay(50)
 ProcessSetPriority("Normal")
 
 MatchList := ""
-ExclusionList := ["ShellExperienceHost.exe", "SearchUI.exe"]
+ExclusionMap := Map("ShellExperienceHost.exe", true, "SearchUI.exe", true)
 LastSaved := Map()  ; Cache for last saved positions to avoid redundant INI writes
 LastSaved.CaseSense := "Off"
 PendingWrites := Map()
@@ -39,7 +39,7 @@ SetTimer(MonitorWindows, 350)
 SetTimer(ProcessPendingWrites, 1000)
 
 MonitorWindows() {
-    global MatchList, ExclusionList, LastSaved
+    global MatchList, LastSaved
 
     try {
         active_id := WinGetID("A")
@@ -80,7 +80,7 @@ MonitorWindows() {
 }
 
 SaveCurrentWindowPosition() {
-    global ExclusionList, LastSaved, PendingWrites
+    global ExclusionMap, LastSaved, PendingWrites
 
     try {
         WinGetPos(&X, &Y, &Width, &Height, "A")
@@ -98,10 +98,8 @@ SaveCurrentWindowPosition() {
             }
 
             ; Check if in exclusion list
-            for excludedProcess in ExclusionList {
-                if (active_ProcessName == excludedProcess)
-                    return
-            }
+            if (ExclusionMap.Has(active_ProcessName))
+                return
 
             ; Only write if position/size changed
             currentValue := X . "," . Y . "," . Width . "," . Height
