@@ -17,6 +17,58 @@ AssertEqual(actual, expected, testName) {
     }
 }
 
+TestRegExEscape() {
+    global stdout
+    stdout.WriteLine("Running TestRegExEscape...")
+
+    AssertEqual(RegExEscape("normal"), "normal", "RegExEscape normal string")
+    AssertEqual(RegExEscape("backslash\"), "backslash\\", "RegExEscape backslash")
+    AssertEqual(RegExEscape("(parens)"), "\(parens\)", "RegExEscape parens")
+    AssertEqual(RegExEscape("[brackets]"), "\[brackets\]", "RegExEscape brackets")
+    AssertEqual(RegExEscape("{braces}"), "\{braces\}", "RegExEscape braces")
+    AssertEqual(RegExEscape("dot.dot"), "dot\.dot", "RegExEscape dot")
+    AssertEqual(RegExEscape("star*"), "star\*", "RegExEscape star")
+    AssertEqual(RegExEscape("plus+"), "plus\+", "RegExEscape plus")
+    AssertEqual(RegExEscape("question?"), "question\?", "RegExEscape question")
+    AssertEqual(RegExEscape("pipe|pipe"), "pipe\|pipe", "RegExEscape pipe")
+    AssertEqual(RegExEscape("^start"), "\^start", "RegExEscape caret")
+    AssertEqual(RegExEscape("end$"), "end\$", "RegExEscape dollar")
+
+    allSpecials := "\()[]{}?*+|^$."
+    expectedAll := "\\\(\)\[\]\{\}\?\*\+\|\^\$\."
+    AssertEqual(RegExEscape(allSpecials), expectedAll, "RegExEscape all special characters")
+}
+
+TestSetKey() {
+    global stdout
+    stdout.WriteLine("Running TestSetKey...")
+
+    content := "key1=value1`nkey2 = value2`n[Section]`nkey.with.dot=val"
+
+    ; Test 1: Update existing key
+    result := SetKey(content, "key1", "new_val")
+    AssertEqual(InStr(result, "key1=new_val") > 0, true, "SetKey updates existing key")
+    AssertEqual(InStr(result, "key1=value1") == 0, true, "SetKey removes old value")
+
+    ; Test 2: Update key with spaces in source
+    result := SetKey(content, "key2", "new_val2")
+    AssertEqual(InStr(result, "key2=new_val2") > 0, true, "SetKey updates key with spaces")
+
+    ; Test 3: Add new key
+    result := SetKey(content, "key3", "value3")
+    AssertEqual(InStr(result, "key3=value3") > 0, true, "SetKey adds new key")
+
+    ; Test 4: Update key with special regex characters
+    result := SetKey(content, "key.with.dot", "new_dot_val")
+    AssertEqual(InStr(result, "key.with.dot=new_dot_val") > 0, true, "SetKey updates key with dots")
+    AssertEqual(InStr(result, "key.with.dot=val") == 0, true, "SetKey removes old value with dots")
+
+    ; Test 5: Key with backslashes
+    content2 := "path\to\file=exists`n"
+    result := SetKey(content2, "path\to\file", "updated")
+    AssertEqual(InStr(result, "path\to\file=updated") > 0, true, "SetKey updates key with backslashes")
+}
+
 TestReplaceInFile() {
     global stdout
     stdout.WriteLine("Running TestReplaceInFile...")
@@ -63,6 +115,8 @@ TestReplaceInFile() {
         FileDelete(testFile . ".bak")
 }
 
+TestRegExEscape()
+TestSetKey()
 TestReplaceInFile()
 
 stdout.WriteLine("Tests Passed: " . testsPassed)
