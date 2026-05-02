@@ -42,8 +42,8 @@ loop, Files, % root "\*.*", D
 Gui, New, -MinimizeBox, Citra Mod Manager
 
 for each,button in Buttons                                                     ; Move through the Buttons object, one button at a time
-{                                                                              
-        Buttonhwnd := RegExReplace(button.Name, "[^A-Z0-9]")                   ; Sanitising the button name for use as a Hwnd 
+{
+        Buttonhwnd := RegExReplace(button.Name, "[^A-Z0-9]")                   ; Sanitising the button name for use as a Hwnd
         Gui Add, Button, % "+HWNDh" Buttonhwnd, % "Apply " button.Name " mod"  ; Adding the button to the GUI, with the Hwnd as an option
         ControlHandler := Func("FileActions").Bind(root, button)               ; Create Link from the button to the function we want
         GuiControl, +g, % h%Buttonhwnd%, % ControlHandler                      ; Update the button control to call the ControlHandler
@@ -68,7 +68,7 @@ FileActions(Root, Button)
           Break                             ;Optimization: Break after finding the first item
         }
         If !dirHasItems                     ;Is directory empty?
-        {                         
+        {
           FileCopyDir, %Quellpfad%, %Fullpath%
           MsgBox % "Copied " button.Name
         }
