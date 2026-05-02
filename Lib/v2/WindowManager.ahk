@@ -46,10 +46,13 @@ WaitForProcess(processName, timeout := 30) {
     return ProcessWait(processName, timeout) != 0
 }
 
-GetMonitorAtPos(x, y) {
-    count := MonitorGetCount()
+GetMonitorAtPos(x, y, api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    count := api.MonitorGetCount()
     Loop count {
-        MonitorGet(A_Index, &l, &t, &r, &b)
+        api.MonitorGet(A_Index, &l, &t, &r, &b)
         if (l <= x && x <= r && t <= y && y <= b)
             return A_Index
     }
@@ -96,4 +99,6 @@ class SystemWindowAPI {
     WinRestore(winTitle) => WinRestore(winTitle)
     GetScreenWidth() => A_ScreenWidth
     GetScreenHeight() => A_ScreenHeight
+    MonitorGetCount() => MonitorGetCount()
+    MonitorGet(N, &Left, &Top, &Right, &Bottom) => MonitorGet(N, &Left, &Top, &Right, &Bottom)
 }
