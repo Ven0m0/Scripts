@@ -16,11 +16,12 @@ root := OneDrive "\Backup\Game\Emul\Citra\nightly-mingw\Mods"
 
 ; Read CSV once and cache destinations in an associative array
 Destinations := {}
-loop Read, % A_ScriptDir "\Destination.csv"
+FileRead, csvContent, % A_ScriptDir "\Destination.csv"
+loop Parse, csvContent, `n, `r
 {
-    if (InStr(A_LoopReadLine, ","))
+    if (InStr(A_LoopField, ","))
     {
-        parts := StrSplit(A_LoopReadLine, ",")
+        parts := StrSplit(A_LoopField, ",")
         if (parts.Length() >= 2)
             Destinations[parts[1]] := parts[2]
     }
