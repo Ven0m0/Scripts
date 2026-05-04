@@ -67,14 +67,8 @@ try {
     ; Test 7: MustGetExe failure path
     mockState := Map("msgBoxCalled", false, "exitAppCalled", false, "exitCode", "")
 
-    mockMsgBox(msg) {
-        mockState["msgBoxCalled"] := true
-    }
-
-    mockExitApp(code) {
-        mockState["exitAppCalled"] := true
-        mockState["exitCode"] := code
-    }
+    mockMsgBox := (msg) => (mockState["msgBoxCalled"] := true)
+    mockExitApp := (code) => (mockState["exitAppCalled"] := true, mockState["exitCode"] := code)
 
     ; Attempt to find a non-existent file with no fallbacks
     try {
