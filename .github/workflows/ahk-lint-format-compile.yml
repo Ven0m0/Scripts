@@ -83,8 +83,7 @@ jobs:
               $syntaxErrors += $rel
             }
             
-            # Format check
-            $content = Get-Content $_.FullName -Raw
+            # Format check (reuses $content already read above)
             $problems = @()
             if (($content -match "(?m)^\t") -and ($content -match "(?m)^    ")) { $problems += "mixed indent" }
             if ($content -match "[ \t]+`r?`n") { $problems += "trailing space" }
@@ -109,6 +108,37 @@ jobs:
           if ($formatIssues) {
             Write-Host "`nFormat issues in:" -ForegroundColor Yellow
             $formatIssues | % { Write-Host "  $_" }
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Run Tests
+        run: |
+          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+          $testFiles = Get-ChildItem -Recurse -Filter *.ahk |
+            Where-Object { $_.Name -like "test_*" -or $_.Name -like "*_Test.ahk" }
+          $failed = @()
+
+          foreach ($tf in $testFiles) {
+            $rel = $tf.FullName -replace [regex]::Escape("$(Get-Location)\"), ""
+            $proc = Start-Process -FilePath $ahkV2 -ArgumentList "`"$($tf.FullName)`"" -PassThru -NoNewWindow
+            if (!$proc.WaitForExit(30000)) {
+              $proc.Kill()
+              Write-Host "❌ $rel - timed out" -ForegroundColor Red
+              $failed += $rel
+            } elseif ($proc.ExitCode -ne 0) {
+              Write-Host "❌ $rel - exit $($proc.ExitCode)" -ForegroundColor Red
+              $failed += $rel
+            } else {
+              Write-Host "✓ $rel" -ForegroundColor Green
+            }
+          }
+
+          Write-Host "`nRan: $($testFiles.Count) | Failed: $($failed.Count)"
+
+          if ($failed) {
+            Write-Host "`nFailed tests:" -ForegroundColor Red
+            $failed | % { Write-Host "  $_" }
             exit 1
           }
         shell: pwsh
