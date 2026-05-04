@@ -1,7 +1,16 @@
 #Requires AutoHotkey v2.0
+#SingleInstance Force
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
-InitScript(true, false, true)  ; UIA required, no admin, optimize
+SetWorkingDir(A_ScriptDir)
+SetTitleMatchMode("Fast")
+DetectHiddenText(false)
+DetectHiddenWindows(false)
+SetKeyDelay(-1, -1)
+SetMouseDelay(-1)
+SetDefaultMouseSpeed(0)
+SetWinDelay(-1)
+SetControlDelay(-1)
+SendMode("Input")
 
 SetTitleMatchMode(3)
 SetNumLockState("AlwaysOn")
