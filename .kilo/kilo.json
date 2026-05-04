@@ -14,6 +14,9 @@
 		":(){:|:&};:": "deny",
 		"doom_loop": "deny"
 	},
+  "agent": {
+    "compaction": { "model": "kilo-auto/free" },
+  },
 	"provider": {
 		"openai": {
 			"options": { "apiKey": "{env:OPENAI_API_KEY}" }
@@ -25,9 +28,8 @@
 	"disabled_providers": ["openai", "google", "anthropic"],
 	"plugin": [
 		"opencode-ignore@1.1.0",
-    "@bastiangx/opencode-unmoji",
 		"@gotgenes/opencode-agent-identity@3.0.1",
-		"@nick-vi/opencode-type-inject@1.1.2",
+    "opencode-agent-skills@0.6.5",
     "@openspoon/subtask2@0.3.9",
 		"@tarquinen/opencode-dcp@3.1.9",
 		"openslimedit@1.0.4",
@@ -56,6 +58,7 @@
 		"github": {
 			"type": "remote",
 			"url": "https://api.githubcopilot.com/mcp/",
+      "headers": { "Authorization": "Bearer {env:GITHUB_PERSONAL_ACCESS_TOKEN}" },
 			"enabled": true
 		},
 		"exa": {
@@ -78,13 +81,7 @@
 			"type": "local",
 			"command": ["npx", "-y", "octocode-mcp@latest"],
 			"enabled": true
-		},
-    "morph-mcp": {
-      "type": "local",
-      "command": ["npx", "-y", "@morphllm/morphmcp"],
-      "environment": { "MORPH_API_KEY": "{env:MORPH_API_KEY}" },
-      "enabled": true
-    }
+		}
 	},
 	"lsp": {
 		"basedpyright": {
