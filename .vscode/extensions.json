@@ -3,6 +3,6 @@
     "biomejs.biome", 
     "hverlin.mise-vscode",
     "thqby.vscode-autohotkey2-lsp",
-    "mark-wiemer.vscode-autohotkey-plus-plus"
+    "zero-plusplus.vscode-autohotkey-debug"
   ]
 }
