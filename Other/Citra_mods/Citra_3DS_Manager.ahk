@@ -62,23 +62,32 @@ UpdateConfig(content, updates){
   VarSetCapacity(newContent, (StrLen(content) + updates.Count() * 100 + 1) * (A_IsUnicode ? 2 : 1))
   newContent := ""
 
+  remCount := remaining.Count()
+
   Loop, Parse, content, `n, `r
   {
     line := A_LoopField
-    pos := InStr(line, "=")
-    if (pos > 1){
-      keyCandidate := RTrim(SubStr(line, 1, pos-1))
-      if (remaining.HasKey(keyCandidate)){
-        val := remaining[keyCandidate]
-        line := keyCandidate "=" val
-        remaining.Delete(keyCandidate)
+    if (remCount > 0) {
+      pos := InStr(line, "=")
+      if (pos > 1){
+        keyCandidate := RTrim(SubStr(line, 1, pos-1))
+        if (remaining.HasKey(keyCandidate)){
+          val := remaining[keyCandidate]
+          line := keyCandidate "=" val
+          remaining.Delete(keyCandidate)
+          remCount--
+        }
       }
     }
-    newContent .= line "`n"
+    newContent .= line
+    newContent .= "`n"
   }
 
   for k, v in remaining {
-     newContent .= k "=" v "`n"
+     newContent .= k
+     newContent .= "="
+     newContent .= v
+     newContent .= "`n"
   }
 
   return SubStr(newContent, 1, -1)
