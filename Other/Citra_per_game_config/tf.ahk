@@ -889,12 +889,11 @@ TF_Merge(FileList, Separator = "`n", FileName = "merged.txt")
      OW=0
      Loop, Parse, FileList, `n, `r
         {
-         Append2File= ; Just make sure it is empty
-         IfExist, %A_LoopField%
+         FileRead, Append2File, %A_LoopField%
+         If not ErrorLevel ; Successfully loaded
             {
-             FileRead, Append2File, %A_LoopField%
-             If not ErrorLevel ; Successfully loaded
-                Output .= Append2File Separator
+             Output .= Append2File
+             Output .= Separator
             }
         }
 
