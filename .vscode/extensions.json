@@ -1,18 +1,7 @@
 {
   "recommendations": [
     "biomejs.biome", 
-    "oxc.oxc-vscode",
-    "detachhead.basedpyright",
-    "charliermarsh.ruff",
-    "the0807.uv-toolkit",
     "hverlin.mise-vscode",
-    "mads-hartmann.bash-ide-vscode",
-    "redhat.vscode-yaml",
-    "tombi-toml.tombi",
-    "davidanson.vscode-markdownlint",
-    "github.vscode-github-actions",
-    "oven.bun-vscode",
-    "ast-grep.ast-grep-vscode",
     "thqby.vscode-autohotkey2-lsp",
     "mark-wiemer.vscode-autohotkey-plus-plus"
   ]
