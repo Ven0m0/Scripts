@@ -74,12 +74,20 @@ FindExe(name, fallbacks := []) {
     return ""
 }
 
-MustGetExe(name, fallbacks := []) {
+MustGetExe(name, fallbacks := [], mockMsgBox := "", mockExitApp := "") {
     exe := FindExe(name, fallbacks)
     if exe = ""
     {
-        MsgBox("Required executable not found: " . name . "`nChecked PATH and fallbacks.")
-        ExitApp(1)
+        msg := "Required executable not found: " . name . "`nChecked PATH and fallbacks."
+        if mockMsgBox !== ""
+            mockMsgBox(msg)
+        else
+            MsgBox(msg)
+
+        if mockExitApp !== ""
+            mockExitApp(1)
+        else
+            ExitApp(1)
     }
     return exe
 }
