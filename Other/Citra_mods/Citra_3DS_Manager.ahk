@@ -27,9 +27,10 @@ LoadDestinations(){
   DestMap := {}
   if !FileExist(DestCsv)
     return
-  Loop, Read, %DestCsv%
+  FileRead, csvData, %DestCsv%
+  Loop, Parse, csvData, `n, `r
   {
-    line := Trim(A_LoopReadLine)
+    line := Trim(A_LoopField)
     if (line = "" || !InStr(line, ","))
       continue
     StringSplit, p, line, `,
