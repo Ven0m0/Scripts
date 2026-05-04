@@ -55,7 +55,7 @@ TestToggleFakeFullscreen_MakeFullscreen() {
     ; Verify calls
     if (mockApi.calls.Length != 3) {
         FileOpen("*", "w `n").Write("Fail: Expected 3 calls, got " mockApi.calls.Length "`n")
-        FileOpen("*", "w").Write("Fail: Expected 3 calls, got " mockApi.calls.Length "`n")
+        ExitApp(1)
     }
 
     if (mockApi.calls[1].method != "WinGetStyle") {
