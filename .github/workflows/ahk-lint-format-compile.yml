@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install AutoHotkey v1.1 (Portable)
         run: choco install autohotkey.portable --version=1.1.36.01 -y
@@ -83,8 +83,7 @@ jobs:
               $syntaxErrors += $rel
             }
             
-            # Format check
-            $content = Get-Content $_.FullName -Raw
+            # Format check (reuses $content already read above)
             $problems = @()
             if (($content -match "(?m)^\t") -and ($content -match "(?m)^    ")) { $problems += "mixed indent" }
             if ($content -match "[ \t]+`r?`n") { $problems += "trailing space" }
@@ -109,6 +108,61 @@ jobs:
           if ($formatIssues) {
             Write-Host "`nFormat issues in:" -ForegroundColor Yellow
             $formatIssues | % { Write-Host "  $_" }
+            exit 1
+          }
+        shell: pwsh
+
+      - name: Run Tests
+        run: |
+          function Test-IsAhkV2Script {
+            param(
+              [Parameter(Mandatory = $true)]
+              [string]$Path
+            )
+
+            $header = Get-Content -Path $Path -TotalCount 20 -ErrorAction SilentlyContinue
+            return $header -match '^\s*#Requires\s+AutoHotkey\s+v2(\.0)?\b'
+          }
+
+          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+          $searchRoots = @("tests", "ahk", "Lib") | Where-Object { Test-Path $_ }
+          $testFiles = @()
+
+          foreach ($root in $searchRoots) {
+            $testFiles += Get-ChildItem -Path $root -Recurse -Filter *.ahk -File |
+              Where-Object {
+                ($_.Name -like "test_*" -or $_.Name -like "*_Test.ahk") -and
+                (Test-IsAhkV2Script -Path $_.FullName)
+              }
+          }
+
+          $failed = @()
+
+          if (-not $testFiles) {
+            Write-Host "No AutoHotkey v2 test files found under tests/ or ahk/."
+            exit 0
+          }
+
+          foreach ($tf in $testFiles) {
+            $rel = $tf.FullName -replace [regex]::Escape("$(Get-Location)\"), ""
+            $proc = Start-Process -FilePath $ahkV2 -ArgumentList "`"$($tf.FullName)`"" -PassThru -NoNewWindow
+            if (!$proc.WaitForExit(30000)) {
+              $proc.Kill()
+              Write-Host "❌ $rel - timed out" -ForegroundColor Red
+              $failed += $rel
+            } elseif ($proc.ExitCode -ne 0) {
+              Write-Host "❌ $rel - exit $($proc.ExitCode)" -ForegroundColor Red
+              $failed += $rel
+            } else {
+              Write-Host "✓ $rel" -ForegroundColor Green
+            }
+          }
+
+          Write-Host "`nRan: $($testFiles.Count) | Failed: $($failed.Count)"
+
+          if ($failed) {
+            Write-Host "`nFailed tests:" -ForegroundColor Red
+            $failed | % { Write-Host "  $_" }
             exit 1
           }
         shell: pwsh

@@ -1,8 +1,8 @@
 #Requires AutoHotkey v2.0
+#SingleInstance Force
+#Include ..\Lib\v2\AHK_Common.ahk
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
-InitScript(true, false, true)  ; UIA required, no admin, optimize
-
+InitScript(true, false, true)
 SetTitleMatchMode(3)
 SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")

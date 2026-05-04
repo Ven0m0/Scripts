@@ -16,7 +16,7 @@ jobs:
   build-release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Cache AutoHotkey and Ahk2Exe
         uses: actions/cache@v5
@@ -44,7 +44,8 @@ jobs:
           Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath "C:\AutoHotkey-Portable\Compiler" -Force
           $requiredFiles = @(
             "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe",
-            "C:\AutoHotkey-Portable\Compiler\AutoHotkeySC.bin"
+            "C:\AutoHotkey-Portable\Compiler\Unicode 32-bit.bin",
+            "C:\AutoHotkey-Portable\Compiler\Unicode 64-bit.bin"
           )
           $missingFiles = $requiredFiles | Where-Object { -not (Test-Path $_) }
           if ($missingFiles) {
@@ -88,7 +89,7 @@ jobs:
         shell: pwsh
 
       - name: Create Release
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v2
         with:
           files: release/*.exe
           fail_on_unmatched_files: true

@@ -55,22 +55,22 @@ TestToggleFakeFullscreen_MakeFullscreen() {
     ; Verify calls
     if (mockApi.calls.Length != 3) {
         FileOpen("*", "w `n").Write("Fail: Expected 3 calls, got " mockApi.calls.Length "`n")
-        return false
+        ExitApp(1)
     }
 
     if (mockApi.calls[1].method != "WinGetStyle") {
         FileOpen("*", "w `n").Write("Fail: First call was not WinGetStyle`n")
-        return false
+        ExitApp(1)
     }
 
     if (mockApi.calls[2].method != "WinSetStyle") {
         FileOpen("*", "w `n").Write("Fail: Second call was not WinSetStyle`n")
-        return false
+        ExitApp(1)
     }
 
     if (mockApi.calls[3].method != "WinMove") {
         FileOpen("*", "w `n").Write("Fail: Third call was not WinMove`n")
-        return false
+        ExitApp(1)
     }
 
     FileOpen("*", "w `n").Write("Pass: MakeFullscreen`n")
@@ -86,17 +86,17 @@ TestToggleFakeFullscreen_RestoreWindow() {
     ; Verify calls
     if (mockApi.calls.Length != 3) {
         FileOpen("*", "w `n").Write("Fail: Expected 3 calls, got " mockApi.calls.Length "`n")
-        return false
+        ExitApp(1)
     }
 
     if (mockApi.calls[2].method != "WinSetStyle") {
         FileOpen("*", "w `n").Write("Fail: Second call was not WinSetStyle`n")
-        return false
+        ExitApp(1)
     }
 
     if (mockApi.calls[3].method != "WinRestore") {
         FileOpen("*", "w `n").Write("Fail: Third call was not WinRestore`n")
-        return false
+        ExitApp(1)
     }
 
     FileOpen("*", "w `n").Write("Pass: RestoreWindow`n")
@@ -112,7 +112,7 @@ TestGetMonitorAtPos_InsideMonitor() {
     res := GetMonitorAtPos(500, 500, mockApi)
     if (res != 1) {
         FileOpen("*", "w `n").Write("Fail: Expected 1, got " res "`n")
-        return false
+        ExitApp(1)
     }
     FileOpen("*", "w `n").Write("Pass: GetMonitorAtPos_InsideMonitor`n")
     return true
@@ -127,7 +127,7 @@ TestGetMonitorAtPos_OutsideMonitors() {
     res := GetMonitorAtPos(-100, 500, mockApi)
     if (res != -1) {
         FileOpen("*", "w `n").Write("Fail: Expected -1, got " res "`n")
-        return false
+        ExitApp(1)
     }
     FileOpen("*", "w `n").Write("Pass: GetMonitorAtPos_OutsideMonitors`n")
     return true
@@ -143,7 +143,7 @@ TestGetMonitorAtPos_MultipleMonitors() {
     res := GetMonitorAtPos(-500, 500, mockApi)
     if (res != 2) {
         FileOpen("*", "w `n").Write("Fail: Expected 2, got " res "`n")
-        return false
+        ExitApp(1)
     }
     FileOpen("*", "w `n").Write("Pass: GetMonitorAtPos_MultipleMonitors`n")
     return true
@@ -157,4 +157,4 @@ TestGetMonitorAtPos_OutsideMonitors()
 TestGetMonitorAtPos_MultipleMonitors()
 
 FileOpen("*", "w `n").Write("All tests complete.`n")
-ExitApp
+ExitApp(0)

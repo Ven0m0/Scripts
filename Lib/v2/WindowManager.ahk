@@ -2,8 +2,8 @@
 
 ; WindowManager – borderless/fullscreen utilities
 
-static STYLE_DECORATIONS := 0xEC0000      ; title/menu/frame/sysmodal combined
-static STYLE_UNDECORATED := -0xEC0000
+global STYLE_DECORATIONS := "+0xEC0000"     ; title/menu/frame/sysmodal combined
+global STYLE_UNDECORATED := "-0xEC0000"
 
 ToggleFakeFullscreen(winTitle := "A", api := "") {
     if !api
