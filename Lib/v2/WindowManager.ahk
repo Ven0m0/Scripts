@@ -47,12 +47,13 @@ WaitForProcess(processName, timeout := 30) {
 }
 
 GetMonitorAtPos(x, y, api := "") {
-    if !api
-        api := SystemWindowAPI()
-
-    count := api.MonitorGetCount()
+    count := IsObject(api) ? api.MonitorGetCount() : MonitorGetCount()
     Loop count {
-        api.MonitorGet(A_Index, &l, &t, &r, &b)
+        if IsObject(api)
+            api.MonitorGet(A_Index, &l, &t, &r, &b)
+        else
+            MonitorGet(A_Index, &l, &t, &r, &b)
+
         if (l <= x && x <= r && t <= y && y <= b)
             return A_Index
     }
