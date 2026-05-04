@@ -59,6 +59,32 @@ try {
     EnvSet("PATH", ";;" . mockPath . ";;")
     AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle empty entries in PATH")
 
+    ; MustGetExe Tests
+
+    ; Test 6: MustGetExe success path
+    AssertEqual(directPath, MustGetExe(directPath), "MustGetExe should return path if found")
+
+    ; Test 7: MustGetExe failure path
+    mockState := Map("msgBoxCalled", false, "exitAppCalled", false, "exitCode", "")
+
+    mockMsgBox(msg) {
+        mockState["msgBoxCalled"] := true
+    }
+
+    mockExitApp(code) {
+        mockState["exitAppCalled"] := true
+        mockState["exitCode"] := code
+    }
+
+    ; Attempt to find a non-existent file with no fallbacks
+    try {
+        MustGetExe("definitely_nonexistent.exe", [], mockMsgBox, mockExitApp)
+    }
+
+    AssertEqual(1, mockState["msgBoxCalled"], "MustGetExe should call MsgBox on failure")
+    AssertEqual(1, mockState["exitAppCalled"], "MustGetExe should call ExitApp on failure")
+    AssertEqual(1, mockState["exitCode"], "MustGetExe should exit with code 1 on failure")
+
     ; Final Results
     stdout.WriteLine("---")
     stdout.WriteLine("Tests Passed: " . testsPassed)
