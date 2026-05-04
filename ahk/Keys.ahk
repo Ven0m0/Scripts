@@ -3,7 +3,7 @@
 #Include ..\Lib\v2\AHK_Common.ahk
 
 InitScript(true, false, true)
-
+SetTitleMatchMode(3, "Fast")
 SetTitleMatchMode(3)
 SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")
