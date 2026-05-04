@@ -61,12 +61,7 @@ FileActions(Root, Button)
         Fullpath := Zielpfad "\" button.Ziel "\" button.Name
         Checkdir := Zielpfad "\" button.Ziel
         Quellpfad := button.Path
-        dirHasItems := false
-        Loop, Files, %Checkdir%\*, DF       ;Loop through items in dir
-        {
-          dirHasItems := true               ;Mark that we found at least one item
-          Break                             ;Optimization: Break after finding the first item
-        }
+        dirHasItems := FileExist(Checkdir "\*") != ""
         If !dirHasItems                     ;Is directory empty?
         {
           FileCopyDir, %Quellpfad%, %Fullpath%
