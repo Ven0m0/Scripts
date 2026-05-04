@@ -71,99 +71,177 @@ RegisterDefaultHotkeys() {
     Hotkey("F9", (*) => ExitApp())
 }
 
+
+
 ; ---------------- Loops ----------------
 
 BalconyLoop(id) {
     global runningMode, runId
-    while (runId = id && runningMode = "balcony") {
-        rand := Random(250, 2001)
-        Sleep(rand)
-        Send("{p}")
-        Sleep(1001)
-        Send("{2}")
-        Sleep(1001)
-        Send("{RButton down}")
-        Sleep(1001)
-        Send("{RButton up}")
-        Sleep(3001)
-        Send("{c}")
-        Sleep(1001)
-        Send("{p}")
-        Sleep(75001)
+    step := 1
+    NextStep() {
+        if (runId != id || runningMode != "balcony") {
+            ; Cleanup if aborted mid-sequence
+            if (step > 4 && step <= 5) {
+                Send("{RButton up}")
+            }
+            return
+        }
+
+        if (step == 1) {
+            rand := Random(250, 2001)
+            SetTimer(NextStep, -rand)
+            step := 2
+        } else if (step == 2) {
+            Send("{p}")
+            SetTimer(NextStep, -1001)
+            step := 3
+        } else if (step == 3) {
+            Send("{2}")
+            SetTimer(NextStep, -1001)
+            step := 4
+        } else if (step == 4) {
+            Send("{RButton down}")
+            SetTimer(NextStep, -1001)
+            step := 5
+        } else if (step == 5) {
+            Send("{RButton up}")
+            SetTimer(NextStep, -3001)
+            step := 6
+        } else if (step == 6) {
+            Send("{c}")
+            SetTimer(NextStep, -1001)
+            step := 7
+        } else if (step == 7) {
+            Send("{p}")
+            SetTimer(NextStep, -75001)
+            step := 1
+        }
     }
+    NextStep()
 }
 
 BankRoofCleanLoop(id) {
     global runningMode, runId
-    while (runId = id && runningMode = "bank_basic") {
-        start := A_TickCount
-        while (runId = id && runningMode = "bank_basic" && A_TickCount - start < 40000) {
-            rand := Random(0, 20)
-            DllCall("Sleep", "UInt", rand)
-            Send("{LButton}")
-            Sleep(10)
-            Send("{g}")
-            Sleep(100)
-        }
+    start := A_TickCount
+    phase := "shoot"
+
+    Tick() {
         if (runId != id || runningMode != "bank_basic")
-            break
-        CleanUpZombies()
-        Sleep(2000)
-        CleanUpZombies()
-        Sleep(12000)
+            return
+
+        if (phase == "shoot") {
+            if (A_TickCount - start < 40000) {
+                rand := Random(0, 20)
+                if (rand > 0)
+                    DllCall("Sleep", "UInt", rand)
+                Send("{LButton}")
+                Sleep(10)
+                Send("{g}")
+                SetTimer(Tick, -100)
+            } else {
+                phase := "cleanup1"
+                CleanUpZombies()
+                SetTimer(Tick, -2000)
+            }
+        } else if (phase == "cleanup1") {
+            CleanUpZombies()
+            phase := "cleanup2"
+            SetTimer(Tick, -12000)
+        } else if (phase == "cleanup2") {
+            start := A_TickCount
+            phase := "shoot"
+            SetTimer(Tick, -10)
+        }
     }
+    Tick()
 }
 
 BankRoofLootLoop(id) {
     global runningMode, runId
-    while (runId = id && runningMode = "bank_loot") {
-        start := A_TickCount
-        walked20 := false, walked35 := false
-        while (runId = id && runningMode = "bank_loot" && A_TickCount - start < 40000) {
-            rand := Random(0, 20)
-            DllCall("Sleep", "UInt", rand)
-            Send("{LButton}")
-            Sleep(10)
-            Send("{g}")
-            Sleep(100)
-            elapsed := A_TickCount - start
-            if (!walked20 && elapsed >= 20000 && elapsed < 21000) {
-                WalkForwardAndBack()
-                walked20 := true
-            }
-            if (!walked35 && elapsed >= 35000 && elapsed < 36000) {
-                WalkForwardAndBack()
-                walked35 := true
-            }
+    start := A_TickCount
+    walked20 := false
+    walked35 := false
+    phase := "shoot"
+
+    Tick() {
+        if (runId != id || runningMode != "bank_loot") {
+            ; Cleanup if aborted mid-sequence (WalkForwardAndBack could be holding W or S,
+            ; but since it's synchronous and blocks, AHK thread is busy during it.
+            ; The only thing we must clean up is if we were interrupted.)
+            return
         }
-        if (runId != id || runningMode != "bank_loot")
-            break
-        CleanUpZombies()
-        Sleep(2000)
-        CleanUpZombies()
-        Sleep(12000)
+
+        if (phase == "shoot") {
+            elapsed := A_TickCount - start
+            if (elapsed < 40000) {
+                if (!walked20 && elapsed >= 20000 && elapsed < 21000) {
+                    WalkForwardAndBack()
+                    walked20 := true
+                }
+                if (!walked35 && elapsed >= 35000 && elapsed < 36000) {
+                    WalkForwardAndBack()
+                    walked35 := true
+                }
+
+                rand := Random(0, 20)
+                if (rand > 0)
+                    DllCall("Sleep", "UInt", rand)
+                Send("{LButton}")
+                Sleep(10)
+                Send("{g}")
+                SetTimer(Tick, -100)
+            } else {
+                phase := "cleanup1"
+                CleanUpZombies()
+                SetTimer(Tick, -2000)
+            }
+        } else if (phase == "cleanup1") {
+            CleanUpZombies()
+            phase := "cleanup2"
+            SetTimer(Tick, -12000)
+        } else if (phase == "cleanup2") {
+            start := A_TickCount
+            walked20 := false
+            walked35 := false
+            phase := "shoot"
+            SetTimer(Tick, -10)
+        }
     }
+    Tick()
 }
 
 BankRoofAlwaysLoop(id) {
     global runningMode, runId
-    while (runId = id && runningMode = "bank_always") {
+
+    Tick() {
+        if (runId != id || runningMode != "bank_always")
+            return
+
         rand := Random(0, 20)
-        DllCall("Sleep", "UInt", rand)
+        if (rand > 0)
+            DllCall("Sleep", "UInt", rand)
         Send("{LButton}")
         Sleep(10)
         Send("{g}")
-        Sleep(90) ; ~120ms per cycle
+        SetTimer(Tick, -90)
     }
+    Tick()
 }
 
 HoldClickLoop(id) {
     global runningMode, runId
     Send("{LButton down}")
-    while (runId = id && runningMode = "hold_click") {
-        Sleep(100) ; light yield
+
+    Tick() {
+        if (runId != id || runningMode != "hold_click") {
+            ; Since StopAll() already sends {LButton up}, we don't need to do it here
+            ; UNLESS we are doing it via natural expiry, but this runs infinitely.
+            ; StopAll() already handles cleanup, so we can just return.
+            return
+        }
+        SetTimer(Tick, -100)
     }
-    Send("{LButton up}")
+    Tick()
 }
 
 ; ---------------- Helpers ----------------
