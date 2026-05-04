@@ -22,7 +22,13 @@ jobs:
         run: choco install autohotkey.portable --version=1.1.36.01 -y
         shell: pwsh
       - name: Install AutoHotkey v2
-        run: choco install autohotkey -y
+        run: |
+          for ($i = 0; $i -lt 3; $i++) {
+            choco install autohotkey -y
+            if ($LASTEXITCODE -eq 0) { break }
+            Start-Sleep -Seconds 10
+          }
+          if ($LASTEXITCODE -ne 0) { exit 1 }
         shell: pwsh
       - name: Verify Installations
         run: |

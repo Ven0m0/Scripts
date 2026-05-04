@@ -30,6 +30,13 @@ DirCreate(testBaseDir . "\PathDir1")
 DirCreate(testBaseDir . "\PathDir2")
 DirCreate(testBaseDir . "\FallbackDir")
 
+DirCreate(testBaseDir . "\PathDir3")
+DirCreate(testBaseDir . "\PathDir4")
+FileAppend("", testBaseDir . "\PathDir3\tool_trailing.exe")
+DirCreate(testBaseDir . "\PathDir4\subdir")
+FileAppend("", testBaseDir . "\PathDir4\subdir\subtool.exe")
+
+
 ; Create dummy files
 FileAppend("", testBaseDir . "\PathDir2\tool.exe")
 FileAppend("", testBaseDir . "\FallbackDir\fbtool.exe")
@@ -58,6 +65,21 @@ try {
     ; Test 5: Empty PATH entries (should skip gracefully)
     EnvSet("PATH", ";;" . mockPath . ";;")
     AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle empty entries in PATH")
+
+
+    ; Test 6: PATH entry with trailing backslash
+    EnvSet("PATH", testBaseDir . "\PathDir3\;" . mockPath)
+    AssertEqual(testBaseDir . "\PathDir3\tool_trailing.exe", FindExe("tool_trailing.exe"), "Should handle PATH entries with trailing backslashes")
+
+    ; Test 7: Subdirectory path in name
+    EnvSet("PATH", mockPath . ";" . testBaseDir . "\PathDir4")
+    AssertEqual(testBaseDir . "\PathDir4\subdir\subtool.exe", FindExe("subdir\subtool.exe"), "Should resolve relative subdirectory paths in name")
+
+    ; Test 8: Empty string name
+    AssertEqual("", FindExe(""), "Should return empty string for empty name")
+
+    ; Test 9: Empty fallback array
+    AssertEqual("", FindExe("nonexistent.exe", []), "Should handle empty fallbacks array gracefully")
 
     ; Final Results
     stdout.WriteLine("---")
