@@ -16,7 +16,7 @@ jobs:
   lint:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Install AutoHotkey v1.1 (Portable)
         run: choco install autohotkey.portable --version=1.1.36.01 -y
@@ -125,7 +125,7 @@ jobs:
           }
 
           $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-          $searchRoots = @("tests", "ahk") | Where-Object { Test-Path $_ }
+          $searchRoots = @("tests", "ahk", "Lib") | Where-Object { Test-Path $_ }
           $testFiles = @()
 
           foreach ($root in $searchRoots) {
