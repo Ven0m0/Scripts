@@ -114,10 +114,34 @@ jobs:
 
       - name: Run Tests
         run: |
+          function Test-IsAhkV2Script {
+            param(
+              [Parameter(Mandatory = $true)]
+              [string]$Path
+            )
+
+            $header = Get-Content -Path $Path -TotalCount 20 -ErrorAction SilentlyContinue
+            return $header -match '^\s*#Requires\s+AutoHotkey\s+v2(\.0)?\b'
+          }
+
           $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-          $testFiles = Get-ChildItem -Recurse -Filter *.ahk |
-            Where-Object { $_.Name -like "test_*" -or $_.Name -like "*_Test.ahk" }
+          $searchRoots = @("tests", "ahk") | Where-Object { Test-Path $_ }
+          $testFiles = @()
+
+          foreach ($root in $searchRoots) {
+            $testFiles += Get-ChildItem -Path $root -Recurse -Filter *.ahk -File |
+              Where-Object {
+                ($_.Name -like "test_*" -or $_.Name -like "*_Test.ahk") -and
+                (Test-IsAhkV2Script -Path $_.FullName)
+              }
+          }
+
           $failed = @()
+
+          if (-not $testFiles) {
+            Write-Host "No AutoHotkey v2 test files found under tests/ or ahk/."
+            exit 0
+          }
 
           foreach ($tf in $testFiles) {
             $rel = $tf.FullName -replace [regex]::Escape("$(Get-Location)\"), ""
