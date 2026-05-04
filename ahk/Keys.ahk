@@ -1,16 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
+#Include ..\Lib\v2\AHK_Common.ahk
 
-SetWorkingDir(A_ScriptDir)
-SetTitleMatchMode("Fast")
-DetectHiddenText(false)
-DetectHiddenWindows(false)
-SetKeyDelay(-1, -1)
-SetMouseDelay(-1)
-SetDefaultMouseSpeed(0)
-SetWinDelay(-1)
-SetControlDelay(-1)
-SendMode("Input")
+InitScript(true, false, true)
 
 SetTitleMatchMode(3)
 SetNumLockState("AlwaysOn")
