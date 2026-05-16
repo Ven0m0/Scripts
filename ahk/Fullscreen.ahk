@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 
 ; ============================================================================
-; Fullscreen.ahk - Borderless fullscreen toggle with multi-monitor support
+; Fullscreen.ahk - Borderless fullscreen toggle
 ; Version: 2.0.0 (Migrated to AHK v2 and consolidated from 3 variants)
 ;
 ; Consolidates:
@@ -10,7 +10,7 @@
 ;   - Fullscreen_double.ahk (separate enter/exit hotkeys)
 ;
 ; Hotkeys:
-;   End                - Toggle borderless fullscreen (multi-monitor aware)
+;   End                - Toggle borderless fullscreen
 ;   Ctrl+Alt+K         - Enter borderless fullscreen
 ;   Ctrl+Alt+L         - Exit and restore window
 ;   Ctrl+Alt+End       - Toggle with always-on-top
@@ -23,10 +23,10 @@ InitScript(true, true, true)  ; UIA + Admin + Performance optimizations
 Persistent
 
 ; ============================================================================
-; Primary hotkey - End key toggles fullscreen with multi-monitor support
+; Primary hotkey - End key toggles fullscreen
 ; ============================================================================
 End:: {
-    ToggleFakeFullscreenMultiMonitor("A")
+    ToggleFakeFullscreen("A")
 }
 
 ; ============================================================================
