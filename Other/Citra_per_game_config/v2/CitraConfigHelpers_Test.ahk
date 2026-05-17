@@ -73,6 +73,22 @@ TestSetKey() {
     content2 := "path\to\file=exists`n"
     result := SetKey(content2, "path\to\file", "updated")
     AssertEqual(InStr(result, "path\to\file=updated") > 0, true, "SetKey updates key with backslashes")
+
+    ; Test 6: Empty value
+    result := SetKey(content, "key1", "")
+    AssertEqual(InStr(result, "key1=") > 0 && InStr(result, "key1=value1") == 0, true, "SetKey handles empty value")
+
+    ; Test 7: Value with literal $ sign
+    result := SetKey(content, "key1", "val$ue")
+    AssertEqual(InStr(result, "key1=val$ue") > 0, true, "SetKey handles value with literal $ sign")
+
+    ; Test 8: Value with literal $1
+    result := SetKey(content, "key2", "val$1ue")
+    AssertEqual(InStr(result, "key2=val$1ue") > 0, true, "SetKey handles value with literal $1")
+
+    ; Test 9: Add new key with $ sign
+    result := SetKey(content, "key4", "new$val")
+    AssertEqual(InStr(result, "key4=new$val") > 0, true, "SetKey adds new key with $ sign")
 }
 
 TestReplaceInFile() {

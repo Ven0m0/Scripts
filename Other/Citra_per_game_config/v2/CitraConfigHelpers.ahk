@@ -38,7 +38,7 @@ RegExEscape(str) {
 SetKey(content, key, value) {
     pat := "m)^(" . RegExEscape(key) . ")\s*=.*$"
     if RegExMatch(content, pat)
-        return RegExReplace(content, pat, "$1=" value, , 1)
+        return RegExReplace(content, pat, "$1=" StrReplace(value, "$", "$$"), , 1)
     else
         return content "`n" key "=" value
 }
