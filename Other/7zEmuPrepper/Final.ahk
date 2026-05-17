@@ -4,7 +4,6 @@
 ; 7zEmuPrepper command builder (for 7zEmuPrepper.ps1)
 ; Fields -> emits a ready-to-run PowerShell command. Includes a Copy button.
 
-sevenZEmuPrepperPath := ""
 sevenZipPath := ""
 emulatorPath := ""
 arguments := ""
