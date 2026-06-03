@@ -34,9 +34,11 @@ jobs:
         run: |
           set -euxo pipefail
           # The agent launches these servers via `npx -y <pkg>@latest`. Installing
-          # them globally warms the npm cache so they resolve quickly/offline once
-          # the runtime firewall is in place. Keep this list in sync with the
-          # `type: "local"` servers in the repo's Copilot MCP configuration.
+          # them globally warms the npm cache so they resolve quickly once the
+          # runtime firewall is in place. Keep this list in sync with the
+          # `type: "local"` MCP servers configured for the coding agent under
+          # repo Settings -> Copilot -> coding agent (configured there, not in a
+          # file in this repo).
           npm install -g \
             @playwright/mcp@latest \
             fast-filesystem-mcp@latest \
