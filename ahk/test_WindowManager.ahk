@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-#Include A_ScriptDir "\..\Lib\v2\WindowManager.ahk"
+#Include A_ScriptDir "\.\..\Lib\v2\WindowManager.ahk"
 
 class MockWindowAPI {
     __New() {
@@ -8,6 +8,11 @@ class MockWindowAPI {
         this.screenWidth := 1920
         this.screenHeight := 1080
         this.monitors := []
+    }
+
+    WinWait(winTitle, winText:="", timeout:="") {
+        this.calls.Push({method: "WinWait", args: [winTitle, winText, timeout]})
+        return 0 ; Simulate timeout
     }
 
     WinGetStyle(winTitle) {
@@ -149,12 +154,50 @@ TestGetMonitorAtPos_MultipleMonitors() {
     return true
 }
 
+
+TestWaitForWindow_Timeout() {
+    mockApi := MockWindowAPI()
+
+    res := WaitForWindow("FakeWindow", 0.1, mockApi)
+
+    ; Verify result
+    if (res != false) {
+        FileOpen("*", "w `n").Write("Fail: Expected false, got " res "`n")
+        return false
+    }
+
+    ; Verify calls
+    if (mockApi.calls.Length != 1) {
+        FileOpen("*", "w `n").Write("Fail: Expected 1 call, got " mockApi.calls.Length "`n")
+        return false
+    }
+
+    if (mockApi.calls[1].method != "WinWait") {
+        FileOpen("*", "w `n").Write("Fail: First call was not WinWait`n")
+        return false
+    }
+
+    if (mockApi.calls[1].args[1] != "FakeWindow") {
+        FileOpen("*", "w `n").Write("Fail: Expected winTitle 'FakeWindow', got '" mockApi.calls[1].args[1] "'`n")
+        return false
+    }
+
+    if (mockApi.calls[1].args[3] != 0.1) {
+        FileOpen("*", "w `n").Write("Fail: Expected timeout 0.1, got '" mockApi.calls[1].args[3] "'`n")
+        return false
+    }
+
+    FileOpen("*", "w `n").Write("Pass: WaitForWindow_Timeout`n")
+    return true
+}
+
 TestToggleFakeFullscreen_MakeFullscreen()
 TestToggleFakeFullscreen_RestoreWindow()
 
 TestGetMonitorAtPos_InsideMonitor()
 TestGetMonitorAtPos_OutsideMonitors()
 TestGetMonitorAtPos_MultipleMonitors()
+TestWaitForWindow_Timeout()
 
 FileOpen("*", "w `n").Write("All tests complete.`n")
 ExitApp(0)

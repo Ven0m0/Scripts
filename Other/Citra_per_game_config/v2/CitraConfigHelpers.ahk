@@ -18,7 +18,7 @@
 ;   Escaped string safe for use in regex patterns
 ; ============================================================================
 RegExEscape(str) {
-    return RegExReplace(str, "([\\()\[\]{}?*+|^$.])", "\$1")
+    return RegExReplace(str, "([\\()\[\]{}?*+|^$.})", "\\$1")
 }
 
 ; ============================================================================
@@ -36,9 +36,9 @@ RegExEscape(str) {
 ;   Modified configuration content
 ; ============================================================================
 SetKey(content, key, value) {
-    pat := "m)^(" . RegExEscape(key) . ")\s*=.*$"
+    pat := "m)^(" . RegExEscape(key) . ")\\s*=.*$"
     if RegExMatch(content, pat)
-        return RegExReplace(content, pat, "$1=" value, , 1)
+        return RegExReplace(content, pat, "$1=" StrReplace(value, "$", "$$"), , 1)
     else
         return content "`n" key "=" value
 }

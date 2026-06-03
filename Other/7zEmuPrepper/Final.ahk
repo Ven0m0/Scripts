@@ -4,7 +4,6 @@
 ; 7zEmuPrepper command builder (for 7zEmuPrepper.ps1)
 ; Fields -> emits a ready-to-run PowerShell command. Includes a Copy button.
 
-sevenZEmuPrepperPath := ""
 sevenZipPath := ""
 emulatorPath := ""
 arguments := ""
@@ -45,15 +44,6 @@ gui.Add("Button", "x340 y430 w80 h23", "Exit").OnEvent("Click", (*) => ExitApp()
 
 gui.Show("w480 h470")
 return
-
-SelectFileOrDir(btn) {
-    global
-    text := btn.Text
-    if (text = "…") {
-        ; infer based on label order
-        idx := btn.Hwnd
-    }
-}
 
 ; Simplified per-control selection based on Y position
 SelectFileOrDir(btn, *) {
