@@ -19,8 +19,7 @@ PlayBootVideo() {
     vlcPath := MustGetExe("vlc.exe", ["C:\Program Files\VideoLAN\VLC\vlc.exe"])
     bootVideo := A_ScriptDir . "\BootVideo.mp4"
     vlcArgs := '--fullscreen --video-on-top --play-and-exit --no-video-title -Idummy "' . bootVideo . '"'
-    RunWait('cmd.exe /c START "" "' . vlcPath . '" ' . vlcArgs, , "hide")
-    DllCall("kernel32.dll\Sleep", "UInt", 3000)
+    RunWait('"' . vlcPath . '" ' . vlcArgs, , "hide")
 }
 LaunchPlaynite() {
     playniteExe := MustGetExe(
