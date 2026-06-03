@@ -29,6 +29,11 @@ DirCreate(testBaseDir)
 DirCreate(testBaseDir . "\PathDir1")
 DirCreate(testBaseDir . "\PathDir2")
 DirCreate(testBaseDir . "\FallbackDir")
+DirCreate(testBaseDir . "\PathDir3")
+DirCreate(testBaseDir . "\PathDir4")
+FileAppend("", testBaseDir . "\PathDir3\tool_trailing.exe")
+DirCreate(testBaseDir . "\PathDir4\subdir")
+FileAppend("", testBaseDir . "\PathDir4\subdir\subtool.exe")
 
 ; Create dummy files
 FileAppend("", testBaseDir . "\PathDir2\tool.exe")
@@ -59,12 +64,35 @@ try {
     EnvSet("PATH", ";;" . mockPath . ";;")
     AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle empty entries in PATH")
 
+    ; Test 6: Whitespace around PATH entries
+    EnvSet("PATH", "  " . testBaseDir . "\PathDir2  ")
+    AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle whitespace in PATH entries")
+
+    ; Test 7: Quoted PATH entries
+    EnvSet("PATH", "`"" . testBaseDir . "\PathDir2`"")
+    AssertEqual(testBaseDir . "\PathDir2\tool.exe", FindExe("tool.exe"), "Should handle quoted PATH entries")
+
+    ; Test 8: Trailing backslash in PATH entry
+    EnvSet("PATH", testBaseDir . "\PathDir3\")
+    AssertEqual(testBaseDir . "\PathDir3\tool_trailing.exe", FindExe("tool_trailing.exe"), "Should handle PATH entries with trailing backslashes")
+
+    ; Test 9: Subdirectory path in name
+    EnvSet("PATH", mockPath . ";" . testBaseDir . "\PathDir4")
+    AssertEqual(testBaseDir . "\PathDir4\subdir\subtool.exe", FindExe("subdir\subtool.exe"), "Should resolve relative subdirectory paths in name")
+
+    ; Test 10: Empty string name
+    AssertEqual("", FindExe(""), "Should return empty string for empty name")
+
+    ; Test 11: Empty fallback array
+    EnvSet("PATH", mockPath)
+    AssertEqual("", FindExe("nonexistent.exe", []), "Should handle empty fallbacks array gracefully")
+
     ; MustGetExe Tests
 
-    ; Test 6: MustGetExe success path
+    ; Test 12: MustGetExe success path
     AssertEqual(directPath, MustGetExe(directPath), "MustGetExe should return path if found")
 
-    ; Test 7: MustGetExe failure path
+    ; Test 13: MustGetExe failure path
     mockState := Map("msgBoxCalled", false, "exitAppCalled", false, "exitCode", "")
 
     mockMsgBox := (msg) => (mockState["msgBoxCalled"] := true)

@@ -1,9 +1,22 @@
 #Requires AutoHotkey v2.0
-#SingleInstance Force
-#Include ..\Lib\v2\AHK_Common.ahk
 
-InitScript(true, false, true)
+#SingleInstance Force
+SendMode "Input"
+SetWorkingDir A_ScriptDir
+
+#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+InitScript(true, false, false)  ; UIA required, no admin, manual tuning
+
+if (A_LineFile == A_ScriptFullPath) {
+KeyHistory(0)
+ListLines False
+SetKeyDelay(-1, -1)
+SetMouseDelay(-1)
+SetDefaultMouseSpeed(0)
+SetWinDelay(-1)
+SetControlDelay(-1)
 SetTitleMatchMode(3)
+SetTitleMatchMode("Fast")
 SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")
 SetScrollLockState("AlwaysOff")
@@ -12,7 +25,6 @@ SetScrollLockState("AlwaysOff")
 mw := GetMonitorWidth()
 mh := GetMonitorHeight()
 pw := mw / 3
-ph := mh / 3
 lw := (2 * pw > 1024) ? 1024 : 2 * pw
 rw := mw - lw
 positions := Map()
@@ -23,6 +35,7 @@ SetTimer(SetAlwaysOnTop, 1000)
 ; Tray documentation entry
 A_TrayMenu.Add("Documentation", ShowDocumentation)
 
+}
 #HotIf !WinActive("ahk_exe Explorer.EXE")
 +F1::WinMinimize("A")
 #HotIf
@@ -73,40 +86,48 @@ AddDateToSelection() {
   }
 }
 
-MoveWindowLeft() {
+MoveWindowLeft(api := "") {
   global lw, mh
-  SaveWindowPosition()
-  if IsResizable() {
-    WinMove(0, 0, lw, mh, "A")
+  if !api
+    api := KeysWindowAPI()
+  SaveWindowPosition(api)
+  if IsResizable(api) {
+    api.WinMove(0, 0, lw, mh, "A")
   } else {
-    WinMove(0, 0, , , "A")
+    api.WinMoveNoSize(0, 0, "A")
   }
 }
 
-MoveWindowRight() {
+MoveWindowRight(api := "") {
   global lw, rw, mh
-  SaveWindowPosition()
-  if IsResizable() {
-    WinMove(lw, 0, rw, mh, "A")
+  if !api
+    api := KeysWindowAPI()
+  SaveWindowPosition(api)
+  if IsResizable(api) {
+    api.WinMove(lw, 0, rw, mh, "A")
   } else {
-    WinMove(lw, 0, , , "A")
+    api.WinMoveNoSize(lw, 0, "A")
   }
 }
 
-RestoreWindowPosition() {
+RestoreWindowPosition(api := "") {
   global positions
-  hwnd := WinExist("A")
+  if !api
+    api := KeysWindowAPI()
+  hwnd := api.WinExist("A")
   if !positions.Has(hwnd)
     return
 
   pos := positions[hwnd]
-  WinMove(pos[1], pos[2], pos[3], pos[4], "A")
+  api.WinMove(pos[1], pos[2], pos[3], pos[4], "A")
 }
 
-SaveWindowPosition() {
+SaveWindowPosition(api := "") {
   global positions
-  hwnd := WinExist("A")
-  WinGetPos(&x, &y, &w, &h, "A")
+  if !api
+    api := KeysWindowAPI()
+  hwnd := api.WinExist("A")
+  api.WinGetPos(&x, &y, &w, &h, "A")
   positions[hwnd] := [x, y, w, h]
 }
 
@@ -120,8 +141,10 @@ GetMonitorHeight() {
   return bottom - top
 }
 
-IsResizable() {
-  style := WinGetStyle("A")
+IsResizable(api := "") {
+  if !api
+    api := KeysWindowAPI()
+  style := api.WinGetStyle("A")
   return (style & 0x00040000) != 0  ; WS_SIZEBOX
 }
 
@@ -190,4 +213,15 @@ ShowDocumentation(*) {
 
   tabs.UseTab()
   docGui.Show("Center")
+}
+
+
+
+
+class KeysWindowAPI {
+  WinExist(winTitle) => WinExist(winTitle)
+  WinGetPos(&x, &y, &w, &h, winTitle) => WinGetPos(&x, &y, &w, &h, winTitle)
+  WinGetStyle(winTitle) => WinGetStyle(winTitle)
+  WinMove(x, y, w, h, winTitle) => WinMove(x, y, w, h, winTitle)
+  WinMoveNoSize(x, y, winTitle) => WinMove(x, y, , , winTitle)
 }

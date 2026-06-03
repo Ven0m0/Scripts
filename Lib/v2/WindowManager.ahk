@@ -33,13 +33,11 @@ MakeFullscreen(winTitle) {
     MaximizeWindow(winTitle)
 }
 
-WaitForWindow(winTitle, timeout := 30) {
-    try {
-        WinWait(winTitle, , timeout)
-        return true
-    } catch TimeoutError {
-        return false
-    }
+WaitForWindow(winTitle, timeout := 30, api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    return api.WinWait(winTitle, , timeout) != 0
 }
 
 WaitForProcess(processName, timeout := 30) {
@@ -47,12 +45,13 @@ WaitForProcess(processName, timeout := 30) {
 }
 
 GetMonitorAtPos(x, y, api := "") {
-    if !api
-        api := SystemWindowAPI()
-
-    count := api.MonitorGetCount()
+    count := IsObject(api) ? api.MonitorGetCount() : MonitorGetCount()
     Loop count {
-        api.MonitorGet(A_Index, &l, &t, &r, &b)
+        if IsObject(api)
+            api.MonitorGet(A_Index, &l, &t, &r, &b)
+        else
+            MonitorGet(A_Index, &l, &t, &r, &b)
+
         if (l <= x && x <= r && t <= y && y <= b)
             return A_Index
     }
@@ -93,6 +92,7 @@ RestoreWindowBorders(winTitle) {
 }
 
 class SystemWindowAPI {
+    WinWait(winTitle, winText?, timeout?) => WinWait(winTitle, winText?, timeout?)
     WinGetStyle(winTitle) => WinGetStyle(winTitle)
     WinSetStyle(style, winTitle) => WinSetStyle(style, winTitle)
     WinMove(x, y, w, h, winTitle) => WinMove(x, y, w, h, winTitle)
