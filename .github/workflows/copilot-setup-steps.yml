@@ -13,6 +13,10 @@ permissions:
   contents: read
 
 jobs:
+  # NOTE: The job MUST stay named `copilot-setup-steps` or the Copilot coding
+  # agent will not pick it up. These steps run BEFORE the agent's firewall is
+  # enabled, so anything the agent's MCP servers need at runtime should be
+  # downloaded/cached here.
   copilot-setup-steps:
     runs-on: ubuntu-latest
     steps:
@@ -21,6 +25,33 @@ jobs:
       - uses: actions/setup-node@v6
         with:
           node-version: "24"
+
+      - name: Pre-install local (stdio) MCP server packages
+        shell: bash
+        env:
+          NPM_CONFIG_FUND: "false"
+          NPM_CONFIG_AUDIT: "false"
+        run: |
+          set -euxo pipefail
+          # The agent launches these servers via `npx -y <pkg>@latest`. Installing
+          # them globally warms the npm cache so they resolve quickly once the
+          # runtime firewall is in place. Keep this list in sync with the
+          # `type: "local"` MCP servers configured for the coding agent under
+          # repo Settings -> Copilot -> coding agent (configured there, not in a
+          # file in this repo).
+          npm install -g \
+            @playwright/mcp@latest \
+            fast-filesystem-mcp@latest \
+            octocode-mcp@latest \
+            yggdrasil-mcp@latest
+
+      - name: Install Playwright browser (Chromium)
+        shell: bash
+        run: |
+          set -euxo pipefail
+          # The playwright MCP server needs a browser binary present. Fetch
+          # Chromium and its OS dependencies before the firewall blocks downloads.
+          npx --yes playwright install --with-deps chromium
 
       - name: Note Windows validation workflows
         shell: bash
