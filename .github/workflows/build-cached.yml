@@ -16,7 +16,7 @@ jobs:
   build-release:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Cache AutoHotkey and Ahk2Exe
         uses: actions/cache@v5
