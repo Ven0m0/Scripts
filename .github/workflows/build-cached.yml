@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Cache AutoHotkey and Ahk2Exe
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: cache-ahk
         with:
           path: C:\AutoHotkey-Portable
