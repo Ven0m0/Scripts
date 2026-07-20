@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DISABLE_INSTALLATION_CHECKS": "true",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "FORCE_AUTOUPDATE_PLUGINS": "true",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "DISABLE_COST_WARNINGS": "1",
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "CLAUDE_CODE_SKIP_BEDROCK_AUTH": "1",
+    "CLAUDE_CODE_SKIP_FOUNDRY_AUTH": "1",
+    "CLAUDE_CODE_SKIP_VERTEX_AUTH": "1",
+    "CLAUDE_CODE_DISABLE_TERMINAL_TITLE": "1",
+    "CLAUDE_BASH_MAINTAIN_PROJECT_WORKING_DIR": "1",
+    "ENABLE_TOOL_SEARCH": "true",
+    "ENABLE_LSP_TOOL": "1",
+    "USE_BUILTIN_RIPGREP": "0",
+    "CLAUDE_CODE_SHELL": "bash",
+    "ANTHROPIC_MODEL": "opusplan",
+    "NO_COLOR": "1",
+    "LC_ALL": "C",
+    "BASH_DEFAULT_TIMEOUT_MS": "120000",
+    "BASH_MAX_TIMEOUT_MS": "600000",
+    "BASH_MAX_OUTPUT_LENGTH": "65536",
+    "MCP_TIMEOUT": "30000",
+    "MCP_TOOL_TIMEOUT": "120000",
+    "MAX_MCP_OUTPUT_TOKENS": "25000",
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "63999",
+    "MAX_THINKING_TOKENS": "16000",
+    "PYTHONUNBUFFERED": "1",
+    "PYTHONDONTWRITEBYTECODE": "1",
+    "PYTHONOPTIMIZE": "1",
+    "BUN_OPTIONS": "--bun --prefer-offline --prefer-latest --parallel --silent",
+    "CLAUDE_CODE_USE_POWERSHELL_TOOL": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Grep",
+      "Glob",
+      "Bash",
+      "Edit",
+      "Write",
+      "LSP",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "TaskList",
+      "TaskUpdate",
+      "Bash(git:*)",
+      "Bash(gh:*)",
+      "Bash(pwsh:*)",
+      "Bash(pwsh.exe:*)",
+      "Bash(powershell:*)",
+      "Bash(powershell.exe:*)",
+      "mcp__plugin_context-mode_context-mode__ctx_batch_execute",
+      "Skill",
+      "Skill(update-config)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(uv:*)",
+      "Bash(npm:*)",
+      "Bash(rg:*)",
+      "Bash(ast-grep:*)",
+      "Bash(fd:*)",
+      "Bash(find:*)",
+      "mcp__cachebro__read_file",
+      "mcp__plugin_context-mode_context-mode__ctx_execute",
+      "mcp__plugin_oh-my-claudecode_t__state_list_active",
+      "mcp__plugin_oh-my-claudecode_t__state_clear",
+      "Bash(cat:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)",
+      "Edit(.ssh/*)",
+      "Write(.ssh/*)",
+      "NotebookEdit",
+      "mcp__plugin_playwright_playwright__browser_install",
+      "mcp__plugin_playwright_playwright__browser_navigate"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$fp = ($input | ConvertFrom-Json).tool_input.file_path; if ($fp -match '[.]reg$') { Write-Host 'WARNING: Editing a registry file. Verify a restore point exists before applying.' }",
+            "if": "Edit(**/*.reg)",
+            "shell": "powershell",
+            "statusMessage": "Registry file - verify restore point exists",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$json = $input | ConvertFrom-Json; $fp = $json.tool_input.file_path; if ($fp -notmatch '[.](ps1|psm1|psd1)$') { exit 0 }; $settings = Join-Path (Get-Location) 'PSScriptAnalyzerSettings.psd1'; try { $issues = Invoke-ScriptAnalyzer -Path $fp -Settings $settings -ErrorAction Stop; if ($issues) { Write-Host 'PSScriptAnalyzer issues found:'; $issues | ForEach-Object { Write-Host \"  - ($($_.Message)) at line $($_.Line)\" }; exit 1 } else { Write-Host 'PSScriptAnalyzer: OK' } } catch { Write-Error \"Linting failed: $_\"; exit 1 }",
+            "shell": "powershell",
+            "statusMessage": "Running PSScriptAnalyzer...",
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$fp = ($input | ConvertFrom-Json).tool_input.file_path; if ($fp -notlike '*autounattend.xml') { exit 0 }; try { $xml = [xml]::new(); $xml.Load($fp); Write-Host 'XML valid: autounattend.xml' } catch { Write-Error 'XML validation failed'; exit 1 }",
+            "shell": "powershell",
+            "timeout": 15,
+            "statusMessage": "Validating autounattend.xml..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$fp = ($input | ConvertFrom-Json).tool_input.file_path; if ($fp -notlike '*.ps1') { exit 0 }; $name = [IO.Path]::GetFileNameWithoutExtension($fp); $t = Join-Path 'tests' \"$name.Tests.ps1\"; if (-not (Test-Path $t)) { exit 0 }; Invoke-Pester -Path $t -Output Minimal",
+            "shell": "powershell",
+            "statusMessage": "Running matching Pester test...",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  },
+  "theme": "dark",
+  "effortLevel": "medium"
+}
