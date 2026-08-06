@@ -22,7 +22,7 @@
 ahk/                    Primary AutoHotkey v2 scripts
 Lib/v2/                 Shared v2 helpers (`AHK_Common`, `WindowManager`, `AutoStartHelper`)
 Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and specialized tools
-.github/instructions/   File-path or workflow guidance for Copilot
+.claude/rules/          Language rulesets (AutoHotkey, PowerShell) auto-loaded as project context
 .github/skills/         Reusable Copilot task playbooks for repo-specific work
 .github/workflows/      CI definitions; `ahk-lint-format-compile.yml` is the main AHK validation workflow
 ```
@@ -89,4 +89,4 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
 - `README.md` - project overview and user-facing setup
 - `CONTRIBUTING.md` - contributor workflow expectations
 - `ahk/README.md`, `Lib/README.md`, `Other/*/README.md` - area-specific behavior and dependencies
-- `.github/instructions/autohotkey.instructions.md` - file-type guidance for Copilot
+- `.claude/rules/autohotkey.md` - AutoHotkey v2 rules and conventions
