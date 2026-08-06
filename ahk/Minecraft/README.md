@@ -50,6 +50,26 @@ Same as MC_AFK.ahk but optimized for Bedrock Edition
 
 ---
 
+### MC_AutoSprint.ahk
+
+**Purpose:** Auto-sprint for Minecraft Bedrock Edition while moving forward
+
+**Features:**
+- Holds Ctrl (Bedrock sprint bind) automatically while `W` is held
+- Scoped to `ahk_exe Minecraft.Windows.exe` only; no effect outside the game
+- No toggle needed - always active while Minecraft Bedrock is focused
+
+**Usage:**
+```bash
+# 1. Start Minecraft Bedrock
+# 2. Run the macro
+MC_AutoSprint.ahk
+
+# 3. Hold W to move and sprint automatically
+```
+
+---
+
 ## Common Use Cases
 
 ### 1. AFK Fishing

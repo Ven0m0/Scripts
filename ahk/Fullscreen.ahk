@@ -36,8 +36,7 @@ End:: {
 ; Ctrl+Alt+K - Enter borderless fullscreen
 ^!k:: {
     WinSetAlwaysOnTop(1, "A")
-    SetWindowBorderless("A")
-    WinMove(0, 0, A_ScreenWidth, A_ScreenHeight, "A")
+    MakeFullscreen("A")
 }
 
 ; Ctrl+Alt+L - Exit and restore window
@@ -49,16 +48,12 @@ End:: {
 
 ; Ctrl+Alt+End - Toggle with always-on-top (old single-tap behavior)
 ^!End:: {
-    currentStyle := WinGetStyle("A")
-    hasTitleBar := currentStyle & 0xC00000
+    hasTitleBar := WinGetStyle("A") & 0xC00000
 
     if (hasTitleBar) {
-        ; Enter fullscreen
         WinSetAlwaysOnTop(1, "A")
-        SetWindowBorderless("A")
-        WinMove(0, 0, A_ScreenWidth, A_ScreenHeight, "A")
+        MakeFullscreen("A")
     } else {
-        ; Exit fullscreen
         WinSetAlwaysOnTop(0, "A")
         RestoreWindowBorders("A")
         WinMove(0, 0, 1280, 720, "A")

@@ -3,10 +3,6 @@
 
 ; AHK_Common – shared init utilities
 
-InitUIA() {
-    ; UIA is built-in in v2 (no-op, kept for compatibility)
-}
-
 RequireAdmin(mockIsAdmin := "", mockRun := "", mockMsgBox := "", mockExitApp := "") {
     isAdmin := mockIsAdmin !== "" ? mockIsAdmin : A_IsAdmin
     if isAdmin
@@ -48,8 +44,6 @@ InitScript(requireUIA := true, requireAdmin := false, optimize := true) {
     DetectHiddenText(false)
     DetectHiddenWindows(false)
 
-    if requireUIA
-        InitUIA()
     if requireAdmin
         RequireAdmin()
     if optimize

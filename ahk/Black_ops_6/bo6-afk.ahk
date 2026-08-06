@@ -26,8 +26,8 @@ global runningMode := ""
 global runId := 0
 global ModeHandlers := Map(
     "balcony", BalconyLoop,
-    "bank_basic", BankRoofCleanLoop,
-    "bank_loot", BankRoofLootLoop,
+    "bank_basic", (id) => BankRoofLoop(id, "bank_basic", false),
+    "bank_loot", (id) => BankRoofLoop(id, "bank_loot", true),
     "bank_always", BankRoofAlwaysLoop,
     "hold_click", HoldClickLoop
 )
@@ -120,43 +120,7 @@ BalconyLoop(id) {
     NextStep()
 }
 
-BankRoofCleanLoop(id) {
-    global runningMode, runId
-    start := A_TickCount
-    phase := "shoot"
-
-    Tick() {
-        if (runId != id || runningMode != "bank_basic")
-            return
-
-        if (phase == "shoot") {
-            if (A_TickCount - start < 40000) {
-                rand := Random(0, 20)
-                if (rand > 0)
-                    DllCall("Sleep", "UInt", rand)
-                Send("{LButton}")
-                Sleep(10)
-                Send("{g}")
-                SetTimer(Tick, -100)
-            } else {
-                phase := "cleanup1"
-                CleanUpZombies()
-                SetTimer(Tick, -2000)
-            }
-        } else if (phase == "cleanup1") {
-            CleanUpZombies()
-            phase := "cleanup2"
-            SetTimer(Tick, -12000)
-        } else if (phase == "cleanup2") {
-            start := A_TickCount
-            phase := "shoot"
-            SetTimer(Tick, -10)
-        }
-    }
-    Tick()
-}
-
-BankRoofLootLoop(id) {
+BankRoofLoop(id, mode, withLoot) {
     global runningMode, runId
     start := A_TickCount
     walked20 := false
@@ -164,20 +128,21 @@ BankRoofLootLoop(id) {
     phase := "shoot"
 
     Tick() {
-        if (runId != id || runningMode != "bank_loot") {
+        if (runId != id || runningMode != mode)
             return
-        }
 
         if (phase == "shoot") {
             elapsed := A_TickCount - start
             if (elapsed < 40000) {
-                if (!walked20 && elapsed >= 20000 && elapsed < 21000) {
-                    WalkForwardAndBack()
-                    walked20 := true
-                }
-                if (!walked35 && elapsed >= 35000 && elapsed < 36000) {
-                    WalkForwardAndBack()
-                    walked35 := true
+                if (withLoot) {
+                    if (!walked20 && elapsed >= 20000 && elapsed < 21000) {
+                        WalkForwardAndBack()
+                        walked20 := true
+                    }
+                    if (!walked35 && elapsed >= 35000 && elapsed < 36000) {
+                        WalkForwardAndBack()
+                        walked35 := true
+                    }
                 }
 
                 rand := Random(0, 20)
