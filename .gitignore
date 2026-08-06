@@ -41,6 +41,10 @@ ehthumbs.db
 *~
 *.sublime-workspace
 *.sublime-project
+.serena/
+!.serena/project.yml
+.omc/
+.codegraph/
 
 # Logs
 *.log
