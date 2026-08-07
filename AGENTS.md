@@ -8,7 +8,7 @@
 - **Primary language:** AutoHotkey v2 (`ahk/`, `Lib/v2/`)
 - **Legacy surface:** AutoHotkey v1 scripts and helper assets in `Other/`
 - **Platform:** Windows 10/11 for runtime and meaningful validation
-- **Canonical user docs:** `README.md`, `CONTRIBUTING.md`, directory READMEs
+- **Canonical user docs:** `README.md`, `EXAMPLES.md`, directory READMEs
 
 ## How to use this guide
 
@@ -22,8 +22,9 @@
 ahk/                    Primary AutoHotkey v2 scripts
 Lib/v2/                 Shared v2 helpers (`AHK_Common`, `WindowManager`, `AutoStartHelper`)
 Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and specialized tools
+tests/                  Standalone test scripts (mirrors `Other/` layout, e.g. `tests/Other/`)
 .claude/rules/          Language rulesets (AutoHotkey, PowerShell) auto-loaded as project context
-.github/skills/         Reusable Copilot task playbooks for repo-specific work
+.kilo/                  Kilo agent config (`kilo.json`); instructions resolve back to `AGENTS.md`
 .github/workflows/      CI definitions; `ahk-lint-format-compile.yml` is the main AHK validation workflow
 ```
 
@@ -76,7 +77,6 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
 - The authoritative AHK CI workflow is `.github/workflows/ahk-lint-format-compile.yml`.
 - That workflow performs version detection, syntax compilation, and formatting checks on Windows.
 - Agent guidance changes should run `ctxlint` and `agnix`.
-- Use `.github/skills/validate/SKILL.md` for the exact commands and scope.
 - If you need to reproduce CI locally, prefer matching the workflow definitions over older duplicated doc snippets.
 
 ## Release notes
@@ -87,6 +87,6 @@ Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and spec
 ## Useful references
 
 - `README.md` - project overview and user-facing setup
-- `CONTRIBUTING.md` - contributor workflow expectations
-- `ahk/README.md`, `Lib/README.md`, `Other/*/README.md` - area-specific behavior and dependencies
+- `EXAMPLES.md` - usage examples
+- `ahk/README.md`, `Lib/README.md` - area-specific behavior and dependencies
 - `.claude/rules/autohotkey.md` - AutoHotkey v2 rules and conventions

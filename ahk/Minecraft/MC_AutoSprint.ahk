@@ -2,6 +2,10 @@
 #SingleInstance Force
 ListLines False
 SendMode "Input"
+SetKeyDelay(-1, -1)
+SetControlDelay(-1)
+SetTitleMatchMode(3)
+SetTitleMatchMode("Fast")
 
 ; Bedrock sprint bind is Ctrl. Hold W -> W + Ctrl held together, both released on W up.
 ; Ctrl+key in Bedrock. Harmless for default binds; if it misfires, switch to a single
