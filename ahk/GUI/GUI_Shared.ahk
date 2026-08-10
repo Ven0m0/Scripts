@@ -7,7 +7,7 @@
 ; Provides data-driven GUI creation for script launchers
 ; ============================================================================
 
-#Include %A_ScriptDir%\..\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
 InitScript(true, true, true)  ; UIA + Admin + Performance
 
 Persistent

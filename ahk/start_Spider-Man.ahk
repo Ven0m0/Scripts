@@ -4,7 +4,7 @@
 ; Auto_start_Spider-Man.ahk - Auto-start Spider-Man with splash screen dismiss
 ; ============================================================================
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(false, false, true)
 
 ; Run unified AutoStartManager for SpiderMan

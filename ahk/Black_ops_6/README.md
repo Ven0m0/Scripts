@@ -222,7 +222,7 @@ Loop {
 **Solutions:**
 ```ahk
 ; 1. Add admin requirement
-#Include A_ScriptDir "\..\..\Lib\v2\AHK_Common.ahk"
+#Include A_ScriptDir "\..\..\Lib\AHK_Common.ahk"
 InitScript(false, true)  ; Require admin
 
 ; 2. Use DirectInput instead

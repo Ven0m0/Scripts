@@ -211,7 +211,7 @@ See [GUI/README.md](GUI/README.md) for details.
    - Try/catch error handling
 
 2. **Performance Optimization**
-   - Automatic via `InitScript()` from Lib/v2/AHK_Common.ahk
+   - Automatic via `InitScript()` from Lib/AHK_Common.ahk
    - Maximum execution speed
    - Minimal overhead
 
@@ -346,7 +346,7 @@ SendMode "Input"
 SetWorkingDir A_ScriptDir
 
 ; Include shared libraries
-#Include A_ScriptDir "\..\Lib\v2\AHK_Common.ahk"
+#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
 
 ; Initialize script (UIA not needed in v2, admin if needed, optimize=true)
 InitScript(false, false, true)
@@ -364,7 +364,7 @@ MyFunction() {
 
 ### Best Practices
 
-1. **Use shared libraries:** Include from `Lib/v2/` instead of duplicating code
+1. **Use shared libraries:** Include from `Lib/` instead of duplicating code
 2. **Add error handling:** Use try/catch for risky operations
 3. **Use timeouts:** Never use infinite waits
 4. **Document hotkeys:** Add comments or help system

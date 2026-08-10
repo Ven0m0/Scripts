@@ -191,7 +191,7 @@ SendMode "Input"
 SetWorkingDir A_ScriptDir
 
 #Include A_ScriptDir "\GUI_Shared.ahk"  ; Optional: use shared functions
-#Include A_ScriptDir "\..\..\Lib\v2\AHK_Common.ahk"
+#Include A_ScriptDir "\..\..\Lib\AHK_Common.ahk"
 
 InitScript(false, false)
 

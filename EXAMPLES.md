@@ -22,7 +22,7 @@ This document provides practical examples and common usage patterns for the scri
 ```autohotkey
 ; ahk/Fullscreen.ahk
 #Requires AutoHotkey v2.0
-#Include A_ScriptDir "\..\Lib\v2\WindowManager.ahk"
+#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
 
 ; Press End key to toggle borderless fullscreen on active window
 End::ToggleFakeFullscreenMultiMonitor("A")
@@ -86,7 +86,7 @@ Other/AutoStartManager.ahk Citra
 
 ```autohotkey
 #Requires AutoHotkey v2.0
-#Include A_ScriptDir "\..\Lib\v2\AutoStartHelper.ahk"
+#Include A_ScriptDir "\..\Lib\AutoStartHelper.ahk"
 
 ; Wait for Citra, then press F11 for fullscreen
 AutoStartFullscreen("citra-qt.exe", "{F11}", true, 0)
@@ -379,8 +379,8 @@ pause
 
 ```autohotkey
 #Requires AutoHotkey v2.0
-#Include A_ScriptDir "\..\Lib\v2\AHK_Common.ahk"
-#Include A_ScriptDir "\..\Lib\v2\WindowManager.ahk"
+#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
+#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
 
 InitScript(false, true)  ; Require admin
 

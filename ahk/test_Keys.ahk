@@ -1,7 +1,7 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
 InitScript(false, false, false)
 

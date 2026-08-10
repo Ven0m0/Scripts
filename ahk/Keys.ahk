@@ -4,7 +4,7 @@
 SendMode "Input"
 SetWorkingDir A_ScriptDir
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(true, false, false)  ; UIA required, no admin, manual tuning
 
 if (A_LineFile == A_ScriptFullPath) {

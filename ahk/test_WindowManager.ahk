@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-#Include A_ScriptDir "\.\..\Lib\v2\WindowManager.ahk"
+#Include A_ScriptDir "\.\..\Lib\WindowManager.ahk"
 
 class MockWindowAPI {
     __New() {

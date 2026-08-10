@@ -120,11 +120,10 @@ Scripts/
 │   ├── Keys.ahk                # Main hotkey suite
 │   └── Powerplan.ahk           # Auto power plan switching
 │
-├── Lib/                          # Shared libraries
-│   └── v2/                      # AutoHotkey v2.0 libraries
-│       ├── AHK_Common.ahk      # v2 initialization (UIA built-in)
-│       ├── AutoStartHelper.ahk # v2 auto-fullscreen helpers
-│       └── WindowManager.ahk   # v2 window manipulation
+├── Lib/                          # Shared AutoHotkey v2.0 libraries
+│   ├── AHK_Common.ahk           # v2 initialization (UIA built-in)
+│   ├── AutoStartHelper.ahk      # v2 auto-fullscreen helpers
+│   └── WindowManager.ahk        # v2 window manipulation
 │
 ├── Other/                        # Specialized utilities
 │   ├── 7zEmuPrepper/           # On-the-fly game decompression
@@ -189,13 +188,13 @@ Scripts/
 
 > **Status:** Core scripts migrated to v2 | Hybrid codebase maintained
 
-### Dual Library Architecture
+### Library
 
-- **Lib/v2/** - AutoHotkey v2.0 libraries with modern syntax
+- **Lib/** - AutoHotkey v2.0 libraries with modern syntax
 
 ### Migrated to v2
 
-- All core libraries (`Lib/v2/`)
+- All core libraries (`Lib/`)
 - All AFK macros (Black Ops 6, Minecraft)
 - All GUI scripts (GUI, GUI_Shared, WM)
 - Playnite launcher (`playnite-all.ahk`)

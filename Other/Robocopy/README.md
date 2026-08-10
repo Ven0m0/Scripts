@@ -1,10 +1,10 @@
 # Robocopy Utilities
 
-Batch script wrappers for Windows Robocopy command, optimized for fast file copying and filtering by extension.
+Scripts wrapping Windows Robocopy for fast, filtered file copying.
 
 ## Overview
 
-This directory contains CMD/Batch scripts that simplify using Microsoft's **Robocopy** (Robust File Copy) utility for common file management tasks. These scripts are pre-configured for specific use cases like copying images or performing fast mass copies.
+This directory contains a PowerShell script and a CMD wrapper that simplify using Microsoft's **Robocopy** (Robust File Copy) utility for common file management tasks: copying images by extension or general-purpose mass copies.
 
 ## Features
 
@@ -12,19 +12,18 @@ This directory contains CMD/Batch scripts that simplify using Microsoft's **Robo
 - **Multi-threaded** - Faster copying with parallel operations
 - **Recursive** - Automatically copy subdirectories
 - **Logging** - Optional copy operation logs
-- **Simple Configuration** - Edit paths directly in script
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `Copy_images.cmd` | Copy image files (jpg, png, webp, bmp, ico) |
-| `robocopy_wrapper.cmd` | General-purpose robocopy wrapper |
-| `Fast_mass_copy.txt` | Documentation for fast copy parameters |
+| `Copy-Images.ps1` | Copy image files (jpg, png, webp, bmp, ico) via robocopy |
+| `robocopy_wrapper.cmd` | General-purpose robocopy wrapper for files or directories, with rename support |
 
 ## Prerequisites
 
 - **Windows 10/11** - Robocopy is built-in
+- **PowerShell 5.1+** - For `Copy-Images.ps1`
 - **Source files** - Files to copy
 - **Destination folder** - Must exist or will be created
 
@@ -32,29 +31,23 @@ This directory contains CMD/Batch scripts that simplify using Microsoft's **Robo
 
 ### Copy Images
 
-**Purpose:** Copy all image files from one location to another, including subdirectories.
+```powershell
+.\Copy-Images.ps1 -Source "C:\Pictures" -Destination "D:\Backup\Pictures" -Threads 32
+```
 
-1. **Edit the script** `Copy_images.cmd`:
-   ```cmd
-   set ext=*.jpg *.png *.webp *.bmp *.ico
-   robocopy "input Path" "output path" %ext% /s /MT:32
-   ```
+### General-Purpose Copy
 
-2. **Configure paths:**
-   - Replace `"input Path"` with your source directory
-   - Replace `"output path"` with your destination directory
-
-3. **Run the script:**
-   ```cmd
-   Copy_images.cmd
-   ```
+```cmd
+robocopy_wrapper.cmd "C:\Source\file.txt" "D:\Dest\file.txt"
+```
 
 ## Customization
 
-### Add More File Extensions
+### Fast Mass Copy
 
 ```cmd
-set ext=*.jpg *.png *.gif *.svg *.webp
+robocopy "%userprofile%\Downloads\test" "%userprofile%\Downloads\test2" /MT:32 /E /NS /NC /NFL /NDL /NJH /LOG:C:\Robocopy.log
+xcopy "%userprofile%\Downloads\test" "%userprofile%\Downloads\test2" /s /e /t /b /j /compress
 ```
 
 ### Change Thread Count
@@ -65,31 +58,10 @@ set ext=*.jpg *.png *.gif *.svg *.webp
 /MT:64  # More threads (faster)
 ```
 
-## Examples
-
-### Copy Photos Only
-
-```cmd
-set ext=*.jpg *.jpeg *.png *.raw
-robocopy "C:\Pictures" "D:\Backup" %ext% /s /MT:32
-```
-
-### Copy Videos
-
-```cmd
-set ext=*.mp4 *.mkv *.avi *.mov
-robocopy "D:\Videos" "E:\Backup" %ext% /s /MT:16
-```
-
 ## Resources
 
 - [Robocopy Documentation](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/robocopy)
-- [Fast_mass_copy.txt](Fast_mass_copy.txt) - Additional parameters
-
-## Contributing
-
-See [CONTRIBUTING.md](../../CONTRIBUTING.md) for contribution guidelines.
 
 ---
 
-**Last Updated:** 2025-12-26
+**Last Updated:** 2026-08-10

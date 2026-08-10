@@ -4,7 +4,7 @@
 ; RemotePlay_Whatever.ahk - Launch Steam and RemotePlayWhatever
 ; ============================================================================
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(false, false, true)
 
 ; Launch Steam (standard x86 installation path)

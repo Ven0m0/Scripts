@@ -16,8 +16,8 @@
 ;   Ctrl+Alt+End       - Toggle with always-on-top
 ; ============================================================================
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
-#Include %A_ScriptDir%\..\Lib\v2\WindowManager.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
 InitScript(true, true, true)  ; UIA + Admin + Performance optimizations
 Persistent

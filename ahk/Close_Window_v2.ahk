@@ -9,7 +9,7 @@
 ;   Safe windows: Explorer, Desktop, Playnite, Edge
 ; ============================================================================
 
-#Include %A_ScriptDir%\..\Lib\v2\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript(false, false, true)
 
 ; Create group of safe windows that shouldn't be closed
