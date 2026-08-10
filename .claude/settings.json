@@ -75,7 +75,6 @@
       "Read(./.env.*)",
       "Read(./secrets/**)",
       "Edit(.ssh/*)",
-      "Write(.ssh/*)",
       "NotebookEdit",
       "mcp__plugin_playwright_playwright__browser_install",
       "mcp__plugin_playwright_playwright__browser_navigate"
