@@ -4,9 +4,8 @@
 
 ## Repository snapshot
 
-- **Project:** Windows gaming, emulation, and utility automation scripts
-- **Primary language:** AutoHotkey v2 (`ahk/`, `Lib/`)
-- **Legacy surface:** AutoHotkey v1 scripts and helper assets in `Other/`
+- **Project:** Windows gaming and utility automation scripts
+- **Primary language:** AutoHotkey v2, exclusively (`ahk/`, `Lib/`)
 - **Platform:** Windows 10/11 for runtime and meaningful validation
 - **Canonical user docs:** `README.md`, `EXAMPLES.md`, directory READMEs
 
@@ -19,10 +18,9 @@
 ## Repository map
 
 ```text
-ahk/                    Primary AutoHotkey v2 scripts
-Lib/                    Shared v2 helpers (`AHK_Common`, `WindowManager`, `AutoStartHelper`)
-Other/                  Legacy v1 scripts plus PowerShell/CMD utilities and specialized tools
-tests/                  Standalone test scripts (mirrors `Other/` layout, e.g. `tests/Other/`)
+ahk/                    AutoHotkey v2 scripts
+Lib/                    Shared v2 helpers (`AHK_Common`, `WindowManager`)
+tests/                  Standalone test scripts
 .claude/rules/          Language rulesets (AutoHotkey, PowerShell) auto-loaded as project context
 .kilo/                  Kilo agent config (`kilo.json`); instructions resolve back to `AGENTS.md`
 .github/workflows/      CI definitions; `ahk-lint-format-compile.yml` is the main AHK validation workflow
@@ -30,8 +28,8 @@ tests/                  Standalone test scripts (mirrors `Other/` layout, e.g. `
 
 ## Core rules
 
-1. **Prefer v2 for new work.** Add new automation scripts under `ahk/` unless a legacy workflow in `Other/` requires v1 compatibility.
-2. **Reuse shared helpers before adding new logic.** Check `Lib/` first for initialization, fullscreen, window, and auto-start behavior.
+1. **AHK v2 only.** Every `.ahk` file in this repo targets v2; no v1 command syntax anywhere.
+2. **Reuse shared helpers before adding new logic.** Check `Lib/` first for initialization, fullscreen, and window behavior.
 3. **Be careful with shared libraries.** Changes in `Lib/` can affect many scripts; inspect consumers before editing and test representative dependents.
 4. **Respect Windows-oriented formatting rules.**
    - `.ahk`, `.ps1`, `.cmd`, `.bat`: CRLF, UTF-8, 4 spaces
@@ -43,20 +41,10 @@ tests/                  Standalone test scripts (mirrors `Other/` layout, e.g. `
 
 ## AutoHotkey guidance
 
-### v2 scripts (`ahk/` and some `Other/*.ahk`)
-
-- Start with `#Requires AutoHotkey v2.0`.
-- Reuse `Lib/AHK_Common.ahk` and call `InitScript(...)` in v2 entry scripts that need shared startup behavior.
+- Start every script with `#Requires AutoHotkey v2.0`.
+- Reuse `Lib/AHK_Common.ahk` and call `InitScript(...)` in entry scripts that need shared startup behavior.
 - Use v2 function syntax consistently.
-- Prefer existing helpers such as `ToggleFakeFullscreenMultiMonitor()`, `WaitForWindow()`, and `AutoStartFullscreen()` instead of copy-pasting window and process logic.
-
-### Legacy v1 areas (`Other/`)
-
-- Treat v1 scripts as maintenance-oriented unless the task explicitly requires legacy behavior.
-- Preserve local helper and binary assumptions in those folders, for example:
-  - `Other/Citra_per_game_config/` depends on `tf.ahk`
-  - `Other/Downloader/` expects companion binaries such as `yt-dlp.exe`, `spotdl.exe`, and `ffmpeg.exe`
-- Keep legacy v1 edits limited to the targeted maintenance task unless the work explicitly calls for a migration.
+- Prefer existing helpers such as `ToggleFakeFullscreen()`, `ToggleFakeFullscreenMultiMonitor()`, and `WaitForWindow()` instead of copy-pasting window and process logic.
 
 ## Change checklists
 
@@ -75,8 +63,7 @@ tests/                  Standalone test scripts (mirrors `Other/` layout, e.g. `
 ## Validation notes
 
 - The authoritative AHK CI workflow is `.github/workflows/ahk-lint-format-compile.yml`.
-- That workflow performs version detection, syntax compilation, and formatting checks on Windows.
-- Agent guidance changes should run `ctxlint` and `agnix`.
+- That workflow performs syntax compilation and formatting checks on Windows.
 - If you need to reproduce CI locally, prefer matching the workflow definitions over older duplicated doc snippets.
 
 ## Release notes

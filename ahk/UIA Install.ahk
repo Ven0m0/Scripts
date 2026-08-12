@@ -7,7 +7,7 @@
 ; ============================================================================
 if (!A_IsAdmin) {
     try {
-        Run("*RunAs " . A_ScriptFullPath)
+        Run('*RunAs "' . A_ScriptFullPath . '"')
     }
     ExitApp()
 }

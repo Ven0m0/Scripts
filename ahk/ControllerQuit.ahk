@@ -14,12 +14,11 @@
 ; Find first available joystick
 global JoystickNumber := 0
 Loop 16 {
-    try {
-        JoyName := GetKeyState(A_Index . "JoyName")
-        if (JoyName != "") {
-            JoystickNumber := A_Index
-            break
-        }
+    JoyName := ""
+    try JoyName := GetKeyState(A_Index . "JoyName")
+    if (JoyName != "") {
+        JoystickNumber := A_Index
+        break
     }
 }
 

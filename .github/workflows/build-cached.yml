@@ -56,18 +56,21 @@ jobs:
       - name: Compile Scripts
         run: |
           $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
+          $ahkV2 = "C:\AutoHotkey-Portable\AutoHotkey64.exe"
           $outDir = 'release'
           New-Item -Type Directory -Force $outDir | Out-Null
 
-          $scripts = Get-ChildItem -Recurse -Filter *.ahk
+          $scripts = Get-ChildItem -Recurse -Filter *.ahk | Where-Object {
+            $_.Name -notmatch '^test_|_Test\.ahk$' -and $_.FullName -notmatch '[\\/]Lib[\\/]'
+          }
           $compiled = 0
           $failed = @()
 
           $scripts | % {
             $outExe = Join-Path $outDir "$($_.BaseName).exe"
             $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
-            
-            & $compiler /in $_.FullName /out $outExe 2>&1 | Out-Null
+
+            & $compiler /in $_.FullName /out $outExe /base $ahkV2 2>&1 | Out-Null
             
             if ($LASTEXITCODE -eq 0 -and (Test-Path $outExe)) {
               $compiled++

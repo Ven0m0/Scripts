@@ -5,7 +5,7 @@ SendMode "Input"
 SetWorkingDir A_ScriptDir
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
-InitScript(true, false, false)  ; UIA required, no admin, manual tuning
+InitScript(false, false)  ; no admin, manual tuning
 
 if (A_LineFile == A_ScriptFullPath) {
 KeyHistory(0)
@@ -41,7 +41,7 @@ A_TrayMenu.Add("Documentation", ShowDocumentation)
 #HotIf
 
 +F2:: {
-  FileRecycleEmpty()
+  try FileRecycleEmpty()
   A_Clipboard := ""
 }
 

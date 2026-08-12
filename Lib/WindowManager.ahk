@@ -84,7 +84,7 @@ ToggleFakeFullscreenMultiMonitor(winTitle := "A") {
     WinSetStyle(STYLE_UNDECORATED, "ahk_id " . id)
     mon := GetMonitorActiveWindow("ahk_id " . id)
     MonitorGet(mon, &ml, &mt, &mr, &mb)
-    WinMove(ml, mt, mr - ml, mb - mt, winTitle)
+    WinMove(ml, mt, mr - ml, mb - mt, "ahk_id " . id)
 }
 
 RestoreWindowBorders(winTitle) {

@@ -64,3 +64,5 @@ node_modules/
 *.rar
 *.tar
 *.gz
+
+WindowSizePosLog.ini

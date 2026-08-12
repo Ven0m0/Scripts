@@ -4,7 +4,7 @@
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
-InitScript(false, false, false) ; disable UIA, Admin, and optimization for the test
+InitScript(false, false) ; disable Admin and optimization for the test
 
 ; Setup testing output
 stdout := FileOpen("*", "w `n")

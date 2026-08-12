@@ -3,7 +3,7 @@
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
-InitScript(false, false, false)
+InitScript(false, false)
 
 ; Define the test mock variables used by Keys.ahk logic
 global positions := Map()

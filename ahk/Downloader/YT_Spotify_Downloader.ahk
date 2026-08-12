@@ -1,70 +1,66 @@
-#Warn
-#SingleInstance
-#NoEnv
-SetBatchLines, -1
+#Requires AutoHotkey v2.0
+#SingleInstance Force
+SendMode "Input"
+SetWorkingDir A_ScriptDir
 
-; Initialise variables
-Youtube := ""
-Spotify := ""
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
 
-Gui, Add, GroupBox, x22 y340 w430 h90 vMyGroupBox, Batch output
-Gui, Add, Edit, ReadOnly x32 y355 w410 h70 vOutput,
+InitScript(false, false)
 
-Gui, Add, GroupBox, x2 y19 w250 h30 , Youtube
-Gui, Add, Edit, x2 y34 w250 h20 vYoutube gYTDLP
+; ============================================================================
+; YT_Spotify_Downloader.ahk - GUI for yt-dlp / spotdl
+; ============================================================================
 
-Gui, Add, GroupBox, x300 y19 w250 h30 , Spotify
-Gui, Add, Edit, x300 y34 w250 h20 vSpotify gSpotYoutube
-; Add a button to execute the command
-Gui, Add, Button, x32 y435 w100 h30 gRunCmd, Run Command
+musicDir := EnvGet("USERPROFILE") . "\Music"
 
-Gui, Show, h480 w640, YT & Spotify Downloader
-Return
+ytdlpExe := MustGetExe("yt-dlp.exe", [A_ScriptDir . "\yt-dlp.exe"])
+spotdlExe := MustGetExe("spotdl.exe", [A_ScriptDir . "\spotdl.exe"])
 
-; The GUI fields and buttons
-YTDLP:
-  GuiControlGet, Youtube
-  ; Add "yt-dlp.exe" in front of the input text
-  Cmd := "yt-dlp.exe --paths %userprofile%\Music -f ""bv*[height=1080]+ba/b"" --merge-output-format mp4 " . Youtube
-  ; Update the GroupBox with the combined text
-  GuiControl,, Output, % Cmd
-return
-; The GUI fields and buttons
-SpotYoutube:
-  GuiControlGet, Spotify
-  ; Add "spotdl" in front of the input text
-  Cmd := "spotdl download " Spotify " --output %userprofile%\Music --preload --sponsor-block --threads 16 "
-  ; Update the GroupBox with the combined text
-  GuiControl,, Output, % Cmd
-return
+dlGui := Gui(, "YT & Spotify Downloader")
 
-; Function to validate input for command injection
+dlGui.Add("GroupBox", "x2 y19 w250 h30", "Youtube")
+youtubeEdit := dlGui.Add("Edit", "x12 y34 w230 h20")
+youtubeEdit.OnEvent("Change", (*) => UpdateCommand())
+
+dlGui.Add("GroupBox", "x300 y19 w250 h30", "Spotify")
+spotifyEdit := dlGui.Add("Edit", "x310 y34 w230 h20")
+spotifyEdit.OnEvent("Change", (*) => UpdateCommand())
+
+dlGui.Add("GroupBox", "x22 y340 w430 h90", "Batch output")
+outputEdit := dlGui.Add("Edit", "x32 y355 w410 h70 ReadOnly")
+
+runBtn := dlGui.Add("Button", "x32 y435 w100 h30", "Run Command")
+runBtn.OnEvent("Click", RunCmd)
+
+dlGui.OnEvent("Close", (*) => ExitApp())
+dlGui.Show("h480 w640")
+
+; Reject shell metacharacters that would enable command injection.
 ValidateInput(input) {
-    ; Check for dangerous characters that could enable command injection
-    ; Dangerous: & | ; < > ( ) $ ` ^ "
-    if RegExMatch(input, "[&|;<>()`$^""]") {
-        return false
-    }
-    return true
+    return !RegExMatch(input, "[&|;<>()`$^`"]")
 }
 
-; Function to execute the command in cmd
-RunCmd:
-  GuiControlGet, Youtube
-  GuiControlGet, Spotify
+UpdateCommand() {
+    if (youtubeEdit.Value != "") {
+        cmd := '"' . ytdlpExe . '" --paths "' . musicDir . '" -f "bv*[height=1080]+ba/b" --merge-output-format mp4 ' . youtubeEdit.Value
+        outputEdit.Value := cmd
+    } else if (spotifyEdit.Value != "") {
+        cmd := '"' . spotdlExe . '" download ' . spotifyEdit.Value . ' --output "' . musicDir . '" --preload --sponsor-block --threads 16'
+        outputEdit.Value := cmd
+    }
+}
 
-  ; Determine which field has content and validate it
-  inputToValidate := (Youtube != "") ? Youtube : Spotify
+RunCmd(*) {
+    input := (youtubeEdit.Value != "") ? youtubeEdit.Value : spotifyEdit.Value
 
-  ; Validate input before executing
-  if (!ValidateInput(inputToValidate)) {
-      MsgBox, 16, Security Error, Invalid characters detected in URL!`n`nThe following characters are not allowed:`n& | ; < > ( ) $ `` ^ "
-      return
-  }
+    if (!ValidateInput(input)) {
+        MsgBox("Invalid characters detected in URL!`n`nThe following characters are not allowed:`n& | ; < > ( ) $ `` ^ `"", "Security Error", "Icon!")
+        return
+    }
 
-  GuiControlGet, Cmd, , Output
-  Run, %ComSpec% /c %Cmd%,, Hide
-return
+    cmd := outputEdit.Value
+    if (cmd == "")
+        return
 
-GuiClose:
-ExitApp
+    Run(A_ComSpec . " /c " . cmd, , "Hide")
+}

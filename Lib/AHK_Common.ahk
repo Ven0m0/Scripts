@@ -37,7 +37,7 @@ SetOptimalPerformance() {
     SendMode("Input")
 }
 
-InitScript(requireUIA := true, requireAdmin := false, optimize := true) {
+InitScript(requireAdmin := false, optimize := true) {
     SetWorkingDir(A_ScriptDir)
     SetTitleMatchMode(2)
     SetTitleMatchMode("Fast")
