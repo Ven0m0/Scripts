@@ -5,10 +5,6 @@ on:
   push:
     tags: ["v*", "*-v*"]
 
-env:
-  AHK_TAG: v2.0.26
-  AHK2EXE_TAG: Ahk2Exe1.1.37.02a2
-
 permissions:
   contents: read
 
@@ -73,8 +69,6 @@ jobs:
         with:
           in: ${{ matrix.in }}
           out: dist/${{ matrix.name }}_${{ github.ref_name }}.exe
-          ahk_version_tag: ${{ env.AHK_TAG }}
-          ahk2exe_version_tag: ${{ env.AHK2EXE_TAG }}
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
