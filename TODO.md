@@ -3,3 +3,5 @@
 - [ ] Improve the powershell linting in @.github/workflows/powershell.yml
 - [ ] Install autohotkey via "choco install -y --no-progress autohotkey" instead of doing it manually
 - [ ] Use "MohamedSaidSallam/AHK2Exe-GitHub-Action@v1" to build exe's instead of doing it manually
+- [ ] Add more ahk testing and add proper ci
+- [ ] Allow for releases on specific sub projects
