@@ -12,88 +12,75 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     runs-on: windows-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
-      
+
       - name: Install AutoHotkey
         run: |
-          choco install -y --no-progress autohotkey 
+          choco install -y --no-progress autohotkey
 
-      - name: Verify Installations
+      - name: Verify Installation
         run: |
-          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+          $ahk = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
 
-          if (!(Test-Path $ahkV1)) { throw "V1 Installation failed: $ahkV1 not found" }
-          if (!(Test-Path $ahkV2)) { throw "V2 Installation failed: $ahkV2 not found" }
+          if (!(Test-Path $ahk)) { throw "V2 Installation failed: $ahk not found" }
 
-          Write-Host "Installed AHK v1: $((Get-Item $ahkV1).VersionInfo.FileVersion)"
-          Write-Host "Installed AHK v2: $(& $ahkV2 --version)"
+          Write-Host "Installed AHK v2: $(& $ahk --version)"
       - name: Syntax Check & Format Validation
         run: |
-          $ahk2Exe = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
-          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-          $tempDir = New-Item -Type Directory -Force "$env:TEMP\ahk-$(Get-Random)"
+          $ahk = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
           $syntaxErrors = @()
+          $missingDirective = @()
           $formatIssues = @()
           $checked = 0
-          $v1Count = 0
-          $v2Count = 0
 
           Get-ChildItem -Recurse -Filter *.ahk | % {
             $checked++
             $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ""
-
-            # Detect AHK version
             $content = Get-Content $_.FullName -Raw -Encoding UTF8
-            $isV2 = $false
 
-            # Check for #Requires AutoHotkey v2 directive
-            if ($content -match "(?m)^#Requires\s+AutoHotkey\s+v2") {
-              $isV2 = $true
-            }
-            # Check for v2 directory paths (Lib/, ahk/, Other/**/v2/)
-            elseif ($rel -match "(Lib[\\/]|ahk[\\/]|Other.*[\\/]v2[\\/])") {
-              $isV2 = $true
+            if ($content -notmatch "(?m)^#Requires\s+AutoHotkey\s+v2") {
+              Write-Host "❌ $rel - missing #Requires AutoHotkey v2 directive" -ForegroundColor Red
+              $missingDirective += $rel
             }
 
-            $version = if ($isV2) { "v2" } else { "v1" }
-            if ($isV2) { $v2Count++ } else { $v1Count++ }
+            # Syntax check via the documented /Validate switch
+            & $ahk /ErrorStdOut=UTF-8 /Validate $_.FullName 2>&1 | Out-Null
 
-            # Syntax check
-            $tempExe = Join-Path $tempDir "$([IO.Path]::GetRandomFileName()).exe"
-
-            if ($isV2) {
-              & $ahk2Exe /in $_.FullName /out $tempExe /base $ahkV2 2>&1 | Out-Null
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "✓ $rel" -ForegroundColor Green
             } else {
-              & $ahk2Exe /in $_.FullName /out $tempExe 2>&1 | Out-Null
-            }
-
-            if ($LASTEXITCODE -eq 0 -and (Test-Path $tempExe)) {
-              Write-Host "✓ $rel ($version)" -ForegroundColor Green
-              Remove-Item $tempExe -Force -EA SilentlyContinue
-            } else {
-              Write-Host "❌ $rel ($version) - syntax error" -ForegroundColor Red
+              Write-Host "❌ $rel - syntax error" -ForegroundColor Red
               $syntaxErrors += $rel
             }
-            
+
             # Format check (reuses $content already read above)
             $problems = @()
             if (($content -match "(?m)^\t") -and ($content -match "(?m)^    ")) { $problems += "mixed indent" }
             if ($content -match "[ \t]+`r?`n") { $problems += "trailing space" }
             if (($content -match "`r`n") -and ($content -match "(?<!`r)`n")) { $problems += "mixed line endings" }
-            
+
             if ($problems) {
               Write-Host "⚠ $rel : $($problems -join ", ")" -ForegroundColor Yellow
               $formatIssues += $rel
             }
           }
 
-          Remove-Item $tempDir -Recurse -Force -EA SilentlyContinue
+          Write-Host "`nChecked: $checked | Missing directive: $($missingDirective.Count) | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
 
-          Write-Host "`nChecked: $checked (v1: $v1Count, v2: $v2Count) | Syntax errors: $($syntaxErrors.Count) | Format issues: $($formatIssues.Count)"
+          if ($missingDirective) {
+            Write-Host "`nMissing #Requires AutoHotkey v2 in:" -ForegroundColor Red
+            $missingDirective | % { Write-Host "  $_" }
+            exit 1
+          }
 
           if ($syntaxErrors) {
             Write-Host "`nSyntax errors in:" -ForegroundColor Red

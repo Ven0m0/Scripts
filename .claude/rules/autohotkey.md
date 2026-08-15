@@ -43,7 +43,7 @@ SetWorkingDir A_ScriptDir
 
 ToggleFullscreen() {
     target := "Game Title"
-    if !WaitForWindow(target, 4000) {
+    if !WaitForWindow(target, 4) {
         MsgBox("Failed to find window: " target, "Error", "Iconx")
         return
     }
