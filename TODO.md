@@ -5,3 +5,4 @@
 - [ ] Use "MohamedSaidSallam/AHK2Exe-GitHub-Action@v1" to build exe's instead of doing it manually
 - [ ] Add more ahk testing and add proper ci
 - [ ] Allow for releases on specific sub projects
+- [ ] Cleanup the leftovers of removed files
