@@ -15,7 +15,6 @@ jobs:
       - uses: actions/checkout@v7
 
       - name: Install AutoHotkey
-        shell: pwsh
         run: |
           choco install -y --no-progress autohotkey 
 
@@ -24,11 +23,10 @@ jobs:
         uses: MohamedSaidSallam/AHK2Exe-GitHub-Action@v1
         with:
           in: ahk/Minecraft/MC_AutoSprint.ahk
-          out: MC_AutoSprint_${{ github.ref_name }}.exe
+          out: compiled/MC_AutoSprint_${{ github.ref_name }}.exe
 
       # TODO: remove
       - name: Install Ahk2Exe
-        shell: pwsh
         run: |
           $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
           $compilerDir = "C:\AutoHotkey-Portable\Compiler"
@@ -85,10 +83,9 @@ jobs:
             $failed | % { Write-Host "  $_" }
             exit 1
           }
-        shell: pwsh
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
-          files: release/*.exe
+          files: compiled/*.exe
           fail_on_unmatched_files: true
