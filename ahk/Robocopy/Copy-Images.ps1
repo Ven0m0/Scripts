@@ -35,7 +35,7 @@ $extensions = "*.jpg *.png *.webp *.bmp *.ico"
 Write-Host "Copying images from '$Source' to '$Destination'..." -ForegroundColor Cyan
 
 # Execute robocopy
-$result = robocopy "$Source" "$Destination" $extensions /s /MT:$Threads /NJH /NFL /NC /NS
+$null = robocopy "$Source" "$Destination" $extensions /s /MT:$Threads /NJH /NFL /NC /NS
 
 # Robocopy exit codes: 0-7 are success, 8+ are errors
 if ($LASTEXITCODE -lt 8) {

@@ -8,9 +8,6 @@ compiled/
 *.old
 *.orig
 
-# Formatter temporary files
-formatter.ahk
-
 # AutoHotkey debugging
 *.stackdump
 

@@ -22,7 +22,7 @@
 ## Overview
 
 AutoHotkey v2 automation scripts for Windows gaming and productivity: window management,
-AFK macros, a media downloader GUI, and a general hotkey suite.
+AFK macros, and a general hotkey suite.
 
 ---
 
@@ -54,13 +54,11 @@ Double-click any `.ahk` file, or run it from the command line:
 Scripts/
 ├── ahk/                          # AutoHotkey v2 scripts
 │   ├── Black_ops_6/              # CoD BO6 AFK macros
-│   ├── Downloader/                # yt-dlp/spotdl GUI downloader
 │   ├── Minecraft/                # Minecraft AFK automation
 │   ├── Robocopy/                 # Robocopy wrapper (PowerShell/cmd)
 │   ├── ControllerQuit.ahk        # Quit apps with controller combo
 │   ├── Fullscreen.ahk            # Borderless fullscreen toggle
 │   ├── Keys.ahk                  # Main hotkey suite
-│   ├── UIA Install.ahk           # AHK v1 UIA installer (legacy)
 │   └── test_Keys.ahk             # Unit test for Keys.ahk
 │
 ├── Lib/                          # Shared AutoHotkey v2.0 libraries
@@ -72,7 +70,7 @@ Scripts/
 │
 ├── .github/workflows/            # CI/CD automation
 │   ├── ahk-lint-format-compile.yml  # Syntax & format validation
-│   ├── build.yml / build-cached.yml # Release compilation
+│   ├── build.yml                    # Release compilation
 │   └── powershell.yml            # PSScriptAnalyzer
 │
 ├── AGENTS.md                     # AI assistant development guide
@@ -92,7 +90,6 @@ Scripts/
 | `ahk/ControllerQuit.ahk` | Quit active window with a controller button combo |
 | `ahk/Black_ops_6/bo6-afk.ahk` | Black Ops 6 AFK farming macros |
 | `ahk/Minecraft/MC_AFK.ahk`, `MC_AutoSprint.ahk` | Minecraft AFK automation |
-| `ahk/Downloader/YT_Spotify_Downloader.ahk` | yt-dlp/spotdl downloader GUI |
 
 See [ahk/README.md](ahk/README.md) for the full script list and hotkeys.
 
@@ -110,7 +107,6 @@ See [ahk/README.md](ahk/README.md) for the full script list and hotkeys.
 
 - **AutoHotkey v2.0.19+** - [Download](https://www.autohotkey.com/)
 - **Windows 10/11**
-- **yt-dlp**, **spotdl**, **ffmpeg** - only for `ahk/Downloader/`
 
 ---
 

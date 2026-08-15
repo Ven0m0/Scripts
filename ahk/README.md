@@ -7,13 +7,11 @@ AutoHotkey v2.0 scripts for gaming automation, window management, and system uti
 ```
 ahk/
 ├── Black_ops_6/         # Call of Duty Black Ops 6 AFK macros
-├── Downloader/          # yt-dlp/spotdl GUI downloader
 ├── Minecraft/           # Minecraft AFK/automation scripts
 ├── Robocopy/            # Robocopy wrapper for image backups
 ├── ControllerQuit.ahk   # Close active window with a controller button combo
 ├── Fullscreen.ahk       # Borderless fullscreen toggle
 ├── Keys.ahk             # General hotkey suite
-├── UIA Install.ahk      # Installs AHK v1 with UIA support (legacy scripts only)
 └── test_Keys.ahk        # Unit test for Keys.ahk window functions
 ```
 
@@ -40,18 +38,9 @@ General-purpose hotkey suite: window snapping, media keys, always-on-top toggle,
 recycle bin/clipboard clear, file date-stamping, and a documentation GUI. See the script
 for the full hotkey list.
 
-### UIA Install.ahk
-
-Installs AutoHotkey v1 with UI Automation support. AHK v2 has UIA built in and does not
-need this; keep this script only for legacy v1 workflows outside this repo.
-
 ### Black_ops_6/
 
 AFK macros for Black Ops 6. See [Black_ops_6/README.md](Black_ops_6/README.md).
-
-### Downloader/
-
-GUI wrapper around `yt-dlp` and `spotdl`. See [Downloader/README.md](Downloader/README.md).
 
 ### Minecraft/
 

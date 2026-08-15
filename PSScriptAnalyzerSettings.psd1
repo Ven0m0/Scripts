@@ -16,6 +16,7 @@
     'PSUseCmdletCorrectly'
     'PSUseConsistentIndentation'
     'PSUseConsistentWhitespace'
+    'PSUseDeclaredVarsMoreThanAssignments'
     'PSUseSupportsShouldProcess'
     'PSUseVerbosityForRequestedLevel'
   )
@@ -27,7 +28,6 @@
     'PSAvoidUsingWriteHost'
     # Exclude unused parameter warnings for CLI scripts with optional params
     'PSReviewUnusedParameter'
-    'PSUseApprovedVerbs'
     'PSAvoidUsingPositionalParameters'
     'PSAvoidAssignmentToAutomaticVariable'
     'PSUseSingularNouns'

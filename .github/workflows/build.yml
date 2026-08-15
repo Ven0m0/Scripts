@@ -3,89 +3,101 @@ name: Build and Release
 on:
   workflow_dispatch:
   push:
-    tags: ["*"]
+    tags: ["v*", "*-v*"]
+
+env:
+  AHK_TAG: v2.0.26
+  AHK2EXE_TAG: Ahk2Exe1.1.37.02a2
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-release:
+  plan:
     runs-on: windows-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install AutoHotkey
+      - name: Derive build matrix from tag
+        id: plan
         run: |
-          choco install -y --no-progress autohotkey 
+          $tag = "${{ github.ref_name }}"
+          $group = if ($tag -match '^(.+)-v[0-9]') { $Matches[1] } else { $null }
 
-      # Better than manually
-      - name: Build exe
-        uses: MohamedSaidSallam/AHK2Exe-GitHub-Action@v1
-        with:
-          in: ahk/Minecraft/MC_AutoSprint.ahk
-          out: compiled/MC_AutoSprint_${{ github.ref_name }}.exe
-
-      # TODO: remove
-      - name: Install Ahk2Exe
-        run: |
-          $url = "https://github.com/AutoHotkey/Ahk2Exe/releases/download/$env:AHK2EXE_TAG/Ahk2Exe.zip"
-          $compilerDir = "C:\AutoHotkey-Portable\Compiler"
-          Invoke-WebRequest -Uri $url -OutFile "$env:TEMP\Ahk2Exe.zip"
-          New-Item -Type Directory -Force $compilerDir | Out-Null
-          Expand-Archive "$env:TEMP\Ahk2Exe.zip" -DestinationPath $compilerDir -Force
-
-          $requiredFiles = @(
-            "Ahk2Exe.exe"
-            "Unicode 32-bit.bin"
-            "Unicode 64-bit.bin"
-          )
-          $missingFiles = $requiredFiles | Where-Object {
-            -not (Test-Path (Join-Path $compilerDir $_))
+          $scripts = Get-ChildItem -Path ahk -Recurse -Filter *.ahk -File | Where-Object {
+            $_.Name -notmatch '^test_|_Test\.ahk$'
           }
-          if ($missingFiles) {
-            throw "Ahk2Exe extraction failed or archive layout changed. Missing expected files in '$compilerDir': $($missingFiles -join ', ')"
-          }
-          Remove-Item "$env:TEMP\Ahk2Exe.zip"
 
-      - name: Compile Scripts
-        run: |
-          $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
-          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
-          $outDir = 'release'
-          New-Item -Type Directory -Force $outDir | Out-Null
-
-          $scripts = Get-ChildItem -Recurse -Filter *.ahk | Where-Object {
-            $_.Name -notmatch '^test_|_Test\.ahk$' -and $_.FullName -notmatch '[\\/]Lib[\\/]'
-          }
-          $compiled = 0
-          $failed = @()
-
-          $scripts | % {
-            $outExe = Join-Path $outDir "$($_.BaseName).exe"
-            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), ''
-
-            & $compiler /in $_.FullName /out $outExe /base $ahkV2 2>&1 | Out-Null
-            
-            if ($LASTEXITCODE -eq 0 -and (Test-Path $outExe)) {
-              $compiled++
-              $size = [math]::Round((Get-Item $outExe).Length / 1KB, 1)
-              Write-Host "✓ $rel → $($_.BaseName).exe ($size KB)" -ForegroundColor Green
-            } else {
-              Write-Host "❌ $rel" -ForegroundColor Red
-              $failed += $rel
+          $include = $scripts | ForEach-Object {
+            $rel = $_.FullName -replace [regex]::Escape("$(Get-Location)\"), '' -replace '\\', '/'
+            $parts = $rel -split '/'
+            # ahk/<Name>.ahk -> core ; ahk/<Dir>/<Name>.ahk -> <dir> lowercased
+            $itemGroup = if ($parts.Count -eq 2) { 'core' } else { $parts[1].ToLowerInvariant() }
+            [PSCustomObject]@{
+              name  = $_.BaseName
+              in    = $rel
+              group = $itemGroup
             }
           }
 
-          Write-Host "`nCompiled: $compiled/$($scripts.Count)"
-
-          if ($failed) {
-            Write-Host "`nFailed:" -ForegroundColor Red
-            $failed | % { Write-Host "  $_" }
-            exit 1
+          if ($group) {
+            $matched = $include | Where-Object { $_.group -eq $group }
+            if (-not $matched) {
+              throw "Tag prefix '$group' (from '$tag') matches no script group. Known groups: $(($include.group | Sort-Object -Unique) -join ', ')"
+            }
+            $include = $matched
           }
+
+          if (-not $include) {
+            throw "No scripts resolved for tag '$tag'."
+          }
+
+          $matrixJson = @{ include = $include } | ConvertTo-Json -Compress -Depth 4
+          Write-Host "Matrix: $matrixJson"
+          "matrix=$matrixJson" >> $env:GITHUB_OUTPUT
+
+  compile:
+    needs: plan
+    runs-on: windows-latest
+    timeout-minutes: 10
+    strategy:
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build exe
+        uses: MohamedSaidSallam/AHK2Exe-GitHub-Action@v1
+        with:
+          in: ${{ matrix.in }}
+          out: dist/${{ matrix.name }}_${{ github.ref_name }}.exe
+          ahk_version_tag: ${{ env.AHK_TAG }}
+          ahk2exe_version_tag: ${{ env.AHK2EXE_TAG }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: exe-${{ matrix.name }}
+          path: dist/*.exe
+
+  release:
+    needs: compile
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: exe-*
+          path: dist
+          merge-multiple: true
 
       - name: Create Release
         uses: softprops/action-gh-release@v3
         with:
-          files: compiled/*.exe
+          files: dist/*.exe
           fail_on_unmatched_files: true

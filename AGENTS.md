@@ -22,7 +22,6 @@ ahk/                    AutoHotkey v2 scripts
 Lib/                    Shared v2 helpers (`AHK_Common`, `WindowManager`)
 tests/                  Standalone test scripts
 .claude/rules/          Language rulesets (AutoHotkey, PowerShell) auto-loaded as project context
-.kilo/                  Kilo agent config (`kilo.json`); instructions resolve back to `AGENTS.md`
 .github/workflows/      CI definitions; `ahk-lint-format-compile.yml` is the main AHK validation workflow
 ```
 
@@ -68,8 +67,10 @@ tests/                  Standalone test scripts
 
 ## Release notes
 
-- Pushing a tag triggers `build.yml` and `build-cached.yml` to create release artifacts.
-- Treat tagged builds as the release path for compiled `.exe` outputs.
+- Pushing a tag matching `v*` builds and releases every compilable script; a tag prefixed with a
+  script group (`minecraft-v*`, `black_ops_6-v*`, `core-v*`) builds and releases only that group.
+- `build.yml` derives each script's group from its path (`ahk/<Dir>/*.ahk` -> `<dir>`, loose
+  `ahk/*.ahk` -> `core`) — adding a script needs no workflow edit.
 
 ## Useful references
 

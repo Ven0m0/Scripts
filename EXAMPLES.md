@@ -8,7 +8,6 @@ Practical examples for the `Lib/` helpers and scripts actually in this repositor
 - [Init & Elevation](#init--elevation)
 - [Finding Executables](#finding-executables)
 - [AFK Macros](#afk-macros)
-- [Media Downloads](#media-downloads)
 - [Error Handling Pattern](#error-handling-pattern)
 
 ---
@@ -122,18 +121,6 @@ To reuse `bo6-afk.ahk` from a wrapper without its default hotkeys:
 g_registerDefaultHotkeys := false
 g_autostartMode := "balcony"
 #Include bo6-afk.ahk
-```
-
----
-
-## Media Downloads
-
-`ahk/Downloader/YT_Spotify_Downloader.ahk` is a GUI; paste a URL and click **Run Command**.
-Command-line equivalents:
-
-```bash
-yt-dlp -f "bv*[height=1080]+ba/b" --merge-output-format mp4 --paths "%USERPROFILE%\Music" "<url>"
-spotdl download "<url>" --output "%USERPROFILE%\Music" --preload --sponsor-block --threads 16
 ```
 
 ---

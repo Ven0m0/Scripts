@@ -43,6 +43,52 @@ class MockSystemWindowAPI {
     }
 }
 
+class MockToggleAPI {
+    __New(style) {
+        this.calls := []
+        this.style := style
+        this.screenW := 1920
+        this.screenH := 1080
+    }
+
+    WinGetStyle(winTitle) {
+        this.calls.Push({method: "WinGetStyle", args: [winTitle]})
+        return this.style
+    }
+
+    WinSetStyle(style, winTitle) {
+        this.calls.Push({method: "WinSetStyle", args: [style, winTitle]})
+    }
+
+    WinMove(x, y, w, h, winTitle) {
+        this.calls.Push({method: "WinMove", args: [x, y, w, h, winTitle]})
+    }
+
+    WinRestore(winTitle) {
+        this.calls.Push({method: "WinRestore", args: [winTitle]})
+    }
+
+    GetScreenWidth() {
+        return this.screenW
+    }
+
+    GetScreenHeight() {
+        return this.screenH
+    }
+}
+
+class MockWaitAPI {
+    __New(waitResult) {
+        this.calls := []
+        this.waitResult := waitResult
+    }
+
+    WinWait(winTitle, winText?, timeout?) {
+        this.calls.Push({method: "WinWait", args: [winTitle, IsSet(timeout) ? timeout : ""]})
+        return this.waitResult
+    }
+}
+
 try {
     stdout.WriteLine("Starting GetMonitorAtPos tests...")
 
@@ -77,6 +123,42 @@ try {
     ; Test Set 3: Zero Monitors
     apiZero := MockSystemWindowAPI([])
     AssertEqual(-1, GetMonitorAtPos(0, 0, apiZero), "Zero monitors - Should return -1")
+
+    stdout.WriteLine("Starting ToggleFakeFullscreen tests...")
+
+    ; Test Set 4: ToggleFakeFullscreen - window has title bits set -> go fullscreen
+    apiHasTitle := MockToggleAPI(0xC00000)
+    ToggleFakeFullscreen("TestWin", apiHasTitle)
+
+    AssertEqual("WinSetStyle", apiHasTitle.calls[2].method, "ToggleFakeFullscreen (titled) - calls WinSetStyle")
+    AssertEqual(STYLE_UNDECORATED, apiHasTitle.calls[2].args[1], "ToggleFakeFullscreen (titled) - undecorated style")
+    AssertEqual("TestWin", apiHasTitle.calls[2].args[2], "ToggleFakeFullscreen (titled) - WinSetStyle target")
+    AssertEqual("WinMove", apiHasTitle.calls[3].method, "ToggleFakeFullscreen (titled) - calls WinMove")
+    AssertEqual(0, apiHasTitle.calls[3].args[1], "ToggleFakeFullscreen (titled) - WinMove x")
+    AssertEqual(0, apiHasTitle.calls[3].args[2], "ToggleFakeFullscreen (titled) - WinMove y")
+    AssertEqual(1920, apiHasTitle.calls[3].args[3], "ToggleFakeFullscreen (titled) - WinMove width")
+    AssertEqual(1080, apiHasTitle.calls[3].args[4], "ToggleFakeFullscreen (titled) - WinMove height")
+
+    ; Test Set 5: ToggleFakeFullscreen - window already undecorated -> restore
+    apiNoTitle := MockToggleAPI(0x00000000)
+    ToggleFakeFullscreen("TestWin2", apiNoTitle)
+
+    AssertEqual("WinSetStyle", apiNoTitle.calls[2].method, "ToggleFakeFullscreen (undecorated) - calls WinSetStyle")
+    AssertEqual(STYLE_DECORATIONS, apiNoTitle.calls[2].args[1], "ToggleFakeFullscreen (undecorated) - decorated style")
+    AssertEqual("WinRestore", apiNoTitle.calls[3].method, "ToggleFakeFullscreen (undecorated) - calls WinRestore")
+    AssertEqual("TestWin2", apiNoTitle.calls[3].args[1], "ToggleFakeFullscreen (undecorated) - WinRestore target")
+
+    stdout.WriteLine("Starting WaitForWindow tests...")
+
+    ; Test Set 6: WaitForWindow - window found before timeout
+    apiWaitHit := MockWaitAPI(12345)
+    AssertEqual(true, WaitForWindow("TestWin", 5, apiWaitHit), "WaitForWindow - hit returns true")
+    AssertEqual("TestWin", apiWaitHit.calls[1].args[1], "WaitForWindow - hit passes winTitle through")
+    AssertEqual(5, apiWaitHit.calls[1].args[2], "WaitForWindow - hit passes timeout through")
+
+    ; Test Set 7: WaitForWindow - timed out
+    apiWaitMiss := MockWaitAPI(0)
+    AssertEqual(false, WaitForWindow("TestWin", 5, apiWaitMiss), "WaitForWindow - timeout returns false")
 
     ; Final Results
     stdout.WriteLine("---")
