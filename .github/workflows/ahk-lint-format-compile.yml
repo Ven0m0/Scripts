@@ -3,10 +3,10 @@ name: AHK Lint & Format
 on:
   push:
     branches: [main, master]
-    paths: ["**.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
+    paths: ["**/*.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
   pull_request:
     branches: [main, master]
-    paths: ["**.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
+    paths: ["**/*.ahk", ".github/workflows/ahk-lint-format-compile.yml"]
   workflow_dispatch:
 
 permissions:
@@ -17,28 +17,13 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v7
+      
+      - name: Install AutoHotkey
+        run: |
+          choco install -y --no-progress autohotkey 
 
-      - name: Install AutoHotkey v1.1 (Portable)
-        run: |
-          for ($i=0; $i -lt 3; $i++) {
-            choco install autohotkey.portable --version=1.1.36.01 -y
-            if ($LASTEXITCODE -eq 0) { break }
-            Start-Sleep -Seconds 10
-          }
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        shell: pwsh
-      - name: Install AutoHotkey v2
-        run: |
-          for ($i=0; $i -lt 3; $i++) {
-            choco install autohotkey -y
-            if ($LASTEXITCODE -eq 0) { break }
-            Start-Sleep -Seconds 10
-          }
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        shell: pwsh
       - name: Verify Installations
         run: |
-          $ahkV1 = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\AutoHotkey.exe"
           $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
 
           if (!(Test-Path $ahkV1)) { throw "V1 Installation failed: $ahkV1 not found" }
@@ -46,7 +31,6 @@ jobs:
 
           Write-Host "Installed AHK v1: $((Get-Item $ahkV1).VersionInfo.FileVersion)"
           Write-Host "Installed AHK v2: $(& $ahkV2 --version)"
-        shell: pwsh
       - name: Syntax Check & Format Validation
         run: |
           $ahk2Exe = "C:\ProgramData\chocolatey\lib\autohotkey.portable\tools\Compiler\Ahk2Exe.exe"
@@ -122,7 +106,6 @@ jobs:
             $formatIssues | % { Write-Host "  $_" }
             exit 1
           }
-        shell: pwsh
 
       - name: Run Tests
         run: |
@@ -177,4 +160,3 @@ jobs:
             $failed | % { Write-Host "  $_" }
             exit 1
           }
-        shell: pwsh
