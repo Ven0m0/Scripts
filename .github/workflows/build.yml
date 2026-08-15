@@ -18,18 +18,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
 
-      - name: Install Scoop
-        shell: pwsh
-        run: |
-          Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-          irm get.scoop.sh | iex
-          scoop bucket add extras
-          exit $LASTEXITCODE
-
       - name: Install AutoHotkey
         shell: pwsh
         run: |
-          scoop install extras/autohotkey
+          choco install -y --no-progress autohotkey 
 
       - name: Install Ahk2Exe
         shell: pwsh
@@ -56,7 +48,7 @@ jobs:
       - name: Compile Scripts
         run: |
           $compiler = "C:\AutoHotkey-Portable\Compiler\Ahk2Exe.exe"
-          $ahkV2 = "$env:USERPROFILE\scoop\apps\autohotkey\current\v2\AutoHotkey64.exe"
+          $ahkV2 = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
           $outDir = 'release'
           New-Item -Type Directory -Force $outDir | Out-Null
 
