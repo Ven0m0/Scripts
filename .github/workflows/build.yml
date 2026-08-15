@@ -8,10 +8,6 @@ on:
 permissions:
   contents: write
 
-env:
-  AHK_VERSION: "2.0.23"
-  AHK2EXE_TAG: "Ahk2Exe1.1.37.02a2"
-
 jobs:
   build-release:
     runs-on: windows-latest
@@ -23,6 +19,14 @@ jobs:
         run: |
           choco install -y --no-progress autohotkey 
 
+      # Better than manually
+      - name: Build exe
+        uses: MohamedSaidSallam/AHK2Exe-GitHub-Action@v1
+        with:
+          in: ahk/Minecraft/MC_AutoSprint.ahk
+          out: MC_AutoSprint_${{ github.ref_name }}.exe
+
+      # TODO: remove
       - name: Install Ahk2Exe
         shell: pwsh
         run: |
