@@ -1,8 +1,6 @@
 {
   "recommendations": [
-    "biomejs.biome", 
-    "hverlin.mise-vscode",
     "thqby.vscode-autohotkey2-lsp",
-    "zero-plusplus.vscode-autohotkey-debug"
+    "mark-wiemer.vscode-autohotkey-plus-plus"
   ]
 }
