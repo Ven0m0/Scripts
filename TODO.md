@@ -1,4 +1,5 @@
 - [ ] I need to add validation via ".\AutoHotkey.exe /Validate script.ahk"
-- [ ] Fix the workflows @.github/workflows/ahk-lint-format-compile.yml @.github/workflows/build.yml @.github/workflows/powershell.yml
+- [ ] Fix the workflows @.github/workflows/ahk-lint-format-compile.yml @.github/workflows/build.yml
+- [ ] Improve the powershell linting in @.github/workflows/powershell.yml
 - [ ] Install autohotkey via "choco install -y --no-progress autohotkey" instead of doing it manually
 - [ ] Use "MohamedSaidSallam/AHK2Exe-GitHub-Action@v1" to build exe's instead of doing it manually
