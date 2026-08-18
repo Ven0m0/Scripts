@@ -1,3 +1,8 @@
+---
+paths:
+  - '**/*.ahk'
+---
+
 # AutoHotkey v2 Rules
 
 Applies to all AutoHotkey files: `ahk/**/*.ahk`, `Lib/**/*.ahk`, and `*.ahk` v2 scripts elsewhere.
