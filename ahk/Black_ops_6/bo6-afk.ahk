@@ -1,7 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-ProcessSetPriority("High")
-ListLines False
+
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript({priority: "High"})
 
 ; Hotkeys (default bindings):
 ;   F1 – Toggle Balcony loop

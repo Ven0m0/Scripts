@@ -1,6 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-ListLines False
+
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript()
 
 global fishingOn := false
 global eatTimerOn := false

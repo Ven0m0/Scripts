@@ -25,20 +25,27 @@ SetOptimalPerformance() {
     SetWinDelay(-1)
     SetControlDelay(-1)
     SendMode("Input")
+    ListLines(false)
+    KeyHistory(0)
 }
 
-InitScript(requireAdmin := false, optimize := true) {
+; opts: admin (false), optimize (true), titleMatch (2), priority (unset keeps the default)
+InitScript(opts := {}) {
     SetWorkingDir(A_ScriptDir)
-    SetTitleMatchMode(2)
+    SetTitleMatchMode(InitOption(opts, "titleMatch", 2))
     SetTitleMatchMode("Fast")
     DetectHiddenText(false)
     DetectHiddenWindows(false)
 
-    if requireAdmin
+    if opts.HasOwnProp("priority")
+        ProcessSetPriority(opts.priority)
+    if InitOption(opts, "admin", false)
         RequireAdmin()
-    if optimize
+    if InitOption(opts, "optimize", true)
         SetOptimalPerformance()
 }
+
+InitOption(opts, name, default) => opts.HasOwnProp(name) ? opts.%name% : default
 
 class SystemHost {
     IsAdmin() => A_IsAdmin

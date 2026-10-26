@@ -35,7 +35,7 @@ tests/                  Standalone test scripts
    - `.md`, `.json`, `.yml`, `.yaml`: LF
    - Follow `.editorconfig` and `.gitattributes` when they differ from editor defaults.
 5. **Avoid hardcoded user-specific paths.** Prefer `A_ScriptDir`, `A_MyDocuments`, `%AppData%`, and environment-aware logic.
-6. **Preserve low-latency behavior.** Gaming and automation scripts keep `InitScript()` or equivalent performance settings unless the task documents an explicit exception.
+6. **Preserve low-latency behavior.** Every entry script calls `InitScript()` for its startup profile; express differences as options (`InitScript({titleMatch: 3})`) rather than hand-rolled `SetKeyDelay`/`ListLines` lines, unless the task documents an explicit exception.
 7. **Keep documentation synchronized by design.** Put durable repo-wide rules here; keep shorter tool-entry docs concise and linked back here.
 
 ## AutoHotkey guidance

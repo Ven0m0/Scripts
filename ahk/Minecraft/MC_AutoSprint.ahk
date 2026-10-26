@@ -1,11 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-ListLines False
-SendMode "Input"
-SetKeyDelay(-1, -1)
-SetControlDelay(-1)
-SetTitleMatchMode(3)
-SetTitleMatchMode("Fast")
+
+#Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
+InitScript({titleMatch: 3})
 
 ; Bedrock sprint bind is Ctrl. Hold W -> W + Ctrl held together, both released on W up.
 ; Ctrl+key in Bedrock. Harmless for default binds; if it misfires, switch to a single

@@ -21,7 +21,7 @@ Tests live in `tests/<Module>_Test.ahk` and use `tests/TestKit.ahk`.
 
 **Functions:**
 
-- `InitScript(requireAdmin, optimize)` - One-call initialization for common requirements
+- `InitScript(opts := {})` - One-call startup for every entry script; options `admin` (false), `optimize` (true), `titleMatch` (2), `priority` (unset)
 - `RequireAdmin(host := "")` - Restarts script with administrator privileges; `host` is a test seam (see `SystemHost`)
 - `SetOptimalPerformance()` - Applies performance optimizations
 
@@ -29,7 +29,7 @@ Tests live in `tests/<Module>_Test.ahk` and use `tests/TestKit.ahk`.
 
 ```autohotkey
 #Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
-InitScript(true, true)  ; Require Admin + Performance optimization
+InitScript({admin: true})  ; Require Admin; performance profile is on by default
 ```
 
 **Performance Optimizations Applied:**
@@ -40,6 +40,7 @@ InitScript(true, true)  ; Require Admin + Performance optimization
 - `SetWinDelay -1` - No window operation delays
 - `SetControlDelay -1` - No control operation delays
 - `SendMode "Input"` - Fastest send mode
+- `ListLines false`, `KeyHistory 0` - No line or key logging overhead
 
 ### WindowManager.ahk
 

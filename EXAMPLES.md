@@ -58,17 +58,18 @@ if !WaitForProcess("game.exe", 10) {
 ```autohotkey
 #Requires AutoHotkey v2.0
 #SingleInstance Force
-SendMode "Input"
-SetWorkingDir A_ScriptDir
 
 #Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
 
-InitScript(true, true)  ; requireAdmin=true, optimize=true
+InitScript()                    ; most scripts
+InitScript({admin: true})       ; relaunch elevated first
+InitScript({priority: "High"})  ; game macros that need a higher process priority
 ```
 
-`InitScript(requireAdmin := false, optimize := true)` sets title-match mode, requests
-elevation via `RequireAdmin()` when `requireAdmin` is true, and applies zero-delay
-key/mouse/window settings when `optimize` is true.
+`InitScript(opts := {})` sets the working directory and title-match mode, then applies the
+low-latency profile (zero key/mouse/window delays, `SendMode "Input"`, `ListLines` and
+`KeyHistory` off). Options: `admin` (false), `optimize` (true), `titleMatch` (2), `priority`
+(unset keeps the default).
 
 ---
 

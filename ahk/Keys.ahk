@@ -1,22 +1,11 @@
 #Requires AutoHotkey v2.0
 
 #SingleInstance Force
-SendMode "Input"
-SetWorkingDir A_ScriptDir
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
-InitScript(false, false)  ; no admin, manual tuning
+InitScript({titleMatch: 3})  ; exact titles, e.g. the "Calculator" timer
 
-KeyHistory(0)
-ListLines False
-SetKeyDelay(-1, -1)
-SetMouseDelay(-1)
-SetDefaultMouseSpeed(0)
-SetWinDelay(-1)
-SetControlDelay(-1)
-SetTitleMatchMode(3)
-SetTitleMatchMode("Fast")
 SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")
 SetScrollLockState("AlwaysOff")

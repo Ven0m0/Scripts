@@ -1,11 +1,8 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 #Include %A_ScriptDir%\TestKit.ahk
-
-InitScript(false, false) ; disable Admin and optimization for the test
 
 global DECORATED := 0xCF0000      ; WS_OVERLAPPEDWINDOW, includes WS_SIZEBOX
 global FIXED_SIZE := 0xC80000     ; caption + system menu, no WS_SIZEBOX
