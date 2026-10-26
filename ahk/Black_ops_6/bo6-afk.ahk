@@ -41,7 +41,7 @@ StopAll() {
     Send("{LButton up}")  ; ensure button released
     Send("{RButton up}")
     if balconyStanding {
-        Send("{p}")  ; go back prone under the desk
+        GoProne()  ; go back prone under the desk
         balconyStanding := false
     }
 }
@@ -111,7 +111,7 @@ BalconyLoop(id) {
             SetTimer(NextStep, -4002)
             step := 6
         } else if (step == 6) {
-            Send("{p}")
+            GoProne()
             balconyStanding := false
             SetTimer(NextStep, -75001)
             step := 1
@@ -205,6 +205,12 @@ HoldClickLoop(id) {
 
 ; ---------------- Helpers ----------------
 
+GoProne() {
+    Send("{3}")  ; the game refuses prone with the Jet Gun in hand, so equip the knife first
+    Sleep(1000)  ; prone is ignored while the Jet Gun's switch-out animation is still playing
+    Send("{p}")
+}
+
 WalkForwardAndBack() {
     Send("{W down}")
     Sleep(500)
@@ -224,6 +230,9 @@ CleanUpZombies() {
 }
 
 ; ---------------- Dispatch ----------------
+
+; Any exit (F9, tray, wrapper) must release held buttons and restore the prone stance.
+OnExit((*) => StopAll())
 
 RegisterDefaultHotkeys()
 

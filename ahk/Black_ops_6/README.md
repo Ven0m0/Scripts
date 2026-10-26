@@ -15,6 +15,21 @@ whichever is currently running; pressing the same key again stops it.
 - `F7` - Stop all loops
 - `F9` - Exit the script
 
+### Balcony setup (F1)
+
+1. Reach the Liberty Falls church balcony manually (Aether Shroud + Burst Dash, from a pew or a rock).
+2. Go prone under the desk, facing the zombies below.
+3. Have the Jet Gun in slot 2, `p` bound to prone (toggle), and ADS on right mouse.
+4. The loop stands up, selects the Jet Gun, holds ADS for the blast, then equips the knife (`3`,
+   the game won't go prone with the Jet Gun in hand), waits 1 s for the switch animation, and goes
+   prone again. The
+   blast drains the Jet Gun's charge; the ~80 s cycle is meant to let it recharge (not verified).
+5. The script never moves the mouse, so the blast goes wherever the camera already points.
+6. Best Directed Mode round to farm: round 11. It has no Manglers and the most zombies of any
+   Mangler-free round (user-observed, not from an official source). A Mangler as the last zombie
+   can't be killed by the loop.
+7. Whether the balcony entry still works on the current build is unconfirmed.
+
 ### Reusing from a wrapper script
 
 ```autohotkey
