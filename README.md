@@ -16,6 +16,7 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [License](#license)
+- [Contact](#contact)
 
 ---
 
@@ -30,8 +31,7 @@ AFK macros, and a general hotkey suite.
 
 ### Prerequisites
 
-- **AutoHotkey v2.0.19+** - [Download](https://www.autohotkey.com/)
-- **Windows 10/11** - Scripts are Windows-specific
+AutoHotkey v2 on Windows 10/11 - see [Installation](#installation).
 
 ### Running Scripts
 
@@ -45,6 +45,8 @@ Double-click any `.ahk` file, or run it from the command line:
 ```bash
 "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe" ahk\Fullscreen.ahk
 ```
+
+Some scripts (for example `Fullscreen.ahk`) request administrator rights on start.
 
 ---
 
@@ -74,6 +76,7 @@ Scripts/
 ├── AGENTS.md                     # AI assistant development guide
 ├── CLAUDE.md                     # Symlink to AGENTS.md
 ├── EXAMPLES.md                   # Usage patterns and code examples
+├── GLOSSARY.md                   # Domain terms (snap, fake fullscreen, ...)
 └── LICENSE                       # MIT License
 ```
 
@@ -88,6 +91,7 @@ Scripts/
 | `ahk/ControllerQuit.ahk` | Quit active window with a controller button combo |
 | `ahk/Black_ops_6/bo6-afk.ahk` | Black Ops 6 AFK farming macros |
 | `ahk/Minecraft/MC_AFK.ahk`, `MC_AutoSprint.ahk` | Minecraft AFK automation |
+| `ahk/Robocopy/` | Robocopy-based image backup wrapper (PowerShell + cmd) |
 
 See [ahk/README.md](ahk/README.md) for the full script list and hotkeys.
 
@@ -96,6 +100,7 @@ See [ahk/README.md](ahk/README.md) for the full script list and hotkeys.
 ## Documentation
 
 - **[EXAMPLES.md](EXAMPLES.md)** - usage patterns and code examples
+- **[GLOSSARY.md](GLOSSARY.md)** - domain terms used across the scripts
 - **[ahk/README.md](ahk/README.md)**, **[Lib/README.md](Lib/README.md)** - area-specific behavior
 - **[AGENTS.md](AGENTS.md)** - development guide for AI assistants and contributors
 
@@ -103,18 +108,21 @@ See [ahk/README.md](ahk/README.md) for the full script list and hotkeys.
 
 ## Requirements
 
-- **AutoHotkey v2.0.19+** - [Download](https://www.autohotkey.com/)
-- **Windows 10/11**
+- **AutoHotkey v2.0+** - [Download](https://www.autohotkey.com/)
+- **Windows 10/11** - the scripts are Windows-specific
 
 ---
 
 ## Installation
 
 ```powershell
-choco install autohotkey
+winget install --id AutoHotkey.AutoHotkey
 ```
 
-Then clone the repository and run any `.ahk` script directly.
+Then clone the repository and run any `.ahk` script directly (see [Quick Start](#quick-start)).
+
+Compiled builds of the scripts are published on the
+[Releases](https://github.com/Ven0m0/Scripts/releases) page.
 
 ---
 
