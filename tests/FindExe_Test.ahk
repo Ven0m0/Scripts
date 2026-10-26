@@ -2,24 +2,9 @@
 #SingleInstance Force
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\TestKit.ahk
 
 InitScript(false, false) ; disable Admin and optimization for the test
-
-; Setup testing output
-stdout := FileOpen("*", "w `n")
-testsPassed := 0
-testsFailed := 0
-
-AssertEqual(expected, actual, context) {
-    global testsPassed, testsFailed, stdout
-    if (expected == actual) {
-        testsPassed++
-        stdout.WriteLine("PASS: " . context)
-    } else {
-        testsFailed++
-        stdout.WriteLine("FAIL: " . context . " - Expected '" . expected . "', but got '" . actual . "'")
-    }
-}
 
 ; Setup Mock Environment
 originalPath := EnvGet("PATH")
@@ -44,7 +29,7 @@ mockPath := testBaseDir . "\PathDir1;" . testBaseDir . "\PathDir2"
 EnvSet("PATH", mockPath)
 
 try {
-    stdout.WriteLine("Starting tests...")
+    testOut.WriteLine("Starting tests...")
 
     ; Test 1: Direct file path
     directPath := testBaseDir . "\direct.exe"
@@ -107,19 +92,10 @@ try {
     AssertEqual(1, mockState["exitAppCalled"], "MustGetExe should call ExitApp on failure")
     AssertEqual(1, mockState["exitCode"], "MustGetExe should exit with code 1 on failure")
 
-    ; Final Results
-    stdout.WriteLine("---")
-    stdout.WriteLine("Tests Passed: " . testsPassed)
-    stdout.WriteLine("Tests Failed: " . testsFailed)
-
 } finally {
     ; Teardown
     EnvSet("PATH", originalPath)
     DirDelete(testBaseDir, true)
 }
 
-if (testsFailed > 0) {
-    ExitApp(1)
-}
-
-ExitApp(0)
+FinishTests()

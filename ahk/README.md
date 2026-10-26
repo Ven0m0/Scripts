@@ -11,8 +11,7 @@ ahk/
 ├── Robocopy/            # Robocopy wrapper for image backups
 ├── ControllerQuit.ahk   # Close active window with a controller button combo
 ├── Fullscreen.ahk       # Borderless fullscreen toggle
-├── Keys.ahk             # General hotkey suite
-└── test_Keys.ahk        # Unit test for Keys.ahk window functions
+└── Keys.ahk             # General hotkey suite
 ```
 
 ## Scripts

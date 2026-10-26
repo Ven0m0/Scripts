@@ -58,15 +58,13 @@ Scripts/
 │   ├── Robocopy/                 # Robocopy wrapper (PowerShell/cmd)
 │   ├── ControllerQuit.ahk        # Quit apps with controller combo
 │   ├── Fullscreen.ahk            # Borderless fullscreen toggle
-│   ├── Keys.ahk                  # Main hotkey suite
-│   └── test_Keys.ahk             # Unit test for Keys.ahk
+│   └── Keys.ahk                  # Main hotkey suite
 │
 ├── Lib/                          # Shared AutoHotkey v2.0 libraries
 │   ├── AHK_Common.ahk            # Init, elevation, exe resolution
-│   ├── WindowManager.ahk         # Window/fullscreen manipulation
-│   └── test_RequireAdmin.ahk     # Unit test for RequireAdmin
+│   └── WindowManager.ahk         # Window/fullscreen manipulation
 │
-├── tests/                        # Standalone unit tests
+├── tests/                        # <Module>_Test.ahk unit tests + TestKit.ahk
 │
 ├── .github/workflows/            # CI/CD automation
 │   ├── ahk-lint-format-compile.yml  # Syntax & format validation

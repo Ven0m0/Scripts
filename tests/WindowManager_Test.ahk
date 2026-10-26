@@ -3,24 +3,9 @@
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 #Include %A_ScriptDir%\..\Lib\WindowManager.ahk
+#Include %A_ScriptDir%\TestKit.ahk
 
 InitScript(false, false) ; disable Admin and optimization for the test
-
-; Setup testing output
-stdout := FileOpen("*", "w `n")
-testsPassed := 0
-testsFailed := 0
-
-AssertEqual(expected, actual, context) {
-    global testsPassed, testsFailed, stdout
-    if (expected == actual) {
-        testsPassed++
-        stdout.WriteLine("PASS: " . context)
-    } else {
-        testsFailed++
-        stdout.WriteLine("FAIL: " . context . " - Expected '" . expected . "', but got '" . actual . "'")
-    }
-}
 
 class MockSystemWindowAPI {
     __New(monitors) {
@@ -89,8 +74,7 @@ class MockWaitAPI {
     }
 }
 
-try {
-    stdout.WriteLine("Starting GetMonitorAtPos tests...")
+    testOut.WriteLine("Starting GetMonitorAtPos tests...")
 
     ; Test Set 1: Single Monitor (0,0 to 1920,1080)
     mon1 := {l: 0, t: 0, r: 1920, b: 1080}
@@ -124,7 +108,7 @@ try {
     apiZero := MockSystemWindowAPI([])
     AssertEqual(-1, GetMonitorAtPos(0, 0, apiZero), "Zero monitors - Should return -1")
 
-    stdout.WriteLine("Starting ToggleFakeFullscreen tests...")
+    testOut.WriteLine("Starting ToggleFakeFullscreen tests...")
 
     ; Test Set 4: ToggleFakeFullscreen - window has title bits set -> go fullscreen
     apiHasTitle := MockToggleAPI(0xC00000)
@@ -148,7 +132,7 @@ try {
     AssertEqual("WinRestore", apiNoTitle.calls[3].method, "ToggleFakeFullscreen (undecorated) - calls WinRestore")
     AssertEqual("TestWin2", apiNoTitle.calls[3].args[1], "ToggleFakeFullscreen (undecorated) - WinRestore target")
 
-    stdout.WriteLine("Starting WaitForWindow tests...")
+    testOut.WriteLine("Starting WaitForWindow tests...")
 
     ; Test Set 6: WaitForWindow - window found before timeout
     apiWaitHit := MockWaitAPI(12345)
@@ -160,17 +144,4 @@ try {
     apiWaitMiss := MockWaitAPI(0)
     AssertEqual(false, WaitForWindow("TestWin", 5, apiWaitMiss), "WaitForWindow - timeout returns false")
 
-    ; Final Results
-    stdout.WriteLine("---")
-    stdout.WriteLine("Tests Passed: " . testsPassed)
-    stdout.WriteLine("Tests Failed: " . testsFailed)
-
-} finally {
-    ; No teardown needed
-}
-
-if (testsFailed > 0) {
-    ExitApp(1)
-}
-
-ExitApp(0)
+FinishTests()

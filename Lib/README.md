@@ -8,9 +8,10 @@ repository. The libraries provide common functionality for initialization and wi
 ```
 Lib/
 ├── AHK_Common.ahk               # v2 initialization utilities
-├── WindowManager.ahk            # v2 window manipulation
-└── test_RequireAdmin.ahk        # standalone test for RequireAdmin()
+└── WindowManager.ahk            # v2 window manipulation
 ```
+
+Tests live in `tests/<Module>_Test.ahk` and use `tests/TestKit.ahk`.
 
 ## Library Files
 

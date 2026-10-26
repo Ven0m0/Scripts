@@ -1,5 +1,5 @@
 #Requires AutoHotkey v2.0
-#Include AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
 MockRun(target) {
     throw Error("Simulated elevation failure")

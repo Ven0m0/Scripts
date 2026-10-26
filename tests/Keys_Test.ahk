@@ -2,6 +2,7 @@
 #SingleInstance Force
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\TestKit.ahk
 
 InitScript(false, false)
 
@@ -48,42 +49,10 @@ class MockKeysAPI {
     }
 }
 
-stdout := FileOpen("*", "w `n")
-testsPassed := 0
-testsFailed := 0
-
-AssertEqual(expected, actual, context) {
-    global testsPassed, testsFailed, stdout
-
-    expectedStr := IsObject(expected) ? ObjToString(expected) : expected
-    actualStr := IsObject(actual) ? ObjToString(actual) : actual
-
-    if (expectedStr == actualStr) {
-        testsPassed++
-        stdout.WriteLine("PASS: " . context)
-    } else {
-        testsFailed++
-        stdout.WriteLine("FAIL: " . context . " - Expected '" . expectedStr . "', but got '" . actualStr . "'")
-    }
-}
-
-ObjToString(obj) {
-    if !IsObject(obj)
-        return obj
-    if (Type(obj) == "Array") {
-        str := "["
-        for v in obj
-            str .= ObjToString(v) . ", "
-        return RTrim(str, ", ") . "]"
-    }
-    return Type(obj)
-}
-
 ; Include the actual Keys.ahk so we can call the functions
-#Include %A_ScriptDir%\Keys.ahk
+#Include %A_ScriptDir%\..\ahk\Keys.ahk
 
-try {
-    stdout.WriteLine("Starting tests for Keys.ahk window functions...")
+    testOut.WriteLine("Starting tests for Keys.ahk window functions...")
 
     ; Test SaveWindowPosition
     global positions := Map()
@@ -179,17 +148,4 @@ try {
         AssertEqual([800, 0, "A"], api.calls[4].args, "MoveWindowRight non-resizable should only move x,y")
     }
 
-    stdout.WriteLine("---")
-    stdout.WriteLine("Tests Passed: " . testsPassed)
-    stdout.WriteLine("Tests Failed: " . testsFailed)
-
-} catch as e {
-    stdout.WriteLine("Error during tests: " e.Message)
-    testsFailed++
-}
-
-if (testsFailed > 0) {
-    ExitApp(1)
-}
-
-ExitApp(0)
+FinishTests()
