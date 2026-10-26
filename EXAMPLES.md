@@ -6,7 +6,6 @@ Practical examples for the `Lib/` helpers and scripts actually in this repositor
 
 - [Window Management](#window-management)
 - [Init & Elevation](#init--elevation)
-- [Finding Executables](#finding-executables)
 - [AFK Macros](#afk-macros)
 - [Error Handling Pattern](#error-handling-pattern)
 
@@ -70,22 +69,6 @@ InitScript(true, true)  ; requireAdmin=true, optimize=true
 `InitScript(requireAdmin := false, optimize := true)` sets title-match mode, requests
 elevation via `RequireAdmin()` when `requireAdmin` is true, and applies zero-delay
 key/mouse/window settings when `optimize` is true.
-
----
-
-## Finding Executables
-
-```autohotkey
-#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
-
-; Returns "" if not found anywhere
-exe := FindExe("yt-dlp.exe", [A_ScriptDir . "\yt-dlp.exe"])
-
-; Shows an error and exits if not found
-exe := MustGetExe("yt-dlp.exe", [A_ScriptDir . "\yt-dlp.exe"])
-```
-
-`FindExe`/`MustGetExe` check, in order: the literal path, `PATH`, then the `fallbacks` array.
 
 ---
 

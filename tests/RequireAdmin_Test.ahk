@@ -1,36 +1,48 @@
 #Requires AutoHotkey v2.0
+#SingleInstance Force
+
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\TestKit.ahk
 
-MockRun(target) {
-    throw Error("Simulated elevation failure")
-}
+; Records what RequireAdmin asked of the host instead of elevating or exiting
+class FakeHost {
+    __New(isAdmin, runFails := false) {
+        this.admin := isAdmin
+        this.runFails := runFails
+        this.ran := ""
+        this.shown := ""
+        this.exited := false
+    }
 
-global msgBoxText := ""
+    IsAdmin() => this.admin
 
-MockMsgBox(text) {
-    global msgBoxText
-    msgBoxText := text
-}
+    Run(target) {
+        this.ran := target
+        if this.runFails
+            throw Error("Simulated elevation failure")
+    }
 
-MockExitApp() {
-    global msgBoxText
-    out := FileOpen("*", "w `n")
-    if InStr(msgBoxText, "Failed to elevate: Simulated elevation failure") {
-        out.Write("Test Passed: Caught simulated elevation failure.`n")
-        out.Close()
-        ExitApp(0)
-    } else {
-        out.Write("Test Failed: Error MsgBox not encountered or incorrect text.`n")
-        out.Close()
-        ExitApp(1)
+    MsgBox(text) {
+        this.shown := text
+    }
+
+    ExitApp(code := 0) {
+        this.exited := true
     }
 }
 
-; Trigger the error path
-RequireAdmin(false, MockRun, MockMsgBox, MockExitApp)
+host := FakeHost(true)
+RequireAdmin(host)
+AssertEqual([false, ""], [host.exited, host.ran], "Already admin - no relaunch, no exit")
 
-; Fallback failure if the async process fails or the error is never triggered
-out := FileOpen("*", "w `n")
-out.Write("Test Failed: Script did not exit through MockExitApp.`n")
-out.Close()
-ExitApp(1)
+host := FakeHost(false)
+RequireAdmin(host)
+AssertEqual('*RunAs "' . A_ScriptFullPath . '"', host.ran, "Not admin - relaunches elevated")
+AssertEqual([true, ""], [host.exited, host.shown], "Not admin - exits without an error")
+
+host := FakeHost(false, true)
+RequireAdmin(host)
+AssertEqual("Failed to elevate: Simulated elevation failure", host.shown, "Elevation fails - reports the error")
+AssertEqual(true, host.exited, "Elevation fails - still exits")
+
+FinishTests()

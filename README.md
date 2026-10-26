@@ -61,7 +61,7 @@ Scripts/
 │   └── Keys.ahk                  # Main hotkey suite
 │
 ├── Lib/                          # Shared AutoHotkey v2.0 libraries
-│   ├── AHK_Common.ahk            # Init, elevation, exe resolution
+│   ├── AHK_Common.ahk            # Init, elevation
 │   └── WindowManager.ahk         # Window/fullscreen manipulation
 │
 ├── tests/                        # <Module>_Test.ahk unit tests + TestKit.ahk

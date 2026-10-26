@@ -66,7 +66,7 @@ CI is `.github/workflows/ahk-lint-format-compile.yml`; these rules exist to pass
 - Test files: `tests/<Module>_Test.ahk`; CI runs every `tests/*_Test.ahk` and nothing else.
 - Tests `#Include %A_ScriptDir%\TestKit.ahk`, assert with `AssertEqual(expected, actual, context)`, and end with `FinishTests()`, which exits 1 on any failure. TestKit also exits 1 on an uncaught error instead of opening a dialog.
 - Tests fail the run on a non-zero exit code or a 30s timeout.
-- Testable functions take optional mock parameters for their side effects, e.g. `RequireAdmin(mockIsAdmin := "", mockRun := "", mockMsgBox := "", mockExitApp := "")` in `Lib/AHK_Common.ahk` — follow this pattern for new `Lib/` helpers that call `Run`, `MsgBox`, or `ExitApp`.
+- Testable `Lib/` functions take one optional adapter object as their last parameter, defaulting to the real one: `SystemHost` (`IsAdmin`, `Run`, `MsgBox`, `ExitApp`) in `Lib/AHK_Common.ahk`, `SystemWindowAPI` in `Lib/WindowManager.ahk`. Tests pass a fake with the same methods. Extend these adapters; don't add per-call mock parameters.
 - CI classifies a file as v2 if it has the `#Requires AutoHotkey v2` directive **or** lives under `Lib/`, `ahk/`, or `Other/**/v2/`. New v2 scripts outside those paths must carry the directive explicitly.
 - CI fails the build on mixed indentation (tabs + spaces in the same file), trailing whitespace, or mixed line endings — not on indent width, so match the file you're editing.
 

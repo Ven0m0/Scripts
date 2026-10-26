@@ -22,10 +22,8 @@ Tests live in `tests/<Module>_Test.ahk` and use `tests/TestKit.ahk`.
 **Functions:**
 
 - `InitScript(requireAdmin, optimize)` - One-call initialization for common requirements
-- `RequireAdmin(...)` - Restarts script with administrator privileges
+- `RequireAdmin(host := "")` - Restarts script with administrator privileges; `host` is a test seam (see `SystemHost`)
 - `SetOptimalPerformance()` - Applies performance optimizations
-- `FindExe(name, fallbacks)` - Resolves an executable via direct path, `PATH`, then fallbacks
-- `MustGetExe(name, fallbacks, ...)` - Same as `FindExe`, but shows an error and exits if not found
 
 **Usage:**
 

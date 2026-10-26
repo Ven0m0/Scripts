@@ -3,29 +3,19 @@
 
 ; AHK_Common – shared init utilities
 
-RequireAdmin(mockIsAdmin := "", mockRun := "", mockMsgBox := "", mockExitApp := "") {
-    isAdmin := mockIsAdmin !== "" ? mockIsAdmin : A_IsAdmin
-    if isAdmin
+; Relaunches the script elevated and exits; on failure reports the error and exits anyway
+RequireAdmin(host := "") {
+    if !host
+        host := SystemHost()
+
+    if host.IsAdmin()
         return
     try {
-        if mockRun !== ""
-            mockRun('*RunAs "' . A_ScriptFullPath . '"')
-        else
-            Run('*RunAs "' . A_ScriptFullPath . '"')
-        if mockExitApp !== ""
-            mockExitApp()
-        else
-            ExitApp()
+        host.Run('*RunAs "' . A_ScriptFullPath . '"')
     } catch Error as err {
-        if mockMsgBox !== ""
-            mockMsgBox("Failed to elevate: " . err.Message)
-        else
-            MsgBox("Failed to elevate: " . err.Message)
-        if mockExitApp !== ""
-            mockExitApp()
-        else
-            ExitApp()
+        host.MsgBox("Failed to elevate: " . err.Message)
     }
+    host.ExitApp()
 }
 
 SetOptimalPerformance() {
@@ -50,41 +40,9 @@ InitScript(requireAdmin := false, optimize := true) {
         SetOptimalPerformance()
 }
 
-FindExe(name, fallbacks := []) {
-    if (name == "")
-        return ""
-    if FileExist(name)
-        return name
-    Loop Parse, EnvGet("PATH"), ";"
-    {
-        p := Trim(A_LoopField, " `t`"")
-        if !p
-            continue
-        p := RTrim(p, "\/")
-        cand := p . "\" . name
-        if FileExist(cand)
-            return cand
-    }
-    for _, fb in fallbacks
-        if FileExist(fb)
-            return fb
-    return ""
-}
-
-MustGetExe(name, fallbacks := [], mockMsgBox := "", mockExitApp := "") {
-    exe := FindExe(name, fallbacks)
-    if exe = ""
-    {
-        msg := "Required executable not found: " . name . "`nChecked PATH and fallbacks."
-        if mockMsgBox !== ""
-            mockMsgBox(msg)
-        else
-            MsgBox(msg)
-
-        if mockExitApp !== ""
-            mockExitApp(1)
-        else
-            ExitApp(1)
-    }
-    return exe
+class SystemHost {
+    IsAdmin() => A_IsAdmin
+    Run(target) => Run(target)
+    MsgBox(text) => MsgBox(text)
+    ExitApp(code := 0) => ExitApp(code)
 }
