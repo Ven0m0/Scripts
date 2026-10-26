@@ -52,7 +52,7 @@ ToggleFullscreen() {
         MsgBox("Failed to find window: " target, "Error", "Iconx")
         return
     }
-    ToggleFakeFullscreenMultiMonitor(target)
+    ToggleFakeFullscreen(target)
 }
 F11::ToggleFullscreen()
 ```

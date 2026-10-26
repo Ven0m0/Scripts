@@ -45,30 +45,26 @@ InitScript(true, true)  ; Require Admin + Performance optimization
 
 ### WindowManager.ahk
 
-**Purpose:** Window manipulation and multi-monitor management
+**Purpose:** Window placement (see `GLOSSARY.md`): fake fullscreen, snap, and restore, each on
+the window's own monitor. The first placement remembers the window's geometry; restore returns
+to it, so snap, fullscreen, restore lands back on the original window.
 
 **Functions:**
 
-- `ToggleFakeFullscreenMultiMonitor(winTitle)` — most used
-  - Multi-monitor aware borderless fullscreen toggle
-  - Detects current monitor and calculates bounds
-  - Saves/restores window state
+- `ToggleFakeFullscreen(winTitle := "A")`
+  - Strips borders and fills the window's monitor; a second call restores it
+  - Returns true when the window is now fullscreen
 
-- `ToggleFakeFullscreen(winTitle)`
-  - Single-monitor borderless fullscreen toggle
-  - Always uses primary monitor dimensions
+- `SnapWindow(side, winTitle := "A")`
+  - `side` is `"left"` or `"right"`; fills that part of the monitor's work area
+  - Left width is 2/3 of the work area, capped at 1024px; right takes the rest
+  - Non-resizable windows are moved, not resized
 
-- `SetWindowBorderless(winTitle)`
-  - Removes window borders and title bar
+- `RestoreWindow(winTitle := "A")`
+  - Returns the window to its remembered geometry; false when nothing is remembered
 
-- `MakeFullscreen(winTitle)`
-  - Combined borderless + maximize operation
-
-- `RestoreWindowBorders(winTitle)`
-  - Restores window borders after borderless mode
-
-- `MaximizeWindow(winTitle)`
-  - Maximizes window to full screen
+- `GetMonitorAtPos(x, y)`
+  - Monitor index containing the point, or -1
 
 - `WaitForWindow(winTitle, timeout)`
   - Safe window waiting with timeout
@@ -83,8 +79,10 @@ InitScript(true, true)  ; Require Admin + Performance optimization
 ```autohotkey
 #Include A_ScriptDir "\..\Lib\WindowManager.ahk"
 
-; Toggle borderless fullscreen
-End::ToggleFakeFullscreenMultiMonitor("A")
+; Toggle fake fullscreen, snap, restore
+End::ToggleFakeFullscreen()
+#Left::SnapWindow("left")
+#Down::RestoreWindow()
 
 ; Wait for window with timeout
 if !WaitForWindow("ahk_exe game.exe", 10) {

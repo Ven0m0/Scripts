@@ -5,9 +5,9 @@ SendMode "Input"
 SetWorkingDir A_ScriptDir
 
 #Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 InitScript(false, false)  ; no admin, manual tuning
 
-if (A_LineFile == A_ScriptFullPath) {
 KeyHistory(0)
 ListLines False
 SetKeyDelay(-1, -1)
@@ -21,21 +21,12 @@ SetNumLockState("AlwaysOn")
 SetCapsLockState("AlwaysOff")
 SetScrollLockState("AlwaysOff")
 
-; Monitor metrics
-mw := GetMonitorWidth()
-mh := GetMonitorHeight()
-pw := mw / 3
-lw := (2 * pw > 1024) ? 1024 : 2 * pw
-rw := mw - lw
-positions := Map()
-
 ; Keep Calculator always on top while it exists
 SetTimer(SetAlwaysOnTop, 1000)
 
 ; Tray documentation entry
 A_TrayMenu.Add("Documentation", ShowDocumentation)
 
-}
 #HotIf !WinActive("ahk_exe Explorer.EXE")
 +F1::WinMinimize("A")
 #HotIf
@@ -54,9 +45,9 @@ A_TrayMenu.Add("Documentation", ShowDocumentation)
 
 #j::AddDateToSelection()
 
-#Left::MoveWindowLeft()
-#Right::MoveWindowRight()
-#Down::RestoreWindowPosition()
+#Left::SnapWindow("left")
+#Right::SnapWindow("right")
+#Down::RestoreWindow()
 
 ; ---------------------------------------------------------------------------
 ; Timers / Helpers
@@ -84,68 +75,6 @@ AddDateToSelection() {
     newName := dir . "\" . stamp . "_" . nameNoExt . "." . ext
     FileMove(Fn, newName, 1)
   }
-}
-
-MoveWindowLeft(api := "") {
-  global lw, mh
-  if !api
-    api := KeysWindowAPI()
-  SaveWindowPosition(api)
-  if IsResizable(api) {
-    api.WinMove(0, 0, lw, mh, "A")
-  } else {
-    api.WinMoveNoSize(0, 0, "A")
-  }
-}
-
-MoveWindowRight(api := "") {
-  global lw, rw, mh
-  if !api
-    api := KeysWindowAPI()
-  SaveWindowPosition(api)
-  if IsResizable(api) {
-    api.WinMove(lw, 0, rw, mh, "A")
-  } else {
-    api.WinMoveNoSize(lw, 0, "A")
-  }
-}
-
-RestoreWindowPosition(api := "") {
-  global positions
-  if !api
-    api := KeysWindowAPI()
-  hwnd := api.WinExist("A")
-  if !positions.Has(hwnd)
-    return
-
-  pos := positions[hwnd]
-  api.WinMove(pos[1], pos[2], pos[3], pos[4], "A")
-}
-
-SaveWindowPosition(api := "") {
-  global positions
-  if !api
-    api := KeysWindowAPI()
-  hwnd := api.WinExist("A")
-  api.WinGetPos(&x, &y, &w, &h, "A")
-  positions[hwnd] := [x, y, w, h]
-}
-
-GetMonitorWidth() {
-  MonitorGetWorkArea(1, &left, &top, &right, &bottom)
-  return right - left
-}
-
-GetMonitorHeight() {
-  MonitorGetWorkArea(1, &left, &top, &right, &bottom)
-  return bottom - top
-}
-
-IsResizable(api := "") {
-  if !api
-    api := KeysWindowAPI()
-  style := api.WinGetStyle("A")
-  return (style & 0x00040000) != 0  ; WS_SIZEBOX
 }
 
 Explorer_GetSelection() {
@@ -195,7 +124,6 @@ ShowDocumentation(*) {
   docGui.Add("Text", , "Shift + F2 Empties the clipboard and recycle bin")
   docGui.Add("Text", , "Alt + Mousewheel Gives media control")
   docGui.Add("Text", , "Alt + T Sets the active window on top.")
-  docGui.Add("Text", , "End makes the active window fullscreen.")
   docGui.Add("Text", , "Win + J adds the creation date to the selected file.")
   docGui.Add("Text", , "Win + Left snaps the active window to the left.")
   docGui.Add("Text", , "Win + Right snaps the active window to the right.")
@@ -213,15 +141,4 @@ ShowDocumentation(*) {
 
   tabs.UseTab()
   docGui.Show("Center")
-}
-
-
-
-
-class KeysWindowAPI {
-  WinExist(winTitle) => WinExist(winTitle)
-  WinGetPos(&x, &y, &w, &h, winTitle) => WinGetPos(&x, &y, &w, &h, winTitle)
-  WinGetStyle(winTitle) => WinGetStyle(winTitle)
-  WinMove(x, y, w, h, winTitle) => WinMove(x, y, w, h, winTitle)
-  WinMoveNoSize(x, y, winTitle) => WinMove(x, y, , , winTitle)
 }

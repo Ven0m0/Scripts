@@ -14,16 +14,19 @@ Practical examples for the `Lib/` helpers and scripts actually in this repositor
 
 ## Window Management
 
-### Toggle Borderless Fullscreen (multi-monitor)
+### Fake Fullscreen, Snap, Restore (multi-monitor)
 
 ```autohotkey
-; ahk/Fullscreen.ahk
 #Include A_ScriptDir "\..\Lib\WindowManager.ahk"
 
-End::ToggleFakeFullscreenMultiMonitor("A")
+End::ToggleFakeFullscreen()
+#Left::SnapWindow("left")
+#Right::SnapWindow("right")
+#Down::RestoreWindow()
 ```
 
-Press `End` on the focused window to toggle; press again to restore.
+Each acts on the window's own monitor. Press `End` again to restore; `RestoreWindow()` returns
+the window to where it was before its first snap or fullscreen.
 
 ### Wait for a Window or Process
 

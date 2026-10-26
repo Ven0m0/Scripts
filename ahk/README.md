@@ -18,12 +18,10 @@ ahk/
 
 ### Fullscreen.ahk
 
-Borderless fullscreen toggle with multi-monitor support.
+Fake fullscreen toggle on the active window's own monitor.
 
-- `End` - Toggle borderless fullscreen
-- `Ctrl+Alt+K` - Enter borderless fullscreen (always on top)
-- `Ctrl+Alt+L` - Exit and restore window
-- `Ctrl+Alt+End` - Toggle with always-on-top
+- `End` - Toggle fake fullscreen; toggling off restores the previous size and position
+- `Ctrl+Alt+End` - Same toggle, with always-on-top while fullscreen
 
 Requires admin (via `InitScript`).
 

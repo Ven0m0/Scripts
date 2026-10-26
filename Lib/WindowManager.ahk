@@ -1,36 +1,110 @@
 #Requires AutoHotkey v2.0
 
-; WindowManager – borderless/fullscreen utilities
+; WindowManager - window placement: fake fullscreen, snap, and restore, each on the window's own monitor
 
-global STYLE_DECORATIONS := "+0xEC0000"     ; title/menu/frame/sysmodal combined
-global STYLE_UNDECORATED := "-0xEC0000"
+global STYLE_UNDECORATED := "-0xEC0000"     ; title/menu/frame/sysmodal combined
+global WS_SIZEBOX := 0x40000
+global SNAP_MAX_LEFT_WIDTH := 1024
 
+; Returns true when the window is now fake fullscreen, false when it was restored or not found
 ToggleFakeFullscreen(winTitle := "A", api := "") {
     if !api
         api := SystemWindowAPI()
 
-    current := api.WinGetStyle(winTitle)
-    hasTitle := current & 0xC00000
-    if hasTitle {
-        api.WinSetStyle(STYLE_UNDECORATED, winTitle)
-        api.WinMove(0, 0, api.GetScreenWidth(), api.GetScreenHeight(), winTitle)
-    } else {
-        api.WinSetStyle(STYLE_DECORATIONS, winTitle)
-        api.WinRestore(winTitle)
+    hwnd := api.WinExist(winTitle)
+    if !hwnd
+        return false
+
+    geometry := RememberedGeometry()
+    if geometry.Has(hwnd) && geometry[hwnd].placement = "fullscreen" {
+        RestoreWindow("ahk_id " . hwnd, api)
+        return false
     }
+
+    RememberGeometry(hwnd, "fullscreen", api)
+    api.MonitorGet(MonitorOfWindow(hwnd, api), &l, &t, &r, &b)
+    api.WinSetStyle(STYLE_UNDECORATED, "ahk_id " . hwnd)
+    api.WinMove(l, t, r - l, b - t, "ahk_id " . hwnd)
+    return true
 }
 
-SetWindowBorderless(winTitle) {
-    WinSetStyle(STYLE_UNDECORATED, winTitle)
+; side: "left" or "right"; fills that part of the work area, keeping the size of non-resizable windows
+SnapWindow(side, winTitle := "A", api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    hwnd := api.WinExist(winTitle)
+    if !hwnd
+        return false
+
+    saved := RememberGeometry(hwnd, "snap", api)
+    id := "ahk_id " . hwnd
+    ; Undo a fake fullscreen's stripped borders
+    api.WinSetStyle(saved.style, id)
+
+    api.MonitorGetWorkArea(MonitorOfWindow(hwnd, api), &l, &t, &r, &b)
+    leftWidth := Round(Min(SNAP_MAX_LEFT_WIDTH, (r - l) * 2 / 3))
+    x := (side = "left") ? l : l + leftWidth
+    w := (side = "left") ? leftWidth : (r - l) - leftWidth
+
+    if (api.WinGetStyle(id) & WS_SIZEBOX)
+        api.WinMove(x, t, w, b - t, id)
+    else
+        api.WinMove(x, t, , , id)
+    return true
 }
 
-MaximizeWindow(winTitle) {
-    WinMove(0, 0, A_ScreenWidth, A_ScreenHeight, winTitle)
+; Returns the window to its remembered geometry; false when nothing is remembered
+RestoreWindow(winTitle := "A", api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    hwnd := api.WinExist(winTitle)
+    geometry := RememberedGeometry()
+    if !hwnd || !geometry.Has(hwnd)
+        return false
+
+    saved := geometry.Delete(hwnd)
+    api.WinSetStyle(saved.style, "ahk_id " . hwnd)
+    api.WinMove(saved.x, saved.y, saved.w, saved.h, "ahk_id " . hwnd)
+    return true
 }
 
-MakeFullscreen(winTitle) {
-    SetWindowBorderless(winTitle)
-    MaximizeWindow(winTitle)
+; shortcut: entries for closed windows stay until the script exits, add cleanup if hwnds ever pile up
+RememberedGeometry() {
+    static geometry := Map()
+    return geometry
+}
+
+; The first placement's geometry wins, so a chain of placements restores to the original window
+RememberGeometry(hwnd, placement, api) {
+    geometry := RememberedGeometry()
+    if !geometry.Has(hwnd) {
+        id := "ahk_id " . hwnd
+        api.WinGetPos(&x, &y, &w, &h, id)
+        geometry[hwnd] := {style: api.WinGetStyle(id), x: x, y: y, w: w, h: h}
+    }
+    geometry[hwnd].placement := placement
+    return geometry[hwnd]
+}
+
+; Off-screen windows fall back to the primary monitor
+MonitorOfWindow(hwnd, api) {
+    api.WinGetPos(&x, &y, &w, &h, "ahk_id " . hwnd)
+    mon := GetMonitorAtPos(x + w / 2, y + h / 2, api)
+    return (mon = -1) ? api.MonitorGetPrimary() : mon
+}
+
+GetMonitorAtPos(x, y, api := "") {
+    if !api
+        api := SystemWindowAPI()
+
+    Loop api.MonitorGetCount() {
+        api.MonitorGet(A_Index, &l, &t, &r, &b)
+        if (l <= x && x <= r && t <= y && y <= b)
+            return A_Index
+    }
+    return -1
 }
 
 WaitForWindow(winTitle, timeout := 30, api := "") {
@@ -44,61 +118,15 @@ WaitForProcess(processName, timeout := 30) {
     return ProcessWait(processName, timeout) != 0
 }
 
-GetMonitorAtPos(x, y, api := "") {
-    count := IsObject(api) ? api.MonitorGetCount() : MonitorGetCount()
-    Loop count {
-        if IsObject(api)
-            api.MonitorGet(A_Index, &l, &t, &r, &b)
-        else
-            MonitorGet(A_Index, &l, &t, &r, &b)
-
-        if (l <= x && x <= r && t <= y && y <= b)
-            return A_Index
-    }
-    return -1
-}
-
-GetMonitorActiveWindow(winTitle := "A") {
-    WinGetPos(&x, &y, &w, &h, winTitle)
-    return GetMonitorAtPos(x + w/2, y + h/2)
-}
-
-ToggleFakeFullscreenMultiMonitor(winTitle := "A") {
-    static saved := Map()
-    id := WinGetID(winTitle)
-
-    if saved.Has(id) {
-        inf := saved[id]
-        WinSetStyle(inf.style, "ahk_id " . id)
-        WinMove(inf.x, inf.y, inf.w, inf.h, "ahk_id " . id)
-        saved.Delete(id)
-        return
-    }
-
-    inf := Map()
-    inf.style := WinGetStyle(winTitle)
-    WinGetPos(&ix, &iy, &iw, &ih, "ahk_id " . id)
-    inf.x := ix, inf.y := iy, inf.w := iw, inf.h := ih
-    saved[id] := inf
-
-    WinSetStyle(STYLE_UNDECORATED, "ahk_id " . id)
-    mon := GetMonitorActiveWindow("ahk_id " . id)
-    MonitorGet(mon, &ml, &mt, &mr, &mb)
-    WinMove(ml, mt, mr - ml, mb - mt, "ahk_id " . id)
-}
-
-RestoreWindowBorders(winTitle) {
-    WinSetStyle(STYLE_DECORATIONS, winTitle)
-}
-
 class SystemWindowAPI {
+    WinExist(winTitle) => WinExist(winTitle)
     WinWait(winTitle, winText?, timeout?) => WinWait(winTitle, winText?, timeout?)
     WinGetStyle(winTitle) => WinGetStyle(winTitle)
     WinSetStyle(style, winTitle) => WinSetStyle(style, winTitle)
-    WinMove(x, y, w, h, winTitle) => WinMove(x, y, w, h, winTitle)
-    WinRestore(winTitle) => WinRestore(winTitle)
-    GetScreenWidth() => A_ScreenWidth
-    GetScreenHeight() => A_ScreenHeight
+    WinGetPos(&x, &y, &w, &h, winTitle) => WinGetPos(&x, &y, &w, &h, winTitle)
+    WinMove(x?, y?, w?, h?, winTitle?) => WinMove(x?, y?, w?, h?, winTitle?)
     MonitorGetCount() => MonitorGetCount()
-    MonitorGet(N, &Left, &Top, &Right, &Bottom) => MonitorGet(N, &Left, &Top, &Right, &Bottom)
+    MonitorGetPrimary() => MonitorGetPrimary()
+    MonitorGet(n, &left, &top, &right, &bottom) => MonitorGet(n, &left, &top, &right, &bottom)
+    MonitorGetWorkArea(n, &left, &top, &right, &bottom) => MonitorGetWorkArea(n, &left, &top, &right, &bottom)
 }

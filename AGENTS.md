@@ -43,7 +43,7 @@ tests/                  Standalone test scripts
 - Start every script with `#Requires AutoHotkey v2.0`.
 - Reuse `Lib/AHK_Common.ahk` and call `InitScript(...)` in entry scripts that need shared startup behavior.
 - Use v2 function syntax consistently.
-- Prefer existing helpers such as `ToggleFakeFullscreen()`, `ToggleFakeFullscreenMultiMonitor()`, and `WaitForWindow()` instead of copy-pasting window and process logic.
+- Prefer existing helpers such as `ToggleFakeFullscreen()`, `SnapWindow()`, `RestoreWindow()`, and `WaitForWindow()` instead of copy-pasting window and process logic.
 
 ## Change checklists
 
@@ -75,6 +75,7 @@ tests/                  Standalone test scripts
 ## Useful references
 
 - `README.md` - project overview and user-facing setup
+- `GLOSSARY.md` - domain terms (window placement, fake fullscreen, snap, ...)
 - `EXAMPLES.md` - usage examples
 - `ahk/README.md`, `Lib/README.md` - area-specific behavior and dependencies
 - `.claude/rules/autohotkey.md` - AutoHotkey v2 rules and conventions
