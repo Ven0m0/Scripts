@@ -7,7 +7,7 @@ AutoHotkey v2 AFK macros for Call of Duty: Black Ops 6.
 Runs at `High` process priority. Each mode is mutually exclusive — starting one stops
 whichever is currently running; pressing the same key again stops it.
 
-- `F1` - Toggle Balcony loop
+- `F1` - Toggle Balcony loop (start prone under the desk, Jet Gun in slot 2)
 - `F2` - Toggle Bank Roof loop (basic)
 - `F3` - Toggle Bank Roof loop + periodic loot walk
 - `F4` - Toggle Bank Roof Always (continuous fire, no phase cycling)

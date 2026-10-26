@@ -5,7 +5,7 @@
 InitScript({priority: "High"})
 
 ; Hotkeys (default bindings):
-;   F1 – Toggle Balcony loop
+;   F1 – Toggle Balcony loop (start prone under the desk, Jet Gun in slot 2)
 ;   F2 – Toggle Bank Roof (basic) loop
 ;   F3 – Toggle Bank Roof + Loot loop
 ;   F4 – Toggle Bank Roof Always (continuous fire) loop
@@ -25,6 +25,7 @@ if !IsSet(g_autostartMode)
 
 global runningMode := ""
 global runId := 0
+global balconyStanding := false  ; p toggles prone, so track when the balcony loop has stood up
 global ModeHandlers := Map(
     "balcony", BalconyLoop,
     "bank_basic", (id) => BankRoofLoop(id, "bank_basic", false),
@@ -34,10 +35,15 @@ global ModeHandlers := Map(
 )
 
 StopAll() {
-    global runningMode, runId
+    global runningMode, runId, balconyStanding
     runningMode := ""
     runId++  ; invalidate any running loop
     Send("{LButton up}")  ; ensure button released
+    Send("{RButton up}")
+    if balconyStanding {
+        Send("{p}")  ; go back prone under the desk
+        balconyStanding := false
+    }
 }
 
 StartMode(mode) {
@@ -77,16 +83,11 @@ RegisterDefaultHotkeys() {
 ; ---------------- Loops ----------------
 
 BalconyLoop(id) {
-    global runningMode, runId
+    global runningMode, runId, balconyStanding
     step := 1
     NextStep() {
-        if (runId != id || runningMode != "balcony") {
-            ; Cleanup if aborted mid-sequence
-            if (step > 4 && step <= 5) {
-                Send("{RButton up}")
-            }
-            return
-        }
+        if (runId != id || runningMode != "balcony")
+            return  ; StopAll already released RMB and restored the prone stance
 
         if (step == 1) {
             rand := Random(250, 2001)
@@ -94,6 +95,7 @@ BalconyLoop(id) {
             step := 2
         } else if (step == 2) {
             Send("{p}")
+            balconyStanding := true
             SetTimer(NextStep, -1001)
             step := 3
         } else if (step == 3) {
@@ -106,14 +108,11 @@ BalconyLoop(id) {
             step := 5
         } else if (step == 5) {
             Send("{RButton up}")
-            SetTimer(NextStep, -3001)
+            SetTimer(NextStep, -4002)
             step := 6
         } else if (step == 6) {
-            Send("{c}")
-            SetTimer(NextStep, -1001)
-            step := 7
-        } else if (step == 7) {
             Send("{p}")
+            balconyStanding := false
             SetTimer(NextStep, -75001)
             step := 1
         }

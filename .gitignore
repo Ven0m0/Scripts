@@ -41,6 +41,7 @@ ehthumbs.db
 .serena/
 .omc/
 .codegraph/
+.claude/context-archive/
 
 # Logs
 *.log
