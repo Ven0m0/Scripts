@@ -26,9 +26,8 @@ whichever is currently running; pressing the same key again stops it.
    blast drains the Jet Gun's charge; the ~80 s cycle is meant to let it recharge (not verified).
 5. The script never moves the mouse, so the blast goes wherever the camera already points.
 6. Best Directed Mode round to farm: round 11. It has no Manglers and the most zombies of any
-   Mangler-free round (user-observed, not from an official source). A Mangler as the last zombie
+   Mangler-free round. A Mangler as the last zombie
    can't be killed by the loop.
-7. Whether the balcony entry still works on the current build is unconfirmed.
 
 ### Reusing from a wrapper script
 
