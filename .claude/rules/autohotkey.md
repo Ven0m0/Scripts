@@ -44,7 +44,7 @@ Applies to all AutoHotkey files: `ahk/**/*.ahk`, `Lib/**/*.ahk`, and `*.ahk` v2 
 SendMode "Input"
 SetWorkingDir A_ScriptDir
 
-#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
 ToggleFullscreen() {
     target := "Game Title"

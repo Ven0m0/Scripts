@@ -6,6 +6,7 @@
 
 global DECORATED := 0xCF0000      ; WS_OVERLAPPEDWINDOW, includes WS_SIZEBOX
 global FIXED_SIZE := 0xC80000     ; caption + system menu, no WS_SIZEBOX
+global WS_MAXIMIZE := 0x1000000
 
 ; Fake window system: monitors are {l, t, r, b, workBottom}, windows are hwnd -> {x, y, w, h, style}
 class FakeDesktop {
@@ -17,8 +18,14 @@ class FakeDesktop {
     }
 
     AddWindow(hwnd, x, y, w, h, style := DECORATED) {
-        this.windows[hwnd] := {x: x, y: y, w: w, h: h, style: style}
+        this.windows[hwnd] := {x: x, y: y, w: w, h: h, style: style, maximizedFrom: ""}
         this.active := hwnd
+    }
+
+    ; Maximized windows remember their normal rect, like the real window system
+    AddMaximizedWindow(hwnd, normal, maxRect) {
+        this.AddWindow(hwnd, maxRect[1], maxRect[2], maxRect[3], maxRect[4], DECORATED | WS_MAXIMIZE)
+        this.windows[hwnd].maximizedFrom := normal
     }
 
     Geometry(hwnd) {
@@ -52,6 +59,18 @@ class FakeDesktop {
     WinGetPos(&x, &y, &w, &h, winTitle) {
         win := this.windows[this.Resolve(winTitle)]
         x := win.x, y := win.y, w := win.w, h := win.h
+    }
+
+    WinGetMinMax(winTitle) => this.windows[this.Resolve(winTitle)].maximizedFrom ? 1 : 0
+
+    WinRestore(winTitle) {
+        win := this.windows[this.Resolve(winTitle)]
+        if !win.maximizedFrom
+            return
+        normal := win.maximizedFrom
+        win.x := normal[1], win.y := normal[2], win.w := normal[3], win.h := normal[4]
+        win.style := win.style & ~WS_MAXIMIZE
+        win.maximizedFrom := ""
     }
 
     WinMove(x?, y?, w?, h?, winTitle?) {
@@ -167,6 +186,13 @@ ToggleFakeFullscreen("A", desk)
 SnapWindow("left", "A", desk)
 AssertEqual(DECORATED, desk.windows[205].style, "Fullscreen then snap - borders come back")
 AssertEqual(true, ToggleFakeFullscreen("A", desk), "Snapped window - toggle enters fullscreen, not restore")
+
+desk := TwoMonitors()
+desk.AddMaximizedWindow(206, [300, 200, 640, 480], [0, 0, 1920, 1040])
+SnapWindow("left", "A", desk)
+RestoreWindow("A", desk)
+AssertEqual([300, 200, 640, 480], desk.Geometry(206), "Maximized, snap, restore - back to the normal window")
+AssertEqual(DECORATED, desk.windows[206].style, "Maximized, snap, restore - no stale WS_MAXIMIZE")
 
 testOut.WriteLine("WaitForWindow...")
 

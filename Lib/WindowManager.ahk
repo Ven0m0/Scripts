@@ -81,6 +81,9 @@ RememberGeometry(hwnd, placement, api) {
     geometry := RememberedGeometry()
     if !geometry.Has(hwnd) {
         id := "ahk_id " . hwnd
+        ; Remember the normal window, not the maximized/minimized rectangle and state bits
+        if api.WinGetMinMax(id) != 0
+            api.WinRestore(id)
         api.WinGetPos(&x, &y, &w, &h, id)
         geometry[hwnd] := {style: api.WinGetStyle(id), x: x, y: y, w: w, h: h}
     }
@@ -124,6 +127,8 @@ class SystemWindowAPI {
     WinGetStyle(winTitle) => WinGetStyle(winTitle)
     WinSetStyle(style, winTitle) => WinSetStyle(style, winTitle)
     WinGetPos(&x, &y, &w, &h, winTitle) => WinGetPos(&x, &y, &w, &h, winTitle)
+    WinGetMinMax(winTitle) => WinGetMinMax(winTitle)
+    WinRestore(winTitle) => WinRestore(winTitle)
     WinMove(x?, y?, w?, h?, winTitle?) => WinMove(x?, y?, w?, h?, winTitle?)
     MonitorGetCount() => MonitorGetCount()
     MonitorGetPrimary() => MonitorGetPrimary()

@@ -16,7 +16,7 @@ Practical examples for the `Lib/` helpers and scripts actually in this repositor
 ### Fake Fullscreen, Snap, Restore (multi-monitor)
 
 ```autohotkey
-#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
 End::ToggleFakeFullscreen()
 #Left::SnapWindow("left")
@@ -30,7 +30,7 @@ the window to where it was before its first snap or fullscreen.
 ### Wait for a Window or Process
 
 ```autohotkey
-#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
 if !WaitForWindow("ahk_exe game.exe", 10) {
     MsgBox("Game window not found!")
@@ -59,7 +59,7 @@ if !WaitForProcess("game.exe", 10) {
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
-#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
 InitScript()                    ; most scripts
 InitScript({admin: true})       ; relaunch elevated first

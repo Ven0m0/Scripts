@@ -28,7 +28,7 @@ Tests live in `tests/<Module>_Test.ahk` and use `tests/TestKit.ahk`.
 **Usage:**
 
 ```autohotkey
-#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 InitScript({admin: true})  ; Require Admin; performance profile is on by default
 ```
 
@@ -76,7 +76,7 @@ to it, so snap, fullscreen, restore lands back on the original window.
 **Usage:**
 
 ```autohotkey
-#Include A_ScriptDir "\..\Lib\WindowManager.ahk"
+#Include %A_ScriptDir%\..\Lib\WindowManager.ahk
 
 ; Toggle fake fullscreen, snap, restore
 End::ToggleFakeFullscreen()
@@ -98,7 +98,7 @@ if !WaitForWindow("ahk_exe game.exe", 10) {
 
 ```autohotkey
 ; Good
-#Include A_ScriptDir "\..\Lib\AHK_Common.ahk"
+#Include %A_ScriptDir%\..\Lib\AHK_Common.ahk
 
 ; Bad (hardcoded path)
 #Include "C:\Scripts\Lib\AHK_Common.ahk"
