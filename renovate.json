@@ -2,12 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended",
-    ":configMigration",
     ":preserveSemverRanges",
     "abandonments:recommended",
     "group:all",
-    "packages:linters",
-    "schedule:weekly"
+    "packages:linters"
   ],
   "enabled": true,
   "automerge": true,
@@ -17,14 +15,20 @@
   "separateMajorMinor": false,
   "separateMinorPatch": false,
   "ignoreUnstable": true,
-  "prConcurrentLimit": 10,
+  "prConcurrentLimit": 0,
   "respectLatest": true,
   "abandonmentThreshold": "2 years",
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true,
     "commitMessageAction": "Update",
-    "extends": ["schedule:monthly"]
+    "automergeType": "branch",
+    "ignoreTests": true,
+    "schedule": ["at any time"],
+    "automergeSchedule": ["at any time"],
+    "minimumReleaseAge": "0 days",
+    "dependencyDashboardApproval": false,
+    "prCreation": "approval"
   },
   "labels": ["dependencies"],
   "timezone": "Europe/Berlin",
@@ -36,25 +40,16 @@
   },
   "packageRules": [
     {
-      "description": "Automerge all stable (non-0.x) updates via branch",
-      "matchCurrentVersion": "!/^0/",
+      "description": "Apply all eligible updates directly to the base branch without automatic pull requests",
+      "matchPackageNames": ["*"],
       "automerge": true,
       "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch"]
-    },
-    {
-      "description": "Require dashboard approval for 0.x major bumps",
-      "matchCurrentVersion": "/^0/",
-      "matchUpdateTypes": ["major"],
-      "dependencyDashboardApproval": true,
-      "automerge": false
-    },
-    {
-      "description": "Automerge linters and formatters aggressively",
-      "matchCategories": ["linters"],
-      "automerge": true,
-      "automergeType": "branch",
-      "schedule": ["at any time"]
+      "ignoreTests": true,
+      "schedule": ["at any time"],
+      "automergeSchedule": ["at any time"],
+      "minimumReleaseAge": "0 days",
+      "dependencyDashboardApproval": false,
+      "prCreation": "approval"
     }
   ],
   "customManagers": [
@@ -96,5 +91,16 @@
       "managerFilePatterns": ["**/{j,t}sconfig.json", "**/{j,t}sconfig.*.json"],
       "matchStrings": ["\"(?<depName>@tsconfig/node(?<major>\\d+))/tsconfig\\.json\""]
     }
-  ]
+  ],
+  "schedule": ["at any time"],
+  "automergeSchedule": ["at any time"],
+  "minimumReleaseAge": "0 days",
+  "dependencyDashboardApproval": false,
+  "prCreation": "approval",
+  "configMigration": false,
+  "prHourlyLimit": 0,
+  "branchConcurrentLimit": 0,
+  "vulnerabilityAlerts": {
+    "prCreation": "approval"
+  }
 }
