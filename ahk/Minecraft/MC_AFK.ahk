@@ -3,6 +3,7 @@
 
 #Include %A_ScriptDir%\..\..\Lib\AHK_Common.ahk
 InitScript()
+Persistent
 
 global fishingOn := false
 global eatTimerOn := false
@@ -46,29 +47,34 @@ StopFishing() {
   fishingOn := false
 }
 
-F7:: {  ; Toggle fishing loop
-  if fishingOn
-    StopFishing()
-  else
-    FishLoop()
+; Bindings come from hotkeys.ini next to this script ([MC_AFK]); these are the defaults.
+keys := LoadHotkeys(A_ScriptDir . "\hotkeys.ini", "MC_AFK", Map(
+    "fishing", "F7",
+    "autoEat", "F6",
+    "pause", "F8",
+    "exit", "F9"))
+
+ToggleFishing(*) {
+    if fishingOn
+        StopFishing()
+    else
+        FishLoop()
 }
 
-F6:: {  ; Toggle mob auto-eat every 60s
-  global eatTimerOn
-  if eatTimerOn {
-    SetTimer(eatFood, 0)
-    eatTimerOn := false
-  } else {
-    Send("1")  ; ensure sword slot first
-    SetTimer(eatFood, 60000)
-    eatTimerOn := true
-  }
+; Toggle mob auto-eat every 60s
+ToggleAutoEat(*) {
+    global eatTimerOn
+    if eatTimerOn {
+        SetTimer(eatFood, 0)
+        eatTimerOn := false
+    } else {
+        Send("1")  ; ensure sword slot first
+        SetTimer(eatFood, 60000)
+        eatTimerOn := true
+    }
 }
 
-F8:: {
-  Pause(-1)
-}
-
-F9:: {
-  ExitApp()
-}
+Hotkey(keys["fishing"], ToggleFishing)
+Hotkey(keys["autoEat"], ToggleAutoEat)
+Hotkey(keys["pause"], (*) => Pause(-1))
+Hotkey(keys["exit"], (*) => ExitApp())

@@ -77,15 +77,13 @@ low-latency profile (zero key/mouse/window delays, `SendMode "Input"`, `ListLine
 
 ### Minecraft AFK Fishing (`ahk/Minecraft/MC_AFK.ahk`)
 
+Bindings are read from `ahk/Minecraft/hotkeys.ini` (`[MC_AFK]` and `[MC_AutoSprint]`) through
+`LoadHotkeys()` in `Lib/AHK_Common.ahk`; a missing file or key keeps the default:
+
 ```autohotkey
-F7:: {  ; Toggle fishing loop
-  if fishingOn
-    StopFishing()
-  else
-    FishLoop()
-}
-F8::Pause(-1)  ; Pause
-F9::ExitApp()  ; Stop
+keys := LoadHotkeys(A_ScriptDir . "\hotkeys.ini", "MC_AFK", Map("fishing", "F7", "exit", "F9"))
+Hotkey(keys["fishing"], ToggleFishing)
+Hotkey(keys["exit"], (*) => ExitApp())
 ```
 
 ### Black Ops 6 (`ahk/Black_ops_6/bo6-afk.ahk`)

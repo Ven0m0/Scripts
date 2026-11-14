@@ -45,6 +45,17 @@ InitScript(opts := {}) {
         SetOptimalPerformance()
 }
 
+; Hotkey names from an INI file so users can rebind without editing the script.
+; defaults is a Map of name -> key; a missing file, key or empty value keeps the default.
+LoadHotkeys(iniPath, section, defaults) {
+    keys := Map()
+    for name, fallback in defaults {
+        value := Trim(IniRead(iniPath, section, name, fallback))
+        keys[name] := (value = "") ? fallback : value
+    }
+    return keys
+}
+
 InitOption(opts, name, default) => opts.HasOwnProp(name) ? opts.%name% : default
 
 class SystemHost {
